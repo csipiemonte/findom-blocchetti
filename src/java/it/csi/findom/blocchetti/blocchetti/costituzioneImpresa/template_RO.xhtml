@@ -1,0 +1,245 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _costituzioneImpresa RO --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+				
+<h5>Costituzione Impresa</h5>
+<div class="formTable" summary="....">
+	<table class="formTable" summary="...." id="id_table_costituzioneimpresa">
+		<col width="30%" />
+		<col width="23%" />
+		<col width="23%" />
+		<col width="24%" />
+		<tr>
+			<th> 
+				<label for="id_costImpr_dataCostituzioneImpresa">
+					Data costituzione impresa
+				</label> 
+			
+				<#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+					<p style="font-style:italic; font-weight:normal;">
+						Dopo il primo salvataggio non sarà più possibile <br/>modificare la data di costituzione impresa 
+                    </p>
+                </#if>
+            </th>
+                        
+			<td>
+				<#if _costituzioneImpresa_costituzione_in_corso == "true" >
+				   [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+			   		  <#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+						  [#if "00/00/0000" != dataCostituzioneImpresaXML]
+							<input type="text" id="id_costImpr_dataCostituzioneImpresa"
+								 name="_costituzioneImpresa.dataCostituzioneImpresa"
+								 value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataCostituzioneImpresa)!?html}" 
+								 class="medium calendarioCustom2" readonly="readonly" disabled="disabled" />
+								 <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+						  [#else]
+						  
+					  </#if>
+							   <input type="text" name="_costituzioneImpresa.dataCostituzioneImpresa" 
+								      value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataCostituzioneImpresa)!?html}" 
+								      id="id_costImpr_dataCostituzioneImpresa" maxlength="10" disabled="disabled"
+								      class="[@classMediumError errorList=(messages._costituzioneImpresa_dataCostituzioneImpresa)![] /] calendarioCustom2"/>
+							   <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+						  <#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+						  [/#if]
+					  </#if>
+			   	  [#else]
+				      <input type="text" name="_costituzioneImpresa.dataCostituzioneImpresa"
+				             value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataCostituzioneImpresa)!?html}"
+				             id="id_costImpr_dataCostituzioneImpresa"  maxlength="10" disabled="disabled"
+						     class="medium calendarioCustom2" />
+					  <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+			      [/#if]
+			    <#else>
+			    	<#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+			          [#if "00/00/0000" != dataCostituzioneImpresaXML]
+						   <input type="text" id="id_costImpr_dataCostituzioneImpresa"
+							      name="_costituzioneImpresa.dataCostituzioneImpresa"
+							      value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataCostituzioneImpresa)!?html}" 
+							      class="medium calendarioCustom2" readonly="readonly" disabled="disabled" />
+						   <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					  [#else]
+					  </#if>
+						   <input type="text" name="_costituzioneImpresa.dataCostituzioneImpresa" 
+							      value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataCostituzioneImpresa)!?html}" 
+							      id="id_costImpr_dataCostituzioneImpresa" maxlength="10" disabled="disabled"
+							      class="[@classMediumError errorList=(messages._costituzioneImpresa_dataCostituzioneImpresa)![] /] calendarioCustom2"/>
+						   <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					  <#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+					  [/#if]
+					  </#if>
+			    
+			    </#if>   
+		    
+			</td>
+
+			<#if _costituzioneImpresa_costituzione_in_corso == "true" >
+				  <th>
+				  	<label for="id_costImpresa_dichiarazioneCostituzioneInCorso">Impresa in fase di costituzione</label>
+				  </th>
+				  
+				  <td>
+				  
+					<span class="check">
+						[#if "00/00/0000" != dataCostituzioneImpresaXML]
+							[#-- se la dataCostituzioneImpresa e' presente nel XML allora questo check e' disabilitato --]
+						    <input type="checkbox" name="_costituzioneImpresa.costituzioneInCorso" id="id_costImpresa_dichiarazioneCostituzioneInCorso" value="true" disabled="disabled" />
+						[#else]
+						    [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+								[#-- non checked --]
+							    <input type="checkbox" name="_costituzioneImpresa.costituzioneInCorso" id="id_costImpresa_dichiarazioneCostituzioneInCorso" value="true" disabled="disabled" />
+						    [#else]
+								[#-- checked --]
+							    <input type="checkbox" name="_costituzioneImpresa.costituzioneInCorso" id="id_costImpresa_dichiarazioneCostituzioneInCorso" value="true" checked="checked" disabled="disabled" />
+						    [/#if]	
+						[/#if]
+					</span>
+				  </td>
+			<#else>
+				  <th></th>
+				  <td></td>
+			</#if>
+		</tr>
+
+
+		<#--in base alla configurazione del bando entrambi i check costituzione in corso e iscrizione in corso possono esserci o no, indipendentemente uno dall'altro -->
+		<tr>
+			<#if _costituzioneImpresa_costituzione_in_corso == "true" >	 <!-- costituzione in corso=esiste -->
+			<#if _costituzioneImpresa_iscrizione_in_corso == "true" >	 <!-- costituzione in corso=esiste e iscrizione in corso=esiste --> 
+		
+			<th>
+				<label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese 1 </label>
+			</th>
+			
+			<td>
+		        [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+				       [#if (!((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true")]
+				     
+					 		 <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />	
+					 
+				       [#else]
+				       
+					   		 <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />
+					   [/#if]
+				 [#else]
+					     <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />
+				 [/#if]
+			</td>
+			
+			<th>
+				<label for="id_costImpresa_iscrizioneInCorso">Iscrizione in corso</label>
+			</th>
+			<td>
+				<span class="check">
+					 [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+						    [#if !((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true"]
+							   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" value="true" class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" disabled="disabled" />									
+						    [#else]
+							   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" value="true" checked="checked" disabled="disabled" class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+						    [/#if]
+					[#else]								    
+					    <input type="checkbox" id="id_costImpresa_iscrizioneInCorso" name="_costituzioneImpresa.iscrizioneInCorso" value="true" disabled="disabled" />
+					[/#if]
+				</span>
+			</td>
+
+		<#else>
+                         <!-- costituzione in corso=esiste e iscrizione in corso=non esiste -->                             
+                         
+                         <th><label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese 2 </label></th>
+			 <td>
+		        [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]		
+			             <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />
+				 [#else]
+				    <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" /> 
+				 [/#if]
+			</td>
+			<th></th>
+			<td></td>
+		
+		</#if><!-- fine blocco costituzione in corso=esiste e iscrizione in corso=non esiste -->
+		<#else>
+		   <!-- costituzione in corso=non esiste -->
+		   <#if _costituzioneImpresa_iscrizione_in_corso == "true" >
+		      <!-- costituzione in corso=non esiste e iscrizione in corso=esiste -->
+		        
+		    <th>
+		    	<label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese 3 </label>
+		    </th>
+			<td>
+		        [#if (!((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true")]
+			     	
+				     <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />
+					 		 	
+			    [#else]
+				     <input  type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+					 		 	id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />
+				[/#if]
+			</td>
+			
+			<th>
+				<label for="id_costImpresa_iscrizioneInCorso">Iscrizione in corso</label>
+			</th>
+			<td>
+				<span class="check">
+				    [#if !((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true"]
+					   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" value="true" disabled="disabled" class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+				    [#else]
+					   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" value="true" checked="checked" class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+				    [/#if]
+				</span>
+			</td>
+		   <#else>
+		      <!-- costituzione in corso=non esiste e iscrizione in corso=non esiste -->
+		      
+		      <th>
+		      	<label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese</label>
+		      </th>
+				  <td>
+						<input type="text" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" 
+							id="id_costImpr_provinciaDescrizione" class="long" readonly="readonly" />	
+				  </td>							
+			  <th>
+				
+			</th>
+			<td></td>
+		   </#if><!-- fine blocco costituzione in corso=non esiste e iscrizione in corso=non esiste -->
+		</#if><!-- fine blocco costituzione in corso=non esiste -->						
+		</tr>
+		
+		<!--  :: inizio Jira 1590 e 1699 nuovo campo data -->
+		<#if _costituzioneImpresa_data_iscrizione_registro_imprese == "true" >
+			<tr>
+				<#if _dettaglio_sedi_stati_esteri_label?has_content >
+					 <th>
+						<label for="lbl_costImpr_dataIscrizioneRegistroImprese">
+							${_dettaglio_sedi_stati_esteri_label}
+						</label>
+					</th>
+				<#else>
+					  <th>
+						<label for="lbl_costImpr_dataIscrizioneRegistroImprese">
+							Iscritto alla sezione ordinaria del Registro Imprese dal
+						</label>
+					</th>
+				</#if>
+				<td id="cb_isori">
+					<input type="text" id="id_costImpr_dataIscrizioneRegistroImprese" name="_costituzioneImpresa.dataIscrizioneRegistroImprese" title="Attenzione, verificare data digitata" maxlength="10" 
+						value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataIscrizioneRegistroImprese)!?html}" disabled="disabled"  class="medium calendarioCustom2 idleField"/>
+					<span id="id_dataIscrizioneRegistroImprese_calendario" class="txt_help hide_txt">Inserire il formato: gg/mm/aaaa</span>
+				</td>
+			</tr>
+		</#if>
+
+	</table>
+	
+</div>

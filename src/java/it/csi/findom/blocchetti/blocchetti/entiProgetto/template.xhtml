@@ -1,0 +1,782 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _entiProgetto --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+<script type="text/javascript">
+			
+	function eliminaEnte(indice){
+		// inserisco un elemento nascosto per eliminare i dati nell'XML
+		//createInputTypeHidden("exec", "_entiProgetto.entiProgettoList["+indice+"]", "DELETED");
+					
+		$("#id_entiProgetto_enteSelected").val(indice);	
+		$('#id_eliminaEnte').click();												
+	}
+	
+
+	function aggiungiEnte(){
+		//<![CDATA[ 
+		// conto il numero di righe della tabella
+		var numRighe = $('#id_lista_enti tr:not(".nested")').length-1;
+					
+		var riga = '<tr><td>';
+		riga += '<span class="cancel">';
+		riga += '<a href="#" class="dialog-elimina" id="id_eliminaEnte_' + numRighe + '" title="Elimina ente" onclick="eliminaEnte(' + numRighe + ');return false;" >';
+		riga += '	<span class="nascosto">elimina</span>';
+		riga += '</a></span>';
+		riga += '</td>';
+		riga += '<td><select name="_entiProgetto.entiProgettoList[' + numRighe + '].codiceEnte" id="id_dettEnte_codice_' + numRighe + '" class="long" style="width: 95%;"onchange="aggiornaDatiEnte(' + numRighe + '); " >';
+		riga += ' <option value=""></option>'; 
+		[#list entiList as curInt]
+		riga += '<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">'+"${FTL_PLACEHOLDER}(curInt.descrizione)!?js_string?html}"+'</option>';
+	    [/#list]
+	   
+		riga += '  </select>';
+		riga += '<input type="hidden" id="id_descrEnte_' + numRighe + '" '; 							       
+	    riga += '       name="_entiProgetto.entiProgettoList[' + numRighe + '].descrizioneEnte" ';
+	    riga += '       value=""/> ';
+	    riga += '<input type="hidden" id="id_tipoEnte_' + numRighe + '" '; 							       
+	    riga += '       name="_entiProgetto.entiProgettoList[' + numRighe + '].tipoEnte" ';
+	    riga += '       value=""/> ';
+	    riga += '  </td>';
+
+		riga += ' <td> <input type="text" id="id_dettEnte_popolazione_' + numRighe + '" name="_entiProgetto.entiProgettoList[' + numRighe + '].popolazione" value="" readonly="readonly" class="long" style="text-align: right"/>';
+		riga += '</td>';
+		
+		riga += ' <td> <input type="text" id="id_dettEnte_classificazione_' + numRighe + '" name="_entiProgetto.entiProgettoList[' + numRighe + '].classificazione" value="" readonly="readonly" class="long" />';
+		riga += '</td>';
+		
+		riga += '<td>	';				
+		riga += '<input type="checkbox" class="noborder" id="id_dettEnte_partecipazioneProgetto_' + numRighe + ' onclick="impostaFlagPartecipazioneProgetto(' + numRighe + '); "/> ';
+		riga += '<input type="hidden"  ';	
+		riga += '	id="id_dettEnte_partecipazioneProgettoStatoCheck_' + numRighe + '" ';	
+		riga += '	value="" ';																										
+		riga += '	name="_entiProgetto.entiProgettoList[' + numRighe + '].partecipazioneProgetto"/>';	
+
+		riga += '</td>';
+
+		riga += '<td>';
+					
+		riga += '	<table style=" margin-bottom: 1px;" id="certificazioneAmbientale_' + numRighe + '"> ';
+		riga += '			<tr class="nested"> ';
+		riga += '			    <td style="border:none;"> ';							    						   
+		riga += '			    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[' + numRighe + '].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[' + numRighe + ']" value="SI"  /> ';
+		riga += '			    SI ';
+		riga += '			    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[' + numRighe + '].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[' + numRighe + ']" value="NO"  /> ';
+		riga += '			    NO ';
+		riga += '				</td> ';
+		riga += '			</tr> ';
+
+		riga += '			<tr class="nested"> ';
+		riga += '				<td style="border:none;"> ';
+		riga += '			    <label for="id_dettEnte_certificazioneAmbientale_' + numRighe + '">Se si specificare quale:</label> ';
+		riga += '				<input type="text" name="_entiProgetto.entiProgettoList[' + numRighe + '].certificazioneAmbientaleText"  ';
+		riga += '				       value=""  ';
+		riga += '				       id="id_dettEnte_certificazioneAmbientaleText_' + numRighe + '" ';
+		riga += '				       class="long" /> ';
+
+		riga += '				</td> ';
+		riga += '			</tr> ';
+		riga += '	</table> ';
+			
+		riga += '</td>';
+		
+		
+		riga += '<td>';
+		
+		
+		riga += '	<table style=" margin-bottom: 1px;" id="pattoSindaci_' + numRighe + '"> ';
+		riga += '			<tr class="nested"> ';
+		riga += '			    <td style="border:none;"> ';							    						   
+		riga += '			    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[' + numRighe + '].pattoSindaci" id="id_ente_pattoSindaci_[' + numRighe + ']" value="SI"  /> ';
+		riga += '			    SI ';
+		riga += '			    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[' + numRighe + '].pattoSindaci" id="id_ente_pattoSindaci_[' + numRighe + ']" value="NO"  /> ';
+		riga += '			    NO ';
+		riga += '				</td> ';
+		riga += '			</tr> ';
+
+		riga += '			<tr class="nested"> ';
+		riga += '				<td style="border:none;"> ';
+		riga += '				</td> ';
+		riga += '			</tr> ';
+		riga += '	</table> ';
+			
+		riga += '</td>';
+		
+		riga += '<td>';
+		
+		
+		riga += '	<table style=" margin-bottom: 1px;" id="richiestaAgevolazioni_' + numRighe + '"> ';
+		riga += '			<tr class="nested"> ';
+		riga += '			    <td style="border:none;"> ';							    						   
+		riga += '			    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[' + numRighe + '].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[' + numRighe + ']" value="SI"  /> ';
+		riga += '			    SI ';
+		riga += '			    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[' + numRighe + '].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[' + numRighe + ']" value="NO"  /> ';
+		riga += '			    NO ';
+		riga += '				</td> ';
+		riga += '			</tr> ';
+
+		riga += '			<tr class="nested"> ';
+		riga += '				<td style="border:none;"> ';
+		riga += '			    <label for="id_dettEnte_richiestaAgevolazioni_' + numRighe + '">Se si specificare quale:</label> ';
+		riga += '				<input type="text" name="_entiProgetto.entiProgettoList[' + numRighe + '].richiestaAgevolazioniText"  ';
+		riga += '				       value=""  ';
+		riga += '				       id="id_dettEnte_richiestaAgevolazioniText_' + numRighe + '" ';
+		riga += '				       class="long" /> ';
+
+		riga += '				</td> ';
+		riga += '			</tr> ';
+		riga += '	</table> ';
+			
+		riga += '</td>';
+		riga += '</tr>';
+		// aggiungo la riga alla tabella			
+		$('#id_lista_enti tr:not(".nested"):last').after(riga);						
+		//]]>
+	}
+
+	function aggiornaDatiEnte(indice){
+		
+		codIstat = $('#id_dettEnte_codice_'+indice + ' option:selected').val();
+		$('#id_ente_selezionato').val(codIstat); 	
+		$('#id_descrEnte_'+indice).val($('#id_dettEnte_codice_'+indice + ' option:selected').text());
+		submitForm();	
+	}
+	
+	function submitForm(){
+		$('#id_reload_S2_P6').click();
+	}
+	
+	function impostaFlagPartecipazioneProgetto(index){
+		if (document.getElementById("id_dettEnte_partecipazioneProgetto_"+index).checked) {
+			$('#id_dettEnte_partecipazioneProgettoStatoCheck_'+index).attr('value', "checked");				 		
+		}else{
+			$('#id_dettEnte_partecipazioneProgettoStatoCheck_'+index).attr('value', ""); 
+		}		
+		aggiornaTotalePopolazione(index);
+	}
+	
+	function aggiornaTotalePopolazione(index){
+		var totale = 0;
+		totalePopolazione = $('#id_entiProgetto_totalePopolazione').val();
+		
+		popolazione = $('#id_dettEnte_popolazione_' + index).val();
+		if (popolazione!=''){
+			if (document.getElementById("id_dettEnte_partecipazioneProgetto_"+index).checked) {
+				totale = Number(totalePopolazione) + Number(popolazione); 
+			} else
+				totale = Number(totalePopolazione) - Number(popolazione);				
+			$("#id_entiProgetto_totalePopolazione").val(totale);
+		}			
+	}
+				   
+</script>
+		
+<h4>
+	<span id="toggle_handle_entiProgetto" class="toggle_handle collapse">Dati riepilogativi dell'Ente/degli Enti
+	[@contextualErrors errorList=(messages._entiProgetto)![] /]
+	</span>
+</h4>
+							
+<div class="toggle_target_entiProgetto" id="id_tabella_entiProgetto">
+
+	<p style="font-style:italic; font-weight:normal;"></p>
+	[#if "UCO" == codiceTipologiaBeneficiario! || "RTE" == codiceTipologiaBeneficiario!]
+						
+	<table class="myovertable tablesorter" summary="...." id="id_lista_enti">
+		<col width="5%" />
+		<col width="15%" />
+		<col width="10%" />
+		<col width="10%" />
+		<col width="3%" />		
+		<col width="24%" />
+		<col width="9%" />
+		<col width="24%" />					
+		<thead>
+			<tr>
+			<th>Azioni</th>				
+			<th>Ente</th>
+			<th>Popolazione</th>
+			<th>Classificazione del Comune</th>
+			<th>Partecipazione progetto</th>				
+			<th>Certificazione ambientale (a)</th>
+			<th>Patto dei sindaci (b)</th>
+			<th>Richiesta agevolazioni (c)</th>			
+			</tr>
+		</thead>
+					
+		[#if (entiProgettoList)?has_content]
+		[#list entiProgettoList as item]
+						
+		<tr>
+		[#if "true" == (item.daCancellare)! ]
+			[#-- caso di item da marcare come DELETED--]
+           	<input type="hidden" value="DELETED" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}]" />                             
+		[#else]
+			<td>
+				<span class="cancel">
+					<a href="#" class="dialog-elimina" id="id_eliminaEnte_${FTL_PLACEHOLDER}item_index}" title="Elimina ente" onclick="eliminaEnte(${FTL_PLACEHOLDER}item_index});return false;" >
+					<span class="nascosto">elimina</span>
+					</a></span>
+			</td>
+			<td>
+			[#assign erroriDettEnte = false] 
+			[#if ((messages._entiProgetto_valore_testo_codiceEnte)?has_content)]
+			[#if messages._entiProgetto_valore_codiceEnte?seq_contains(item_index+"")]
+						
+				<select name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte" 
+					id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+					onchange="aggiornaDatiEnte(${FTL_PLACEHOLDER}item_index}); " style="width: 95%; border: 1px solid red;">
+					
+					<option value=""></option>
+					[#list entiList as curInt]
+					[#if !(!curInt?has_content || !curInt?is_hash)]
+					[#if curInt.codice == (item.codiceEnte)!]
+					<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected" >${FTL_PLACEHOLDER}(curInt.descrizioneEnte)!?html}</option>									   
+					[#else]
+					<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizioneEnte)!?html}</option>										  
+					[/#if]
+					[/#if]
+					[/#list]								
+				</select>
+				
+				<span class="txtError">
+					<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+					<span>
+					errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_codiceEnte?first}
+					</span>
+				</span>
+				<input type="hidden" id="id_descrEnte_${FTL_PLACEHOLDER}item_index}" 							       
+						       name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].descrizioneEnte"
+						           value="${FTL_PLACEHOLDER}item.descrizioneEnte!?html}"/>
+					<input type="hidden" id="id_tipoEnte_${FTL_PLACEHOLDER}item_index}" 							       
+						       name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].tipoEnte"
+						           value="${FTL_PLACEHOLDER}item.tipoEnte!?html}"/>
+				[#assign erroriDettEnte = true] 
+			[/#if]
+			[/#if]
+						
+			[#if erroriDettEnte==false]
+				<select name="	" 
+					id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+					onchange="aggiornaDatiEnte(${FTL_PLACEHOLDER}item_index}); " style="width: 95%;">
+					
+					<option value=""></option>
+					[#list entiList as curInt]
+					[#if !(!curInt?has_content || !curInt?is_hash)]
+					[#if curInt.codice == (item.codiceEnte)!]
+						<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>									   
+					[#else]
+						<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>										  
+					[/#if]
+					[/#if]
+					[/#list]
+								
+				</select>
+				<input type="hidden" id="id_descrEnte_${FTL_PLACEHOLDER}item_index}" 							       
+						       name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].descrizioneEnte"
+						           value="${FTL_PLACEHOLDER}item.descrizioneEnte!?html}"/>
+					<input type="hidden" id="id_tipoEnte_${FTL_PLACEHOLDER}item_index}" 							       
+						       name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].tipoEnte"
+						           value="${FTL_PLACEHOLDER}item.tipoEnte!?html}"/>
+			[/#if]	
+			</td>
+			
+			<td>				
+				<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].popolazione" 
+					id="id_dettEnte_popolazione_${FTL_PLACEHOLDER}item_index}"
+					value="${FTL_PLACEHOLDER}item.popolazione!?html}" readonly="readonly" class="long" style="text-align: right"/>				
+			</td>
+			
+			<td>				
+				<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].classificazione" 
+					id="id_dettEnte_classificazione_${FTL_PLACEHOLDER}item_index}"
+					value="${FTL_PLACEHOLDER}item.classificazione!?html}" readonly="readonly" class="long"/>				
+			</td>
+			
+			<td>					
+				[#if item.partecipazioneProgetto == "checked"]																			
+					<input type="checkbox" class="noborder"
+						id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"
+						checked="checked"	
+						onclick="impostaFlagPartecipazioneProgetto(${FTL_PLACEHOLDER}(item_index)!});"
+						/>
+					
+				[#else]										
+					<input type="checkbox" class="noborder"
+						id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"							
+						onclick="impostaFlagPartecipazioneProgetto(${FTL_PLACEHOLDER}(item_index)!});"
+						/>
+				[/#if]
+				<input type="hidden"  
+					id="id_dettEnte_partecipazioneProgettoStatoCheck_${FTL_PLACEHOLDER}item_index}"
+					value="${FTL_PLACEHOLDER}item.partecipazioneProgetto!?html}"																									
+					name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].partecipazioneProgetto"/>	
+								
+			</td>
+			
+			
+			<td>
+				<table style=" margin-bottom: 1px;" id="certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">
+						<tr class="nested">
+						    <td style="border:none;">	
+						    [#if "SI" == (item.certificazioneAmbientale)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />		
+						    [#else]				    							   
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />
+						    [/#if]	
+						    SI
+						    
+						    [#if "NO" == (item.certificazioneAmbientale)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [#else]
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [/#if]		
+						    NO
+						    [#if ((messages._entiProgetto_valore_certificazioneAmbientale)?has_content)]
+						    [#if messages._entiProgetto_valore_certificazioneAmbientale?seq_contains(item_index+"")]
+						    <span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_certificazioneAmbientale?first}
+					            </span>
+						    </span>
+						   [/#if]
+						   [/#if]
+							</td>
+						</tr>
+						<tr class="nested">
+							<td style="border:none;">
+							<label for="id_dettEnte_certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+							[#assign erroriDettEnte = false] 
+						    [#if ((messages._entiProgetto_valore_testo_certificazioneAmbientaleText)?has_content)]
+						    [#if messages._entiProgetto_valore_certificazioneAmbientaleText?seq_contains(item_index+"")]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientaleText" 
+							       value="${FTL_PLACEHOLDER}(item.certificazioneAmbientaleText)!?html?upper_case}" 
+							       id="id_dettCosti_certificazioneAmbientaleText_${FTL_PLACEHOLDER}item_index}"
+							       class="long" style="border: 1px solid red" 
+							       />
+							<span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_certificazioneAmbientaleText?first}
+					            </span>
+						    </span>[#assign erroriDettEnte = true] 
+						    [/#if]
+						    [/#if]
+						
+						    [#if erroriDettEnte==false]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientaleText" 
+							       value="${FTL_PLACEHOLDER}(item.certificazioneAmbientaleText)!?html?upper_case}" 
+							       id="id_dettEnte_certificazioneAmbientaleText_${FTL_PLACEHOLDER}item_index}"
+							       class="long"/>
+							
+							[/#if]
+							</td>
+						</tr>
+				</table>
+			</td>
+			<td>
+				<table style=" margin-bottom: 1px;" id="pattoSindaci_${FTL_PLACEHOLDER}item_index}">
+						<tr class="nested">
+						    <td style="border:none;">	
+						    [#if "SI" == (item.pattoSindaci)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />		
+						    [#else]				    							   
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />
+						    [/#if]	
+						    SI
+						    
+						    [#if "NO" == (item.pattoSindaci)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [#else]
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [/#if]		
+						    NO
+						    [#if ((messages._entiProgetto_valore_pattoSindaci)?has_content)]
+						    [#if messages._entiProgetto_valore_pattoSindaci?seq_contains(item_index+"")]
+						    <span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_pattoSindaci?first}
+					            </span>
+						    </span>
+						   [/#if]
+						   [/#if]
+							</td>
+						</tr>
+						<tr class="nested">
+							<td style="border:none;">
+							</td>
+						</tr>
+				</table>
+			</td>
+			<td>
+				<table style=" margin-bottom: 1px;" id="richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">
+						<tr class="nested">
+						    <td style="border:none;">	
+						    [#if "SI" == (item.richiestaAgevolazioni)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />		
+						    [#else]				    							   
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />
+						    [/#if]	
+						    SI
+						    
+						    [#if "NO" == (item.richiestaAgevolazioni)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [#else]
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [/#if]		
+						    NO
+						    [#if ((messages._entiProgetto_valore_richiestaAgevolazioni)?has_content)]
+						    [#if messages._entiProgetto_valore_richiestaAgevolazioni?seq_contains(item_index+"")]
+						    <span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_richiestaAgevolazioni?first}
+					            </span>
+						    </span>
+						   [/#if]
+						   [/#if]
+							</td>
+						</tr>
+						<tr class="nested">
+							<td style="border:none;">
+							<label for="id_dettEnte_richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+							[#assign erroriDettEnte = false] 
+						    [#if ((messages._entiProgetto_valore_testo_richiestaAgevolazioniText)?has_content)]
+						    [#if messages._entiProgetto_valore_richiestaAgevolazioniText?seq_contains(item_index+"")]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioniText" 
+							       value="${FTL_PLACEHOLDER}(item.richiestaAgevolazioniText)!?html?upper_case}" 
+							       id="id_dettCosti_richiestaAgevolazioniText_${FTL_PLACEHOLDER}item_index}"
+							       class="long" style="border: 1px solid red" 
+							       />
+							<span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_richiestaAgevolazioniText?first}
+					            </span>
+						    </span>[#assign erroriDettEnte = true] 
+						    [/#if]
+						    [/#if]
+						
+						    [#if erroriDettEnte==false]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioniText" 
+							       value="${FTL_PLACEHOLDER}(item.richiestaAgevolazioniText)!?html?upper_case}" 
+							       id="id_dettEnte_richiestaAgevolazioniText_${FTL_PLACEHOLDER}item_index}"
+							       class="long" />
+							
+							[/#if]
+							</td>
+						</tr>
+				</table>
+			</td>
+			
+
+					   
+		[/#if]  [#-- chiude IF daCancellare --]
+		</tr>
+					
+		[/#list]
+		[/#if]
+					
+	</table>
+	
+	<div class="commandPanel">
+		<div class="button right">
+			<span class="addrows highlighted">
+				<input type="button" value="Aggiungi" onclick="aggiungiEnte()" />
+			</span>
+		</div>
+	</div>
+	
+	<div class="totalePopolazione" id="id_totalePopolazione">
+	<table class="formTable" summary="...." id="id_table_totalePopolazione">
+		<col width="30%" />
+		<col width="20%" />
+		<col width="50%" />
+		<tr>
+			<th> <label for="id_totalePopolazione">Totale popolazione comuni partecipanti</label></th> 
+						
+			<td>							
+			<input type="text" id="id_entiProgetto_totalePopolazione"
+				name="_entiProgetto.totalePopolazione"
+				value="${FTL_PLACEHOLDER}(totalePopolazione)!?html}" 
+				class="long" 
+				readonly="readonly"/>
+			
+			</td>
+			<td></td>				
+		</tr>
+	</table>		
+	</div>
+	<input type="hidden" id="id_entiProgetto_totalePopolazioneGruppo"
+		name="_entiProgetto.totalePopolazioneGruppo"
+		value="${FTL_PLACEHOLDER}(totalePopolazioneGruppo)!?html}" 
+		class="long" 
+		/>
+				
+	[#elseif "COM" == codiceTipologiaBeneficiario! || "PRV" == codiceTipologiaBeneficiario! || "CME" == codiceTipologiaBeneficiario!]
+	<table class="myovertable tablesorter" summary="...." id="id_lista_enti">
+		<col width="15%" />
+		<col width="10%" />
+		<col width="10%" />
+		<col width="3%" />		
+		<col width="24%" />
+		<col width="9%" />
+		<col width="24%" />					
+		<thead>
+			<tr>			
+			<th>Ente</th>
+			<th>Popolazione</th>
+			<th>Classificazione del Comune</th>
+			<th>Partecipazione progetto</th>				
+			<th>Certificazione ambientale (a)</th>
+			<th>Patto dei sindaci (b)</th>
+			<th>Richiesta agevolazioni (c)</th>			
+			</tr>
+		</thead>
+					
+		[#if (entiProgettoList)?has_content]
+		[#list entiProgettoList as item]
+						
+		<tr>
+			<td>
+			[#assign erroriDettEnte = false] 
+			[#assign codEnte = ""] 			
+			<select name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte" 
+				id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+				onchange="aggiornaDatiEnte(${FTL_PLACEHOLDER}item_index}); " style="width: 95%;" disabled="disabled">
+					
+				<option value=""></option>
+				[#list entiList as curInt]
+				[#if !(!curInt?has_content || !curInt?is_hash)]
+				[#if curInt.codice == (item.codiceEnte)!]						
+					<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>									   
+				[#else]
+					<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>										  
+				[/#if]
+				[/#if]
+				[/#list]
+								
+			</select>
+			<input type="hidden"  
+				id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}"
+				value="${FTL_PLACEHOLDER}(item.codiceEnte)!?html}"																									
+				name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte"/>	
+			
+			<input type="hidden" id="id_descrEnte_${FTL_PLACEHOLDER}item_index}" 							       
+				name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].descrizioneEnte"
+					value="${FTL_PLACEHOLDER}item.descrizioneEnte!?html}"/>
+			<input type="hidden" id="id_tipoEnte_${FTL_PLACEHOLDER}item_index}" 							       
+						       name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].tipoEnte"
+						           value="${FTL_PLACEHOLDER}item.tipoEnte!?html}"/>
+				</td>
+			<td>				
+				<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].popolazione" 
+					id="id_dettEnte_popolazione_${FTL_PLACEHOLDER}item_index}"
+					value="${FTL_PLACEHOLDER}item.popolazione!?html}" readonly="readonly" class="long" style="text-align: right"/>				
+			</td>
+			
+			<td>				
+				<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].classificazione" 
+					id="id_dettEnte_classificazione_${FTL_PLACEHOLDER}item_index}"
+					value="${FTL_PLACEHOLDER}item.classificazione!?html}" readonly="readonly" class="long"/>				
+			</td>
+			
+			<td>					
+																				
+			<input type="checkbox" class="noborder"
+				id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"
+				checked="checked"	
+				disabled="disabled"
+				onclick="impostaFlagPartecipazioneProgetto(${FTL_PLACEHOLDER}(item_index)!});"
+				/>			
+			<input type="hidden"  
+				id="id_dettEnte_partecipazioneProgettoStatoCheck_${FTL_PLACEHOLDER}item_index}"
+				value="checked"																									
+				name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].partecipazioneProgetto"/>	
+								
+			</td>
+			
+			
+			<td>
+				<table style=" margin-bottom: 1px;" id="certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">
+						<tr class="nested">
+						    <td style="border:none;">	
+						    [#if "SI" == (item.certificazioneAmbientale)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />		
+						    [#else]				    							   
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />
+						    [/#if]	
+						    SI
+						    
+						    [#if "NO" == (item.certificazioneAmbientale)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [#else]
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [/#if]		
+						    NO
+						    [#if ((messages._entiProgetto_valore_certificazioneAmbientale)?has_content)]
+						    [#if messages._entiProgetto_valore_certificazioneAmbientale?seq_contains(item_index+"")]
+						    <span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_certificazioneAmbientale?first}
+					            </span>
+						    </span>
+						   [/#if]
+						   [/#if]
+							</td>
+						</tr>
+						<tr class="nested">
+							<td style="border:none;">
+							<label for="id_dettEnte_certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+							[#assign erroriDettEnte = false] 
+						    [#if ((messages._entiProgetto_valore_testo_certificazioneAmbientaleText)?has_content)]
+						    [#if messages._entiProgetto_valore_certificazioneAmbientaleText?seq_contains(item_index+"")]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientaleText" 
+							       value="${FTL_PLACEHOLDER}(item.certificazioneAmbientaleText)!?html?upper_case}" 
+							       id="id_dettCosti_certificazioneAmbientaleText_${FTL_PLACEHOLDER}item_index}"
+							       class="long" style="border: 1px solid red" 
+							       />
+							<span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_certificazioneAmbientaleText?first}
+					            </span>
+						    </span>[#assign erroriDettEnte = true] 
+						    [/#if]
+						    [/#if]
+						
+						    [#if erroriDettEnte==false]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientaleText" 
+							       value="${FTL_PLACEHOLDER}(item.certificazioneAmbientaleText)!?html?upper_case}" 
+							       id="id_dettEnte_certificazioneAmbientaleText_${FTL_PLACEHOLDER}item_index}"
+							       class="long"/>
+							
+							[/#if]
+							</td>
+						</tr>
+				</table>
+			</td>
+			<td>
+				<table style=" margin-bottom: 1px;" id="pattoSindaci_${FTL_PLACEHOLDER}item_index}">
+						<tr class="nested">
+						    <td style="border:none;">	
+						    [#if "SI" == (item.pattoSindaci)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />		
+						    [#else]				    							   
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />
+						    [/#if]	
+						    SI
+						    
+						    [#if "NO" == (item.pattoSindaci)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [#else]
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [/#if]		
+						    NO
+						    [#if ((messages._entiProgetto_valore_pattoSindaci)?has_content)]
+						    [#if messages._entiProgetto_valore_pattoSindaci?seq_contains(item_index+"")]
+						    <span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_pattoSindaci?first}
+					            </span>
+						    </span>
+						   [/#if]
+						   [/#if]
+							</td>
+						</tr>
+						<tr class="nested">
+							<td style="border:none;">
+							</td>
+						</tr>
+				</table>
+			</td>
+			<td>
+				<table style=" margin-bottom: 1px;" id="richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">
+						<tr class="nested">
+						    <td style="border:none;">	
+						    [#if "SI" == (item.richiestaAgevolazioni)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />		
+						    [#else]				    							   
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI"  />
+						    [/#if]	
+						    SI
+						    
+						    [#if "NO" == (item.richiestaAgevolazioni)!]
+						    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [#else]
+						    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO"  />
+						    [/#if]		
+						    NO
+						    [#if ((messages._entiProgetto_valore_richiestaAgevolazioni)?has_content)]
+						    [#if messages._entiProgetto_valore_richiestaAgevolazioni?seq_contains(item_index+"")]
+						    <span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_richiestaAgevolazioni?first}
+					            </span>
+						    </span>
+						   [/#if]
+						   [/#if]
+							</td>
+						</tr>
+						<tr class="nested">
+							<td style="border:none;">
+							<label for="id_dettEnte_richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+							[#assign erroriDettEnte = false] 
+						    [#if ((messages._entiProgetto_valore_testo_richiestaAgevolazioniText)?has_content)]
+						    [#if messages._entiProgetto_valore_richiestaAgevolazioniText?seq_contains(item_index+"")]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioniText" 
+							       value="${FTL_PLACEHOLDER}(item.richiestaAgevolazioniText)!?html?upper_case}" 
+							       id="id_dettCosti_richiestaAgevolazioniText_${FTL_PLACEHOLDER}item_index}"
+							       class="long" style="border: 1px solid red" 
+							       />
+							<span class="txtError">
+							    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							         errore:<br />${FTL_PLACEHOLDER}messages._entiProgetto_valore_testo_richiestaAgevolazioniText?first}
+					            </span>
+						    </span>[#assign erroriDettEnte = true] 
+						    [/#if]
+						    [/#if]
+						
+						    [#if erroriDettEnte==false]
+							<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioniText" 
+							       value="${FTL_PLACEHOLDER}(item.richiestaAgevolazioniText)!?html?upper_case}" 
+							       id="id_dettEnte_richiestaAgevolazioniText_${FTL_PLACEHOLDER}item_index}"
+							       class="long" />
+							
+							[/#if]
+							</td>
+						</tr>
+				</table>					
+			</td>
+
+		</tr>
+					
+		[/#list]
+		[/#if]
+					
+	</table>
+	[/#if]
+	<p style="font-style:italic; font-weight:normal;">
+	(a) indicare l'eventuale certificazione ambientale. Sono accettate le certificazioni ISO14001, 50001 e EMAS . Se si è in possesso di più certificazioni è sufficiente indicarne una.<br/>
+	(b) indicare se il comune aderisce al Patto dei Sindaci oppure, se il progetto è proposto da un Ente che ha assunto il ruolo di coordinatore territoriale dell'iniziativa "Patto dei sindaci".<br/>
+	(c) indicare se è stata presentata una richiesta di agevolazioni a livello nazionale. 
+	</p>
+	
+	
+	</div>
+	<input type="submit" id="id_eliminaEnte" name="_command" hidden="hidden"
+	   	value="LabelCommand:C_elimina_ente;DeleteCommand:_entiProgetto.entiProgettoList:_entiProgetto.indiceEnteSelected;SaveCommand;RestoreCommand" />		   				
+	<input type="hidden" id="id_entiProgetto_enteSelected" name="_entiProgetto.indiceEnteSelected" value="" />
+	   			
+	<input type="hidden" id="id_ente_selezionato" value="" name="codIstatEnteSelezionato" />		
+	<input type="submit" id="id_reload_S2_P6" name="_command" value="LabelCommand:C_reload_S2_P6_SL;RenderCommand:2100" hidden="hidden" />
+			

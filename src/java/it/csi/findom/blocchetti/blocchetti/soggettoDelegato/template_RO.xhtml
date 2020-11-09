@@ -1,0 +1,212 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _soggettoDelegato RO --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<h4>
+	<span id="toggle_handle_LegRappr" class="toggle_handle collapse">Soggetto delegato</span>
+</h4>
+				<div class="toggle_target_LegRappr">
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="70%" />
+						<tr>							
+							<th> <label for="id_soggettoDelegato_codiceFiscale">Codice Fiscale</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.codiceFiscale" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.codiceFiscale)!?html}" 
+								       id="id_soggettoDelegato_codiceFiscale" class="short" readonly="readonly" />
+							</td>			
+						</tr>
+						<tr>
+							<th> <label for="id_soggettoDelegato_cognome">Cognome</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.cognome" 
+										value="${FTL_PLACEHOLDER}(_soggettoDelegato.cognome)!?html}" 
+										id="id_soggettoDelegato_cognome" class="long" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_soggettoDelegato_nome">Nome</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.nome" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.nome)!?html}" 
+								       id="id_soggettoDelegato_nome" class="long" readonly="readonly" />
+							</td>
+						</tr>
+						
+<#if _soggettoDelegato_genere == "true">
+						<tr>
+						<th><label for="id_soggetto_delegato">Genere</label></th>
+							<td>
+									<select name="_soggettoDelegato.genere" id="id_soggetto_delegato" class="short"  disabled="disabled">
+										<option value=""></option>
+										[#if "M" == (_soggettoDelegato.genere)!]
+											<option value="M" selected="selected">MASCHILE</option>
+										[#else]
+											<option value="M">MASCHILE</option>
+										[/#if]
+										[#if "F" == (_soggettoDelegato.genere)!]
+											<option value="F" selected="selected">FEMMINILE</option>
+										[#else]
+											<option value="F">FEMMINILE</option>
+										[/#if]
+							</select>
+						</td>
+						</tr>
+</#if>
+		
+						
+						<tr>
+							<th>Luogo di nascita </th>
+							<td>
+								[#if "Italia" == (_soggettoDelegato.luogoNascita)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaIt" value="Italia" checked="checked" />
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaIt" value="Italia" disabled="disabled" />
+								[/#if]
+
+								<label for="id_soggettoDelegato_luogoNascitaIt">Italia</label>
+
+								<div id="italiaSel" class="spaceBottom">
+									<label for="id_soggettoDelegato_provinciaNascita">Provincia</label>
+									<input type="text" name="_soggettoDelegato.provinciaNascitaDescrizione" value="${FTL_PLACEHOLDER}_soggettoDelegato.provinciaNascitaDescrizione!?html}" id="id_soggettoDelegato_provinciaNascita" class="medium" readonly="readonly" />
+									
+									<label for="id_soggettoDelegato_comuneNascita">Comune</label>
+									<input type="text" name="_soggettoDelegato.comuneNascitaDescrizione" value="${FTL_PLACEHOLDER}_soggettoDelegato.comuneNascitaDescrizione!?html}" id="id_soggettoDelegato_comuneNascita" class="medium" readonly="readonly" />
+								</div>
+
+								[#if "Estero" == (_soggettoDelegato.luogoNascita)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaEst" value="Estero" checked="checked" />
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaEst" value="Estero" disabled="disabled" />
+								[/#if]
+
+								<label for="id_soggettoDelegato_luogoNascitaEst">Stato estero</label>
+								<div id="esteroSel">
+									<label for="id_soggettoDelegato_statoEsteroNascita">Stato estero</label>
+									<input type="text" name="_soggettoDelegato.statoEsteroNascitaDescrizione" 
+									       value="${FTL_PLACEHOLDER}_soggettoDelegato.statoEsteroNascitaDescrizione!?html}" 
+									       id="id_soggettoDelegato_statoEsteroNascita" class="medium" readonly="readonly" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_dataNascita">Data di nascita</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.dataNascita" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.dataNascita)!?html}" 
+								       id="id_dataNascita" class="short" readonly="readonly" />
+							</td>	
+						</tr>
+						<tr>
+							<th> <label for="id_soggettoDelegato_descrTipoDocRiconoscimento">Tipo documento di riconoscimento</label>  </th>
+							<td>
+							    <input type="text" name="_soggettoDelegato.documento.descrizioneTipoDocRiconoscimento" 
+							           value="${FTL_PLACEHOLDER}_soggettoDelegato.documento.descrizioneTipoDocRiconoscimento!?html}" 
+							           id="id_soggettoDelegato_descrTipoDocRiconoscimento" class="medium" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<th><label for="id_soggettoDelegato_numDocumentoRiconoscimento">N. documento</label></th>
+							<td>
+								<input type="text" name="_soggettoDelegato.documento.numDocumentoRiconoscimento" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.numDocumentoRiconoscimento)!?html}" 
+									   id="id_soggettoDelegato_numDocumentoRiconoscimento" 
+									   class="medium" readonly="readonly"/>								
+							</td>
+						</tr>
+						<tr>
+							<th><label for="id_soggettoDelegato_docRilasciatoDa">Rilasciato da</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.documento.docRilasciatoDa" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.docRilasciatoDa)!?html}" 
+									   id="id_soggettoDelegato_docRilasciatoDa" 
+									   class="long" readonly="readonly"/>								
+							</td>
+						</tr>						
+						<tr>
+							<th><label for="id_soggettoDelegato_dataRilascioDoc">Data rilascio</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.documento.dataRilascioDoc" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.dataRilascioDoc)!?html}" 
+									   id="id_soggettoDelegato_dataRilascioDoc" 									
+									   class="short" readonly="readonly"/>
+							</td>
+						</tr>
+
+					</table>
+
+<#if _soggettoDelegato_presenza_residenza == "true">
+					<h5>Residenza</h5>
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="70%" />
+						
+						<tr>
+							<th>Stato</th>
+							<td >
+								[#if "Italia" == (_soggettoDelegato.luogoResidenza)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaIt" value="Italia" checked="checked" />
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaIt" value="Italia" disabled="disabled" />
+								[/#if]
+
+								<label for="id_soggettoDelegato_luogoResidenzaIt">Italia</label>
+								<div id="italiaSel_res" class="spaceBottom">
+									<label for="id_soggettoDelegato_provinciaResidenza">Provincia</label>
+									<input type="text" name="_soggettoDelegato.provinciaResidenza" value="${FTL_PLACEHOLDER}_soggettoDelegato.provinciaResidenzaDescrizione!?html}" id="id_soggettoDelegato_provinciaResidenza" class="medium" readonly="readonly" />
+									
+									<label for="id_soggettoDelegato_comuneResidenza">Comune</label>
+									<input type="text" name="_soggettoDelegato.comuneResidenza" value="${FTL_PLACEHOLDER}_soggettoDelegato.comuneResidenzaDescrizione!?html}" id="id_soggettoDelegato_comuneResidenza" class="medium" readonly="readonly" />
+								</div>
+
+								[#if "Estero" == (_soggettoDelegato.luogoResidenza)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaEst" value="Estero" checked="checked" />
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaEst" value="Estero" disabled="disabled" />
+								[/#if]
+
+								<label for="id_soggettoDelegato_luogoResidenzaEst">Stato estero</label>
+								<div id="esteroSel_res">
+									<label for="id_soggettoDelegato_statoEsteroResidenza">Stato estero</label>
+									<input type="text" name="_soggettoDelegato.statoEsteroResidenza" value="${FTL_PLACEHOLDER}_soggettoDelegato.statoEsteroResidenzaDescrizione!?html}" id="id_soggettoDelegato_statoEsteroResidenza" class="medium" readonly="readonly" />
+
+									<label for="id_soggettoDelegato_statoEsteroCitta">Città estera</label>
+									<input type="text" name="_soggettoDelegato.cittaEsteraResidenza" value="${FTL_PLACEHOLDER}(_soggettoDelegato.cittaEsteraResidenza)!?html}" id="id_soggettoDelegato_statoEsteroCitta" class="medium" readonly="readonly" />
+								</div>
+							</td>
+						</tr>
+
+						<tr>
+							<th> <label for="id_soggettoDelegato_indirizzo">Indirizzo</label> </th>
+							<td colspan="3">
+								<input type="text" name="_soggettoDelegato.indirizzo" 
+								        value="${FTL_PLACEHOLDER}(_soggettoDelegato.indirizzo)!?html}" 
+								        id="id_soggettoDelegato_indirizzo" 
+										class="medium" style="width:80%" readonly="readonly"/>
+					
+			
+			    <label for="id_soggettoDelegato_numcivico">N. civico</label>
+			    <input type="text" name="_soggettoDelegato.numCivico" 
+			           value="${FTL_PLACEHOLDER}(_soggettoDelegato.numCivico)!?html}" 
+			           id="id_soggettoDelegato_numcivico" 
+					   class="short" style="width:5%" readonly="readonly"/>
+							</td>
+						</tr>
+
+						<tr>
+						     <th> <label for="id_soggettoDelegato_cap">CAP</label>  </th>
+						     <td  colspan="3">							  
+							    <input type="text" name="_soggettoDelegato.cap" value="${FTL_PLACEHOLDER}(_soggettoDelegato.cap)!?html}" 
+								       id="id_soggettoDelegato_cap" 
+									   class="short" readonly="readonly"/>
+							 </td> 
+						</tr>
+
+					</table>
+</#if>
+				</div>

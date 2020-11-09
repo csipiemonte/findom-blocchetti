@@ -1,0 +1,21 @@
+[#--
+ * Copyright Regione Piemonte - 2020
+ * SPDX-License-Identifier: EUPL-1.2-or-later
+ --]
+	[#macro classShortWarning warningList][#if warningList?has_content]short warning[#else]short[/#if][/#macro]
+	[#macro classMediumWarning warningList][#if warningList?has_content]medium warning[#else]medium[/#if][/#macro]
+	[#macro classLongWarning warningList][#if warningList?has_content]long warning[#else]long[/#if][/#macro]
+	[#macro classGeneralWarning warningList classNormal classWarning][#if warningList?has_content]${FTL_PLACEHOLDER}classWarning}[#else]${FTL_PLACEHOLDER}classNormal}[/#if][/#macro]
+	[#macro contextualWarnings warningList]
+		[#if warningList?has_content]
+			<span class="txtWarning">
+				<img src="/ris/resources/global/images/warning.gif" alt="ci sono segnalazioni" title="ci sono segnalazioni" class="imWarning" />
+				<span>
+					attenzione:<br />
+					[#list warningList as warningItem]
+						${FTL_PLACEHOLDER}warningItem}
+					[/#list]
+				</span>
+			</span>
+		[/#if]
+	[/#macro]

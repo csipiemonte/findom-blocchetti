@@ -1,0 +1,206 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _operatorePresentatore RO --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<input type="submit" id="id_reload_S1_P1" name="_command" value="LabelCommand:C_reload_S1_P1;RenderCommand:1100" hidden="hidden" />
+<h4>
+	<span id="toggle_handle_OpPrs" class="toggle_handle collapse">Dati identificativi</span>
+</h4>
+<div class="toggle_target_OpPrs">
+	<table class="formTable" summary="....">
+		<col width="30%" />
+		<col width="70%" />
+		<tr>
+			<th><label for="id_operatorePresentatore_codiceFiscale">Codice fiscale </label> </th>
+			<td>
+				<input type="text" name="_operatorePresentatore.codiceFiscale" value="${FTL_PLACEHOLDER}(statusInfo.codFiscaleBeneficiario)!?html}"  
+				id="id_operatorePresentatore_codiceFiscale" readonly="readonly" />
+			</td>
+		</tr>
+
+		[#if beneficiarioEstero!?has_content]
+			<tr>							
+				<th>
+					<label for="id_operatorePresentatore_statoEstero">Stato estero</label>
+				</th>
+				<td>
+					<input type="text" name="_operatorePresentatore.descrStato" value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrStato)!?html}"  
+					id="id_operatorePresentatore_descrStato" readonly="readonly" class="medium"/>
+				</td>
+			</tr>
+		[/#if]
+
+		<tr>
+			<th><label for="id_operatorePresentatore_denominazione">Denominazione o ragione sociale</label></th>
+			<td>
+				<input type="text" name="_operatorePresentatore.denominazione" value="${FTL_PLACEHOLDER}(_operatorePresentatore.denominazione)!?html}" 
+						id="id_operatorePresentatore_denominazione" class="long" readonly="readonly" />								
+			</td>
+		</tr>
+
+
+
+	<#if operatorePresentatore_dipartimenti == "true" >	
+		[#if dipartimentiList?has_content]
+		<tr>
+			<th scope="row">
+				<label for="id_operatorePresentatore_dipartimento">Unit&#224; organizzativa </label>
+			</th>
+			<td>
+			    <input type="text" name="_operatorePresentatore.descrizioneDipartimento" 
+			           value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneDipartimento)!?html}" 
+					   id="id_operatorePresentatore_dipartimento" class="long" readonly="readonly" />	
+			</td>
+		</tr>
+		[/#if]
+	</#if>
+
+
+		<tr>
+			<th scope="row">
+				<label for="id_operatorePresentatore_formaGiuridica">Forma giuridica </label>
+			</th>
+			<td>
+			    <input type="text" name="_operatorePresentatore.descrizioneFormaGiuridica" 
+			           value="${FTL_PLACEHOLDER}_operatorePresentatore.descrizioneFormaGiuridica!?html}" 
+					   id="id_operatorePresentatore_formaGiuridica" class="long" readonly="readonly" />	
+			</td>
+		</tr>
+		 [#if !beneficiarioEstero!?has_content]
+		<tr>
+			<th><label for="id_operatorePresentatore_partitaIva">Partita IVA </label> </th>
+			<td>
+				<input type="text" name="_operatorePresentatore.partitaIva" value="${FTL_PLACEHOLDER}(_operatorePresentatore.partitaIva)!?html}" 
+				id="id_operatorePresentatore_partitaIva" readonly="readonly"/>							   
+			</td>
+		</tr>
+		[/#if]
+		
+		
+		
+		<#if _operatorePresentatore_indirizzoPec == "false" >
+			<tr>
+				<th>
+					<label for="id_operatorePresentatore_indirizzoPec">Indirizzo PEC </label> </th>
+				<td>
+					<input type="text" name="_operatorePresentatore.indirizzoPec" value="${FTL_PLACEHOLDER}(_operatorePresentatore.indirizzoPec)!?html}" 
+					id="id_operatorePresentatore_indirizzoPec" class="medium" readonly="readonly"/>
+				</td>
+			</tr>
+		</#if>
+		
+		
+	<#if _operatorePresentatore_ateco == "true" >
+		<tr>						
+		    <th>Settore prevalente (ATECO 2007)</th>
+			<td>
+				<label for="id_operatorePresentatore_codPrevalenteAteco2007">Codice </label>
+				<input type="text" name="_operatorePresentatore.codicePrevalenteAteco2007" 
+				       value="${FTL_PLACEHOLDER}(_operatorePresentatore.codicePrevalenteAteco2007)!?html}" 
+					   id="id_operatorePresentatore_codPrevalenteAteco2007"
+					   readonly="readonly"
+					   class="short" />										
+
+				<label for="id_operatorePresentatore_descrizioneAteco2007">Descrizione </label>
+
+				<input type="text" name="_operatorePresentatore.descrizioneAteco2007"								       
+				       value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneAteco2007)!?html}" 
+				       id="id_operatorePresentatore_descrizioneAteco2007"
+				       readonly="readonly"
+				       class="medium" style="width:47%"/>						    
+		    
+		    </td>
+		</tr>
+		
+		<#if _operatorePresentatore_settore_attivita_economica == "true" >
+			<tr>							
+				<th>
+					<label for="id_operatorePresentatore_attivitaEconomica">Settore attivit&#224; economica</label>
+				</th>
+				<td>							
+				     <input type="text" name="_operatorePresentatore.descrizioneAttivitaEconomica" 
+				           value="${FTL_PLACEHOLDER}_operatorePresentatore.descrizioneAttivitaEconomica!?html}" 
+						   id="id_operatorePresentatore_attivitaEconomica" class="long" readonly="readonly" />
+				</td>
+			</tr>
+		</#if>
+	</#if>
+		<!-- MB2018_03_27 ini -->
+		[#if visIpa?has_content]
+			[#if "false" != visIpa]
+			<tr>
+				<th><label for="id_operatorePresentatore_codiceIpa">Codice IPA </label> </th>
+				<td>
+					<input type="text" name="_operatorePresentatore.codiceIpa" value="${FTL_PLACEHOLDER}_operatorePresentatore.codiceIpa!?html}"
+					       id="id_operatorePresentatore_codiceIpa" 
+					       class="medium" readonly="readonly" />
+				</td>
+			</tr>
+			[/#if]
+		[/#if]	
+		<!-- MB2018_03_27 fine -->
+		
+		[#-- campo cir codice identificativo regionale --]
+		<#if _operatorePresentatore_cir == "true" >
+				<tr>
+					<th>
+						<label for="lbl_operatorePresentatore_cir">
+							Codice identificativo Regionale
+						</label> 
+					</th>
+					<td>
+						<input type="tel" name="_operatorePresentatore.codiceRegionale" 
+								value="${FTL_PLACEHOLDER}(_operatorePresentatore.codiceRegionale)!?html}" id="id_operatorePresentatore_codiceRegionale" placeholder="XXXXXX-XXX-XXXXX" 
+								maxlength="16" readonly="readonly"
+								title="16-caratteri alfanumerici nel formato di 000000-AAA-00000" class="[@classMediumError errorList=(messages._operatorePresentatore_codiceRegionale)![] /]" />
+								<span class="small"> 
+									<br/> 
+										<i>Per la compilazione verificare quanto indicato nelle 
+											<a href="${FTL_PLACEHOLDER}urlPagRegoleCompilazione}">
+												Regole di compilazione
+											</a>
+										</i> 
+								</span>
+					</td>
+				</tr>
+		</#if>
+		
+		[#-- campo numero iscrizione registro APS --]	
+		<#if _operatorePresentatore_codiceAps == "true" >
+		
+				[#-- numero iscrizione registro APS --]
+				<tr>
+					<th>
+						<label for="lbl_operatorePresentatore_aps">
+							Numero di Iscrizione al Registro APS
+						</label> 
+					</th>
+					<td>
+						<input type="text" id="id_operatorePresentatore_numeroIscrizioneRegistroAPS"  name="_operatorePresentatore.numeroIscrizioneRegistroAPS" 
+								value="${FTL_PLACEHOLDER}(_operatorePresentatore.numeroIscrizioneRegistroAPS)!?html}" readonly="readonly" 
+								title="Solo valori numerici interi" class="[@classMediumError errorList=(messages._operatorePresentatore_numero_iscrizione_registro_APS)![] /]" />
+					</td>
+				</tr>
+				
+				[#-- data iscrizione registro APS dataIscrizioneRegistroAPS --]
+				<tr>
+					<th>
+						<label for="lbl_operatorePresentatore_data_iscrizione_registro_APS">
+							Iscritto al Registro APS dal
+						</label>
+					</th>
+					
+					<td>
+						<input type="text" id="id_operatorePresentatore_dataIscrizioneRegistroAPS" name="_operatorePresentatore.dataIscrizioneRegistroAPS" readonly="readonly"
+								title="Attenzione, verificare data digitata" maxlength="10" pattern="\d{1,2}/\d{1,2}/\d{4}" value="${FTL_PLACEHOLDER}(_operatorePresentatore.dataIscrizioneRegistroAPS)!?html}"  
+								/>
+						<span id="id_dataIscrizioneRegistroAPS_calendario" class="txt_help hide_txt">Inserire il formato: gg/mm/aaaa</span>
+					</td>
+				</tr>
+		</#if>
+
+	</table>
+</div>

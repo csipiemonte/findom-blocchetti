@@ -1,0 +1,54 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+
+<div id="document">
+	<![CDATA[
+		[@InjectModel][/@InjectModel]
+	]]>
+
+	[#-- MACRO: sono valide per ogni sezione o pagina --]
+	
+	<#include "../../../../../../../../../../blocchetti/macros/errorclass.bsh">
+
+	[#-- COMMON: parti di codice comune a piu pagine --]
+	[#-- FINE MACRO --]
+
+	[#if accessoForbidden]
+	[#-- qui visualizzo messaggio per accesso fraudolento --]
+	<div id="S3">
+			<div id="S3_P2">
+				<!-- AGGR_hideAllPageButtons -->
+				Accesso non consentito.
+			</div>
+	</div>
+	[#else]
+	
+		[#if (formState == "BZ") || (formState == "OK") || (formState == "OW") || (formState == "KO")]
+
+		<!-- PARTE IN LETTURA/SCRITTURA-->
+		<#include "../../../../../../../../../../blocchetti/javascripts/disableEnterKey.js">
+
+		<div id="S3">
+			<div id="S3_P2">
+				<!-- AGGR_hideButton_RESET_PAGE -->
+				<#include "../../../../../blocchetti/dichiarazioni96/template.xhtml"> 
+			</div><!--/S3_P2 -->
+		</div><!--/S3 -->
+
+		[#else]
+
+		<!-- PARTE IN SOLA LETTURA-->		
+
+		<div id="S3">
+			<div id="S3_P2">
+				 <!-- AGGR_hideAllPageButtons -->
+				<#include "../../../../../blocchetti/dichiarazioni96/template_RO.xhtml">
+			</div>
+		</div>
+
+		[/#if]
+	[/#if]
+
+</div>

@@ -1,0 +1,213 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+ [#-- _formeFinanziamento RO --] 
+ <#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+<!-- RO -->
+
+<h4>
+	<span id="toggle_handle_formaFinanziamento" class="toggle_handle collapse">
+		Forme di agevolazione
+    </span>
+</h4>
+
+<div>
+	<table class="formTable" summary="....">		
+		<col width="25%" />
+		<col width="75%" />
+		<tr>			
+			<th>
+				<label for="id_importo_totale_spese">
+					Totale delle spese 
+				</label>
+			</th>
+			
+			<td style="vertical-align: bottom" >
+				<input type="text" name="importoPropostoSpese" value="${FTL_PLACEHOLDER}(importoProposto)!?html}" id="id_formaFinanziamento_importoProposto" readonly="readonly"  style="text-align: right"/>
+			</td>
+			
+			<td>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="toggle_target_formaFinanziamento">
+    
+    <p style="font-style: italic; font-weight: normal;">
+    	Indicare le forme di agevolazione richieste:
+    </p>
+    
+
+	  <table class="formTable" summary="....">
+		 <col width="5%" />
+		 <col width="90%" />
+		 <col width="5%" />
+		 
+		 <tr>
+			<td></td>
+			<td>
+				
+				<table summary="...." id="id_forme_finanziamentoTbl"
+					class="myovertable tablesorter target_toggle_checkbox_1">
+					<col width="5%" />
+					<col width="40%" />
+					<col width="25%" />
+					<col width="25%" />
+					
+					<thead>
+						<tr class="skip">
+							<th scope="col"></th>
+							<th scope="col">Forma di agevolazione</th>
+							<th scope="col">Importo finanziamento / Spesa agevolabile</th>
+							<th scope="col">Importo</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						[#list formaFinanziamentoList as item]
+							[#if !(!item?has_content || !item?is_hash)]
+									<tr>
+										<th scope="row">
+										[#if item.idFormaFinanziamento == "1"]	
+										
+										    [#if item.checked == "true"]
+											     <input type="checkbox" class="noborder cb1" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" checked="checked" disabled="disabled" />
+											[#else]																	  
+												 <input type="checkbox" class="noborder cb1" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" disabled="disabled" /> 
+											[/#if]
+										[/#if]
+										
+										[#if item.idFormaFinanziamento == "21"]		
+											[#if item.checked == "true"]
+											     <input type="checkbox" class="noborder cb21" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" checked="checked" disabled="disabled" />
+											[#else]																	  
+												 <input type="checkbox" class="noborder cb21" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" disabled="disabled" /> 
+											[/#if]	
+										[/#if]
+															
+										[#assign erroriFormeAgev = false] 
+											[#if ((messages._formaFinanziamento_valore_testo_checkFormaFinanziamento)?has_content)]							
+												[#if messages._formaFinanziamento_valore_checkFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]													
+													 <span class="txtError">
+													    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+														<span>
+														    errore:<br />${FTL_PLACEHOLDER}messages._formaFinanziamento_valore_testo_checkFormaFinanziamento?first}
+												        </span>
+													 </span>
+													</th>
+													[#assign erroriFormeAgev = true] [#-- settaggio che viene fatto in caso di errore e che evita di visualizzare la versione senza segnalazioni di errore--]
+											    [/#if]
+										    [/#if] 
+									      
+										<td>
+											${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!}
+										</td>
+										
+									
+										<!-- importo interno -->
+										<td> 
+											<!-- spesaAgv - id21 A contributoTotaleRichiesto -->
+											[#if item.idFormaFinanziamento == "1"]							 
+	 						  					<!-- std id1: value="${FTL_PLACEHOLDER}(item.importoFormaAgevolazione)!?html}" -->
+												<input type="text" id="id1_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" 
+													value="${FTL_PLACEHOLDER}(contributoTotaleRichiesto)!?html}" 
+													name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].contributoTotaleRichiesto" 
+													class="long" style="text-align: right" readonly="readonly"/>											
+													
+											[#else]																	  
+													<!-- std id21 B contributoContoInteresse >=5000 <=50000 onchange="selezionaRecord(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); " -->
+													[#assign erroriFormeAgev = false]
+													[#if ((messages._formaFinanziamento_valore_testo)?has_content)]
+													
+													[#if messages._formaFinanziamento_valore_idFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]
+																			
+														<input type="text" id="id_contributo_conto_interesse_21" pattern="^\d*(\,\d{0,2})?$"
+															value="${FTL_PLACEHOLDER}(contributoContoInteresse)!?html}" disabled="disabled"
+															name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].contributoContoInteresse" 
+															class="long" style="border: 1px solid red; text-align:right;" />							
+														
+														<span id="error-contributo" class="txtError">
+															<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+															<span>
+																errore:<br />${FTL_PLACEHOLDER}messages._formaFinanziamento_valore_testo?first}
+															</span>
+														</span>
+										
+														[#assign erroriFormeAgev = true]
+													[/#if]
+														
+												[/#if]
+													<!-- spesaAgv - id21 B contributoContoInteresse id_importo_forma_agevolazione_ diventa id_contributo_conto_interesse_-->
+													[#if erroriFormeAgev==false]
+														<input type="text" id="id_contributo_conto_interesse_21" pattern="^\d*(\,\d{0,2})?$"
+															value="${FTL_PLACEHOLDER}(contributoContoInteresse)!?html}"  disabled="disabled"
+															name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].contributoContoInteresse" class="long" style="text-align: right" 
+														 />											
+														
+													[/#if]				  
+											[/#if]	
+										</td>
+								
+										<!-- importo esterno -->	
+										
+										<!-- std C id1 importoSogliaLimiteInferiore -->
+										<td> 
+											[#if item.idFormaFinanziamento == "1"]
+												[#assign erroriFormeAgev = false]
+												    	[#if ((messages._formaFinanziamento_valore_testo)?has_content)]
+												    		[#if messages._formaFinanziamento_valore_idFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]
+												    							    
+												    			<input type="text" id="id_contributo_conto_interesse_${FTL_PLACEHOLDER}item_index}" 
+												    				value="${FTL_PLACEHOLDER}(importoSogliaLimiteInferiore)!?html}" 
+												    				name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoFormaAgevolazione" 
+												    				class="long sum" style="border: 1px solid red; text-align:right;" readonly="readonly"/>							
+															    <span class="txtError">
+															    	<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+																	<span>
+																	    errore:<br />${FTL_PLACEHOLDER}messages._formaFinanziamento_valore_testo?first}
+															        </span>
+															    </span>
+												
+												    			[#assign erroriFormeAgev = true]
+												    		[/#if]
+												    	[/#if]
+												    [#if erroriFormeAgev==false]
+												      <input type="text" id="id_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" 
+												      	value="${FTL_PLACEHOLDER}(importoSogliaLimiteInferiore)!?html}" 
+												      	name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoFormaAgevolazione" 
+												      	class="long sum" style="text-align: right" readonly="readonly" />
+												    [/#if]
+												    
+											[#else]		
+												  <!-- id21 D importoContributoContoInteresse -->						    
+											      <input type="text" id="id_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" 
+											      	value="" 
+											      	name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoContributoContoInteresse" 
+											      	class="long" style="text-align: right" readonly="readonly" />
+											[/#if]					
+										</td>							
+									</tr>
+							[/#if]
+						[/#list]
+						<!-- E importoRichiesto -->
+                        <tr class="skip">
+							<th scope="row"></th>
+							<td colspan="2">
+								<strong>Totale: </strong>
+							</td>
+							<td>
+								<input type="text" id="id_formaFinanziamento_importoRichiesto" value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}" name="_formaFinanziamento.importoRichiesto" class="long" style="text-align: right" readonly="readonly"  />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+						
+			</td>
+			<td></td>
+		</tr>
+	  </table>
+</div>

@@ -1,0 +1,423 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+				[#-- _soggettoDelegato --]
+
+				<#-- note di dipendenze da altre commonalities: nessuna -->
+
+				<script type="text/javascript">
+
+			        $(window).on('load',function () {
+			        	if($('#id_soggettoDelegato_luogoResidenzaEst').attr('checked')=='checked'){
+			        		resetDatiProvinciaComune('residenza');
+			        	}else if($('#id_soggettoDelegato_luogoResidenzaIt').attr('checked')=='checked'){
+			        		resetDatiStatoEstero('residenza');
+					    }			        		
+					});
+					function resetDatiProvinciaComune(localita) {
+						if (localita == "nascita") {
+							$("#id_soggettoDelegato_provinciaNascita").val("");
+							$("#id_soggettoDelegato_provinciaNascitaDescrizione").val("");
+							$("#id_soggettoDelegato_siglaProvinciaNascita").val("");
+							$("#id_soggettoDelegato_comuneNascita").val("");
+							$("#id_soggettoDelegato_comuneNascitaDescrizione").val("");
+							$("#id_soggettoDelegato_luogoNascitaIt").attr("checked", false); // decheck il radio Italia
+							$("#id_soggettoDelegato_comuneNascita").prop('disabled', 'disabled'); // Jira 1331: disabilito select-box Comune 
+							$("#id_soggettoDelegato_luogoNascitaEst").attr("checked", true); // check il radio Stato Estero
+						}
+						else if (localita == "residenza") {
+							$("#id_soggettoDelegato_provinciaResidenza").val("");
+							$("#id_soggettoDelegato_provinciaResidenzaDescrizione").val("");
+							$("#id_soggettoDelegato_siglaProvinciaResidenza").val("");
+							$("#id_soggettoDelegato_comuneResidenza").val("");
+							$("#id_soggettoDelegato_comuneResidenzaDescrizione").val("");
+							$("#id_soggettoDelegato_luogoResidenzaIt").attr("checked", false); // decheck il radio Italia
+							$("#id_soggettoDelegato_comuneResidenza").prop('disabled', 'disabled'); // Jira 1331: disabilito select-box Comune 
+							$("#id_soggettoDelegato_luogoResidenzaEst").attr("checked", true); // check il radio Stato Estero
+							$('#id_soggettoDelegato_statoEsteroCittaResidenza').attr("readonly", false);
+						}
+					}
+
+					function resetDatiStatoEstero(localita) {
+						if (localita == "nascita") {
+							$("#id_soggettoDelegato_statoEsteroNascita").val("");
+							$("#id_soggettoDelegato_statoEsteroNascitaDescrizione").val("");
+							$("#id_soggettoDelegato_statoEsteroCittaNascita").val("");
+							$("#id_soggettoDelegato_luogoNascitaIt").attr("checked", true); // check il radio Italia
+							$("#id_soggettoDelegato_luogoNascitaEst").attr("checked", false); // decheck il radio Stato Estero
+						}
+						else if (localita == "residenza") {
+							$("#id_soggettoDelegato_statoEsteroResidenza").val("");
+							$("#id_soggettoDelegato_statoEsteroResidenzaDescrizione").val("");
+							$("#id_soggettoDelegato_statoEsteroCittaResidenza").val("");
+							$('#id_soggettoDelegato_statoEsteroCittaResidenza').attr("readonly", true);
+							$("#id_soggettoDelegato_luogoResidenzaIt").attr("checked", true); // check il radio Italia
+							$("#id_soggettoDelegato_luogoResidenzaEst").attr("checked", false); // decheck il radio Stato Estero
+						}
+					}
+
+					function setDescrizioneProvinciaComune(localita) {
+						if (localita == "nascita") {
+							$("#id_soggettoDelegato_provinciaNascitaDescrizione").val($("#id_soggettoDelegato_provinciaNascita option:selected").text());
+							$("#id_soggettoDelegato_comuneNascitaDescrizione").val($("#id_soggettoDelegato_comuneNascita option:selected").text());
+						}
+						else if (localita == "residenza") {
+							$("#id_soggettoDelegato_provinciaResidenzaDescrizione").val($("#id_soggettoDelegato_provinciaResidenza option:selected").text());
+							$("#id_soggettoDelegato_comuneResidenzaDescrizione").val($("#id_soggettoDelegato_comuneResidenza option:selected").text());
+						}
+					}
+
+					function setDescrizioneStatoEstero(localita) {
+						if (localita == "nascita") {
+							$("#id_soggettoDelegato_statoEsteroNascitaDescrizione").val($("#id_soggettoDelegato_statoEsteroNascita option:selected").text());
+						}
+						else if (localita == "residenza") {
+							$("#id_soggettoDelegato_statoEsteroResidenzaDescrizione").val($("#id_soggettoDelegato_statoEsteroResidenza option:selected").text());
+						}
+					}
+					
+					function setDescrizioneTipoDocRiconoscimento(){
+						$("#id_soggettoDelegato_descrTipoDocRiconoscimento").val($("#id_soggettoDelegato_idTipoDocRiconoscimento option:selected").text());
+					}
+
+					$(function() {
+					    $('#id_soggettoDelegato_codiceFiscale').focusout(function() {
+					        // Uppercase-ize contents
+					        this.value = this.value.toLocaleUpperCase();
+					    });
+					});
+
+				</script>
+
+ 				<h4>
+					<span id="toggle_handle_LegRappr" class="toggle_handle collapse">Soggetto delegato</span>
+				</h4>
+				<div class="toggle_target_LegRappr">
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="70%" />	
+						<tr>
+							<th> <label for="id_soggettoDelegato_codiceFiscale">Codice Fiscale</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.codiceFiscale" 
+								value="${FTL_PLACEHOLDER}(_soggettoDelegato.codiceFiscale)!?html?upper_case}" 
+								id="id_soggettoDelegato_codiceFiscale" 
+								maxlength="16" 
+								class="[@classShortError errorList=(messages._soggettoDelegato_codiceFiscale)![] /]" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_codiceFiscale)![] /]
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_soggettoDelegato_cognome">Cognome</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.cognome" 
+								value="${FTL_PLACEHOLDER}(_soggettoDelegato.cognome)!?html}" 
+								id="id_soggettoDelegato_cognome"								
+								class="[@classLongError errorList=(messages._soggettoDelegato_cognome)![] /]" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_cognome)![] /]
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_soggettoDelegato_nome">Nome</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.nome" 
+								value="${FTL_PLACEHOLDER}(_soggettoDelegato.nome)!?html}" 
+								id="id_soggettoDelegato_nome" 								 
+								class="[@classLongError errorList=(messages._soggettoDelegato_nome)![] /]" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_nome)![] /]
+							</td>
+						</tr>						
+<#if _soggettoDelegato_genere == "true">
+						<tr>
+						<th><label for="id_soggetto_delegato">Genere</label></th>
+							<td>
+									<select name="_soggettoDelegato.genere" id="id_soggetto_delegato" class="short">
+										<option value=""></option>
+										[#if "M" == (_soggettoDelegato.genere)!]
+											<option value="M" selected="selected">MASCHILE</option>
+										[#else]
+											<option value="M">MASCHILE</option>
+										[/#if]
+										[#if "F" == (_soggettoDelegato.genere)!]
+											<option value="F" selected="selected">FEMMINILE</option>
+										[#else]
+											<option value="F">FEMMINILE</option>
+										[/#if]
+							</select>
+							[@contextualErrors errorList=(messages._soggettoDelegato_genere)![] /]
+						</td>
+						</tr>
+</#if>
+						<tr>
+							<th>Luogo di nascita</th>
+							<td>
+								[#if "Italia" == (_soggettoDelegato.luogoNascita)!?html]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaIt" value="Italia" checked="checked" onclick="resetDatiStatoEstero('nascita')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_luogoNascita)![] /]
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaIt" value="Italia" onclick="resetDatiStatoEstero('nascita')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_noLuogoNascita)![] /]
+								[/#if]
+								
+								<label for="id_soggettoDelegato_luogoNascitaIt">Italia</label>
+
+								<div id="italiaSel" class="spaceBottom">
+									<label for="id_soggettoDelegato_provinciaNascita">Provincia</label>
+									<select name="_soggettoDelegato.provinciaNascita" id="id_soggettoDelegato_provinciaNascita" 
+									        class="medium" 
+									        onchange="resetDatiStatoEstero('nascita'); $('#id_reload_S1_P6').click()">
+										<option value=""></option>
+										[#list provinciaList as item]
+											[#if item.codice == (_soggettoDelegato.provinciaNascita)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									<input type="hidden" name="_soggettoDelegato.provinciaNascitaDescrizione" id="id_soggettoDelegato_provinciaNascitaDescrizione" value="${FTL_PLACEHOLDER}(_soggettoDelegato.provinciaNascitaDescrizione)!?html}" />
+									<input type="hidden" name="_soggettoDelegato.siglaProvinciaNascita" id="id_soggettoDelegato_siglaProvinciaNascita" value="${FTL_PLACEHOLDER}(_soggettoDelegato_siglaProvinciaNascita)!?html}" />
+									
+									<label for="id_soggettoDelegato_comuneNascita">Comune</label>
+									<select name="_soggettoDelegato.comuneNascita" id="id_soggettoDelegato_comuneNascita" 
+									        class="medium" 
+									        onchange="setDescrizioneProvinciaComune('nascita')">
+										<option value=""></option>
+										[#list comuneNascitaList as item]
+											[#if item.codice == (_soggettoDelegato.comuneNascita)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									<input type="hidden" name="_soggettoDelegato.comuneNascitaDescrizione" id="id_soggettoDelegato_comuneNascitaDescrizione" value="${FTL_PLACEHOLDER}(_soggettoDelegato.comuneNascitaDescrizione)!?html}" />
+								</div>
+
+								[#if "Estero" == (_soggettoDelegato.luogoNascita)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaEst" value="Estero" checked="checked" onclick="resetDatiProvinciaComune('nascita')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_luogoNascita)![] /]
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoNascita" id="id_soggettoDelegato_luogoNascitaEst" value="Estero" onclick="resetDatiProvinciaComune('nascita')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_noLuogoNascita)![] /]
+								[/#if]
+
+								<label for="id_soggettoDelegato_luogoNascitaEst">Stato estero</label>
+								<div id="esteroSel">
+									<label for="id_soggettoDelegato_statoEsteroNascita">Stato estero</label>
+									<select name="_soggettoDelegato.statoEsteroNascita" id="id_soggettoDelegato_statoEsteroNascita" 
+									        class="medium" 
+									         onchange="resetDatiProvinciaComune('nascita'); setDescrizioneStatoEstero('nascita');">
+										<option value=""></option>
+										[#list statoEsteroList as item]
+											[#if item.codice?string == (_soggettoDelegato.statoEsteroNascita)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									<input type="hidden" name="_soggettoDelegato.statoEsteroNascitaDescrizione" 
+									       id="id_soggettoDelegato_statoEsteroNascitaDescrizione" 
+									       value="${FTL_PLACEHOLDER}(_soggettoDelegato.statoEsteroNascitaDescrizione)!?html}" />
+																	
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_dataNascita">Data di nascita</label>  </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.dataNascita" 
+								value="${FTL_PLACEHOLDER}(_soggettoDelegato.dataNascita)!?html}" 
+								id="id_dataNascita" 
+								maxlength="10" 
+								class="[@classShortError errorList=(messages._soggettoDelegato_dataNascita)![] /]  calendarioCustom2" />								
+								[@contextualErrors errorList=(messages._soggettoDelegato_dataNascita)![] /]
+								<span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+							</td>
+						</tr>
+						
+						<tr>
+							<th> <label for="id_soggettoDelegato_idTipoDocRiconoscimento">Tipo documento di riconoscimento</label>  </th>
+							<td >
+								<select name="_soggettoDelegato.documento.idTipoDocRiconoscimento" id="id_soggettoDelegato_idTipoDocRiconoscimento"
+								        class="[@classMediumError errorList=(messages._soggettoDelegato_idTipoDocRiconoscimento)![] /]"	
+										onchange="setDescrizioneTipoDocRiconoscimento()">
+										<option value=""></option>	
+										[#list tipoDocRiconoscimentoList as item]
+											[#if item.codice?string == (_soggettoDelegato.documento.idTipoDocRiconoscimento)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									[@contextualErrors errorList=(messages._soggettoDelegato_idTipoDocRiconoscimento)![] /]
+									<input type="hidden" name="_soggettoDelegato.documento.descrizioneTipoDocRiconoscimento" 
+									       id="id_soggettoDelegato_descrTipoDocRiconoscimento" 
+										   value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.descrizioneTipoDocRiconoscimento)!?html}" />
+							</td>
+							</tr>
+							
+							<tr>
+							<th><label for="id_soggettoDelegato_numDocumentoRiconoscimento">N. documento</label></th>
+							<td>
+								<input type="text" name="_soggettoDelegato.documento.numDocumentoRiconoscimento" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.numDocumentoRiconoscimento)!?html}" 
+									   id="id_soggettoDelegato_numDocumentoRiconoscimento" 
+									   class="[@classMediumError errorList=(messages._soggettoDelegato_numDocumentoRiconoscimento)![] /]" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_numDocumentoRiconoscimento)![] /]
+							</td>
+						    </tr>
+						
+						    <tr>
+							<th><label for="id_soggettoDelegato_docRilasciatoDa">Rilasciato da</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.documento.docRilasciatoDa" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.docRilasciatoDa)!?html}" 
+									   id="id_soggettoDelegato_docRilasciatoDa" 
+									   class="[@classLongError errorList=(messages._soggettoDelegato_docRilasciatoDa)![] /]" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_docRilasciatoDa)![] /]
+							</td>
+							</tr>
+						
+						    <tr>
+							<th><label for="id_soggettoDelegato_dataRilascioDoc">Data rilascio</label> </th>
+							<td>
+								<input type="text" name="_soggettoDelegato.documento.dataRilascioDoc" maxlength="10" 
+								       value="${FTL_PLACEHOLDER}(_soggettoDelegato.documento.dataRilascioDoc)!?html}" 
+									   id="id_soggettoDelegato_dataRilascioDoc" 									
+									   class="[@classShortError errorList=(messages._soggettoDelegato_dataRilascioDoc)![] /]  calendarioCustom2" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_dataRilascioDoc)![] /]
+								<span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+							</td>
+						</tr>
+					</table>
+
+<#if _soggettoDelegato_presenza_residenza == "true">
+					<h5>Residenza</h5>
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="70%" />
+						<tr>
+							<th>Stato </th>
+							<td >
+								[#if "Italia" == (_soggettoDelegato.luogoResidenza)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaIt" value="Italia" checked="checked" onclick="resetDatiStatoEstero('residenza')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_luogoResidenza)![] /]
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaIt" value="Italia" onclick="resetDatiStatoEstero('residenza')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_noLuogoResidenza)![] /]
+								[/#if]								
+
+								<label for="id_soggettoDelegato_luogoResidenzaIt">Italia</label>
+								<div id="italiaSel_res" class="spaceBottom">
+									<label for="id_soggettoDelegato_provinciaResidenza">Provincia</label>
+									<select name="_soggettoDelegato.provinciaResidenza" 
+											id="id_soggettoDelegato_provinciaResidenza" 
+									        class="medium" 
+									        onchange="resetDatiStatoEstero('residenza'); $('#id_reload_S1_P6').click()">
+										<option value=""></option>
+										[#list provinciaList as item]
+											[#if item.codice == (_soggettoDelegato.provinciaResidenza)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									<input type="hidden" name="_soggettoDelegato.provinciaResidenzaDescrizione" id="id_soggettoDelegato_provinciaResidenzaDescrizione" value="${FTL_PLACEHOLDER}(_soggettoDelegato.provinciaResidenzaDescrizione)!?html}" />
+									<input type="hidden" name="_soggettoDelegato.siglaProvinciaResidenza" id="id_soggettoDelegato_siglaProvinciaResidenza" value="${FTL_PLACEHOLDER}(_soggettoDelegato_siglaProvinciaResidenza)!?html}" />
+									
+									<label for="id_soggettoDelegato_comuneResidenza">Comune</label>
+									<select name="_soggettoDelegato.comuneResidenza" id="id_soggettoDelegato_comuneResidenza" 
+									        class="medium" 
+									        onchange="setDescrizioneProvinciaComune('residenza')">
+										<option value=""></option>
+										[#list comuneResidenzaList as item]
+											[#if item.codice == (_soggettoDelegato.comuneResidenza)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									<input type="hidden" name="_soggettoDelegato.comuneResidenzaDescrizione" id="id_soggettoDelegato_comuneResidenzaDescrizione" value="${FTL_PLACEHOLDER}(_soggettoDelegato.comuneResidenzaDescrizione)!?html}" />	
+								</div>
+
+								[#if "Estero" == (_soggettoDelegato.luogoResidenza)!]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaEst" value="Estero" checked="checked" onclick="resetDatiProvinciaComune('residenza')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_luogoResidenza)![] /]
+								[#else]
+									<input class="noborder" type="radio" name="_soggettoDelegato.luogoResidenza" id="id_soggettoDelegato_luogoResidenzaEst" value="Estero" onclick="resetDatiProvinciaComune('residenza')" />
+									[@contextualErrors errorList=(messages._soggettoDelegato_noLuogoResidenza)![] /]
+								[/#if]
+								
+
+								<label for="id_soggettoDelegato_luogoResidenzaEst">Stato estero</label>
+								<div id="esteroSel_res">
+									<label for="id_soggettoDelegato_statoEsteroResidenza">Stato estero</label>
+									<select name="_soggettoDelegato.statoEsteroResidenza" 
+									        id="id_soggettoDelegato_statoEsteroResidenza" 
+									        class="medium" 
+										    onchange="resetDatiProvinciaComune('residenza'); setDescrizioneStatoEstero('residenza');">
+										<option value=""></option>
+										[#list statoEsteroList as item]
+											[#if item.codice?string == (_soggettoDelegato.statoEsteroResidenza)!]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[#else]
+												<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+											[/#if]
+										[/#list]
+									</select>
+									<input type="hidden" name="_soggettoDelegato.statoEsteroResidenzaDescrizione" 
+										   id="id_soggettoDelegato_statoEsteroResidenzaDescrizione" 
+										   value="${FTL_PLACEHOLDER}(_soggettoDelegato.statoEsteroResidenzaDescrizione)!?html}" />
+									
+									<label for="id_soggettoDelegato_statoEsteroCittaResidenza">Città estera</label>
+									<input type="text" name="_soggettoDelegato.cittaEsteraResidenza" value="${FTL_PLACEHOLDER}(_soggettoDelegato.cittaEsteraResidenza)!?html}" 
+										   id="id_soggettoDelegato_statoEsteroCittaResidenza" 
+										   class="[@classMediumError errorList=(messages._soggettoDelegato_cittaEsteraResidenza)![] /]" />
+									       [@contextualErrors errorList=(messages._soggettoDelegato_cittaEsteraResidenza)![] /]
+									
+								</div>
+							</td>
+						</tr>
+						
+						
+						<tr>
+							<th> <label for="id_soggettoDelegato_indirizzo">Indirizzo</label> </th>
+							<td >
+								<input type="text" name="_soggettoDelegato.indirizzo" 
+								        value="${FTL_PLACEHOLDER}(_soggettoDelegato.indirizzo)!?html}" 
+								        id="id_soggettoDelegato_indirizzo" 
+										class="[@classMediumError errorList=(messages._soggettoDelegato_indirizzo)![] /]" style="width:80%"/>
+									[@contextualErrors errorList=(messages._soggettoDelegato_indirizzo)![] /]
+							
+							    <label for="id_soggettoDelegato_numcivico">N. civico</label>
+							    <input type="text" name="_soggettoDelegato.numCivico" 
+							           value="${FTL_PLACEHOLDER}(_soggettoDelegato.numCivico)!?html}" 
+							           id="id_soggettoDelegato_numcivico" 
+									   class="[@classShortError errorList=(messages._soggettoDelegato_numcivico)![] /]" style="width:5%"/>
+									   [@contextualErrors errorList=(messages._soggettoDelegato_numcivico)![] /]
+								
+							</td>
+						</tr>
+						<tr>
+						     <th> <label for="id_soggettoDelegato_cap">CAP</label>  </th>
+						     <td >							  
+							    <input 
+							    	type="text" name="_soggettoDelegato.cap" value="${FTL_PLACEHOLDER}(_soggettoDelegato.cap)!?html}" 
+							    	title="Digitare cap senza spazi"
+								    id="id_soggettoDelegato_cap" pattern="\d*"
+									class="[@classShortError errorList=(messages._soggettoDelegato_cap)![] /]" />
+								[@contextualErrors errorList=(messages._soggettoDelegato_cap)![] /]
+							  
+							 </td> 
+						</tr>
+					</table>
+</#if>
+					
+					<input type="submit" id="id_reload_S1_P6" name="_command" value="LabelCommand:C_reload_S1_P1;RenderCommand:1350" hidden="hidden" />
+				</div>

@@ -1,0 +1,47 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+	[#-- _domandaNG --]
+	<#-- note di dipendenze da altre commonalities: nessuna -->
+	
+	<input type="hidden" name="_domanda.numeroDomanda" value="${FTL_PLACEHOLDER}statusInfo.numProposta?string('0')}" />
+	<input type="hidden" name="_domanda.dataTrasmissione" value="-" /> <#-- questo valore viene modificato all'invio -->
+	<input type="hidden" name="_domanda.statoStampa" value="BOZZA" /> <#-- questo valore viene modificato all'invio -->
+	<input type="hidden" name="_domanda.codTipologiaUtente" value="${FTL_PLACEHOLDER}codTipologiaUtente}" /> <#-- 1 = ente pubblico, 2 = privato -->
+	<input type="hidden" name="_domanda.stereotipoDomanda" value="${FTL_PLACEHOLDER}stereotipoDomanda}" /> <#-- IM=Impresa OP=Opere pubbliche ER=Enti di ricerca -->
+	<input type="hidden" name="_domanda.descrStereotipoDomanda" value="${FTL_PLACEHOLDER}descrStereotipoDomanda}" /> 
+	<input type="hidden" name="_domanda.descrTipologiaUtente" value="${FTL_PLACEHOLDER}descrTipologiaUtente}" />
+	<input type="hidden" name="_domanda.codiceTipologiaBeneficiario" value="${FTL_PLACEHOLDER}codiceTipologiaBeneficiario}" />
+	
+	<input type="hidden" name="_domanda.idSettore" value="${FTL_PLACEHOLDER}idSettore}" />	
+	<input type="hidden" name="_domanda.descrSettore" value="${FTL_PLACEHOLDER}descrSettore}" />
+	<input type="hidden" name="_domanda.idDirezione" value="${FTL_PLACEHOLDER}idDirezione}" />
+	<input type="hidden" name="_domanda.descrDirezione" value="${FTL_PLACEHOLDER}descrDirezione}" />
+	<input type="hidden" name="_domanda.flagBandoDematerializzato" value="${FTL_PLACEHOLDER}(statusInfo.flagBandoDematerializzato)!}" />
+	
+	<input type="hidden" name="_domanda.normativa" value="${FTL_PLACEHOLDER}normativa}" />
+	<input type="hidden" name="_domanda.numAtto" value="${FTL_PLACEHOLDER}numAtto}" />
+	<input type="hidden" name="_domanda.dataAtto" value="${FTL_PLACEHOLDER}dataAtto}" />
+	
+	<!-- data apertura sportello -->
+	<input type="hidden" name="_domanda.dataAperturaSportello" value="${FTL_PLACEHOLDER}(dataAperturaSportello)!}" />
+	
+	<!-- ora apertura sportello -->
+	<input type="hidden" name="_domanda.oraAperturaSportello" value="${FTL_PLACEHOLDER}(oraAperturaSportello)!}" />
+	
+	<!-- data chiusura sportello -->
+	<input type="hidden" name="_domanda.dataChiusuraSportello" value="${FTL_PLACEHOLDER}(dataChiusuraSportello)!}" />
+	
+	<!-- ora chiusura sportello -->
+	<input type="hidden" name="_domanda.oraChiusuraSportello" value="${FTL_PLACEHOLDER}(oraChiusuraSportello)!}" />
+	
+	<!-- anno corrente -->
+	<input type="hidden" name="_domanda.annoCorrente" value="${FTL_PLACEHOLDER}(annoCorrente)!}" />	
+	<input type="hidden" name="_domanda.flagProgettiComuni" value="${FTL_PLACEHOLDER}(flagProgettiComuni)!}" />
+		
+	<input type="hidden" name="_domanda.siglaNazioneSoggettoBeneficiario" value="${FTL_PLACEHOLDER}(siglaNazioneSoggettoBeneficiario)!}" />
+	
+	
+	
+	

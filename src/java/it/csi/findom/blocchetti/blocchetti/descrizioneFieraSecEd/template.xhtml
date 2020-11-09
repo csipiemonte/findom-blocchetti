@@ -1,0 +1,117 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _descrizioneFieraSecEd --]
+
+<#-- note di dipendenze da altre commonalities: ?!? -->
+
+<script type="text/javascript">
+	
+	$(window).on('load',function () {
+	});
+	
+	function setDescrizioneStatoEsteroSL() {
+		$("#id_descrizioneFieraSecEd_statoEsteroDescrizione").val($("#id_descrizioneFieraSecEd_statoEstero option:selected").text());
+	}
+
+</script>
+
+<style>
+	input#id_descrizioneFieraSecEd_dataInizioProgetto {
+    	width: 8%;
+	}
+	
+	input#id_descrizioneFieraSecEd_dataFineProgetto {
+		width: 8%;
+	}
+	
+	#id_descrizioneFieraSecEd_statoEstero {
+	    width: 27%;
+	}
+</style>
+
+
+
+<h4>
+	<span id="toggle_handle_DescFiera" class="toggle_handle collapse">Descrizione della fiera</span>
+</h4>
+
+<div class="toggle_target_DescFiera">
+	
+	<table class="formTable" summary="....">
+	<colgroup>
+		<col width="20%" />
+		<col width="80%" />
+	</colgroup>
+		<tbody>	
+		  	<tr>
+		  		 <th scope="row">
+		  		 	<label for="id_nomeFiera">Nome della manifestazione fieristica<br/>a cui si intende partecipare</label>
+		  		 </th>
+		  		 <td>
+		  		 	<input type="text" 
+							name="_descrizioneFieraSecEd.nomeFiera"
+							placeholder="Digitare Nome fiera"
+							maxlength="500"
+							width="65%"
+							value="${FTL_PLACEHOLDER}(_descrizioneFieraSecEd.nomeFiera)!?html}"
+							id="id_descrizioneFieraSecEd_nomeFiera"
+							class="[@classMediumError errorList=(messages._descrizioneFieraSecEd_nomeFiera)![] /]" />
+							[@contextualErrors errorList=(messages._descrizioneFieraSecEd_nomeFiera)![] /]
+		  		 </td>
+		  	</tr>
+
+		  	<#if _descrizioneFieraSecEd_data_inizio_fine_progetto_seconda_ed == "true" >
+				<tr>
+					<th> 
+						<label for="id_descrizioneFieraSecEd_dataInizioProgetto">Data inizio fiera</label> 
+					</th>
+					<td>
+					   <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" name="_descrizioneFieraSecEd.dataInizioProgetto" width="8%" 
+					   		  value="${FTL_PLACEHOLDER}(_descrizioneFieraSecEd.dataInizioProgetto)!?html}" 
+					   		  id="id_descrizioneFieraSecEd_dataInizioProgetto" maxlength="10" 
+					   		  class="[@classShortError errorList=(messages._descrizioneFieraSecEd_dataInizioProgetto)![] /]  calendarioCustom2" />
+					  		  <span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					  		  [@contextualErrors errorList=(messages._descrizioneFieraSecEd_dataInizioProgetto)![] /]
+					</td>
+				</tr>
+				<tr>			
+					<th> 
+						<label for="id_descrizioneFieraSecEd_dataFineProgetto">Data fine fiera</label> 
+					</th>
+					<td>
+					   <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" name="_descrizioneFieraSecEd.dataFineProgetto" width="8%"
+					   		  value="${FTL_PLACEHOLDER}(_descrizioneFieraSecEd.dataFineProgetto)!?html}" 
+					   		  id="id_descrizioneFieraSecEd_dataFineProgetto" maxlength="10" 
+					   		  class="[@classShortError errorList=(messages._descrizioneFieraSecEd_dataFineProgetto)![] /]  calendarioCustom2" />
+					  		  <span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					  		  [@contextualErrors errorList=(messages._descrizioneFieraSecEd_dataFineProgetto)![] /]
+					</td>
+				</tr>
+			</#if>
+		  	<tr>	 
+		  		 <th scope="row">
+					<label for="id_descrizioneFieraSecEd_statoEstero">Nazione estera in cui si svolge<br/>la manifestazione fieristica</label>
+				 </th>
+				 <td>
+				 	<select name="_descrizioneFieraSecEd.statoEstero" id="id_descrizioneFieraSecEd_statoEstero" 
+							class="[@classLongError errorList=(messages._descrizioneFieraSecEd_statoEstero)![] /]"
+							onchange="setDescrizioneStatoEsteroSL()">
+							<option value="">Seleziona...</option>
+						[#list statoEsteroSLList as item]
+							[#if item.codice?string == (_descrizioneFieraSecEd.statoEstero)!]
+								<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+							[#else]
+							<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+							[/#if]
+						[/#list]
+					</select>
+						[@contextualErrors errorList=(messages._descrizioneFieraSecEd_statoEstero)![] /]
+						<input type="hidden" name="_descrizioneFieraSecEd.statoEsteroDescrizione" id="id_descrizioneFieraSecEd_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_descrizioneFieraSecEd.statoEsteroDescrizione)!?html}" />
+						<input type="hidden" name="_descrizioneFieraSecEd.statoEsteroDescrizione" id="id_descrizioneFieraSecEd_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_descrizioneFieraSecEd.statoEsteroDescrizione)!?html}" /><input type="hidden" name="_descrizioneFieraSecEd.statoEsteroDescrizione" id="id_descrizioneFieraSecEd_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_descrizioneFieraSecEd.statoEsteroDescrizione)!?html}" />
+		  		 </td>
+		  	</tr>
+		  </tbody>	
+	</table>
+</div>

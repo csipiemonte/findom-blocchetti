@@ -1,0 +1,245 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+ [#-- _formeFinanziamento RO --] 
+ <#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+<!-- RO -->
+
+<h4>
+	<span id="toggle_handle_formaFinanziamento" class="toggle_handle collapse">
+		Forme di agevolazione
+    </span>
+</h4>
+
+<div>
+	<table class="formTable" summary="....">		
+		<col width="25%" />
+		<col width="75%" />
+		<tr>			
+			<th>
+				<label for="id_importo_totale_spese">
+					Totale delle spese 
+				</label>
+			</th>
+			
+			<td style="vertical-align: bottom" >
+				<input type="text" name="importoPropostoSpese" value="${FTL_PLACEHOLDER}(importoProposto)!?html}" 
+					id="id_formaFinanziamento_importoProposto" readonly="readonly"  style="text-align: right"/>
+			</td>
+			
+			<td>
+			</td>
+		</tr>
+		
+		<#if _progetto_agevolrichiesta_importo_unico == "true" >
+			<tr>			
+				<th>
+					<label for="id_importo_agevol_pubblica">
+						Importo dell'agevolazione pubblica richiesta 
+					</label>
+	    			<p style="font-style: italic; font-weight: normal;">
+	    				Nel caso in cui il bando preveda delle premialit&#224;, 
+	    				calcolare l'importo tenendo conto delle eventuali premialit&#224; richieste
+	    			</p>
+				</th>
+				
+				<td style="vertical-align: bottom" >
+					<input type="text" name="_formaFinanziamento.importoRichiesto" value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}" id="id_formaFinanziamento_importoRichiesto" 
+						readonly="readonly" style="text-align: right" />
+				</td>
+				<td></td>
+			</tr>
+		</#if>
+	</table>
+</div>
+
+<div class="toggle_target_formaFinanziamento">
+    
+    <p style="font-style: italic; font-weight: normal;">
+    	Indicare le forme di agevolazione richieste:
+    </p>
+    
+    <#if _progetto_agevolrichiesta_importo_unico == "true" > 
+	  <table class="formTable" summary="....">
+		 <col width="5%" />
+		 <col width="90%" />
+		 <col width="5%" />
+		 <tr>
+			<td></td>
+			<td>
+				<table summary="...." id="id_forme_finanziamentoTbl" class="myovertable tablesorter target_toggle_checkbox_1">
+					<col width="5%" />
+					<col width="90%" />
+					
+					<thead>
+						<tr>
+							<th scope="col"></th>
+							<th scope="col">Forma di agevolazione</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						[#list formaFinanziamentoList as item]
+							[#if !(!item?has_content || !item?is_hash)]
+								<tr>
+								    [#if item.checked == "true"]
+									 	<th scope="row">
+									     	<input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" checked="checked" disabled="disabled"/>
+									  	</th>
+									[#else]										
+									  <th scope="row">
+									     <input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" disabled="disabled" />
+									  </th>
+									[/#if]					
+									
+									<td>
+										${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!}
+									</td>
+									
+								</tr>
+							[/#if]
+						[/#list]
+					</tbody>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	  </table>
+	<#else>
+	  <table class="formTable" summary="....">
+		 <col width="5%" />
+		 <col width="90%" />
+		 <col width="5%" />
+		 <tr>
+			<td></td>
+			<td>
+				
+				<!-- posizionamento cessione del credito inizio -->
+				<#if _forma_finanziamento_cessione_credito == "true">
+				  
+					    <p style="font-style: italic; font-weight: normal;">
+					    	Eventuale cessione del credito / sconto in fattura:
+					    </p>
+				
+					    <table class="formTable" summary="....">
+								<col width="5%" />
+								<col width="70%" />
+								<col width="25%" />
+							
+								<thead>
+									<tr class="skip">
+										<th scope="col"></th>
+										<th scope="col">Eventuale cessione del credito / sconto in fattura:</th>
+										<th scope="col">Importo</th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									  <tr>
+										<td>
+											
+											[#if "si" == (_formaFinanziamento.cessioneCreditoChecked)!] 
+												<input type="checkbox" name="_formaFinanziamento.cessioneCreditoChecked" id="id_cessioneCredito" value="si" checked="checked" disabled="disabled" />
+											[#else]
+												<input class="noborder" type="checkbox" name="_formaFinanziamento.cessioneCreditoChecked" id="id_cessioneCredito" value="si" disabled="disabled" />
+											[/#if]
+										</td>
+										
+										<td>
+											<label for="lbl_cessioneCredito">
+												Eventuale cessione del credito / sconto in fattura:
+											</label>
+										</td>
+										
+										<td>
+											<input type="text" name="_formaFinanziamento.cessioneCreditoImporto" 
+												value="${FTL_PLACEHOLDER}(_formaFinanziamento.cessioneCreditoImporto)!?html}" 
+												id="id_descrizione_cessione_credito" class="long" style="text-align: right" disabled="disabled"/>
+										</td>
+									</tr>
+							 	</tbody>
+						</table>
+					</#if>
+				<!-- posizionamento cessione del credito fine 	-->
+				
+				<table summary="...." id="id_forme_finanziamentoTbl"
+					class="myovertable tablesorter target_toggle_checkbox_1">
+					<col width="5%" />
+					<col width="70%" />
+					<col width="25%" />
+					
+					<thead>
+						<tr class="skip">
+							<th scope="col"></th>
+							<th scope="col">Forma di agevolazione</th>
+							<th scope="col">Importo</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						[#list formaFinanziamentoList as item]
+							[#if !(!item?has_content || !item?is_hash)]
+								<tr>
+									<th scope="row">
+								    [#if item.checked == "true"]							 
+									     <input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" checked="checked" disabled="disabled" />							  
+									[#else]																	  
+									     <input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" disabled="disabled"/>							  
+									[/#if]	
+													
+									[#assign erroriFormeAgev = false] 
+										[#if ((messages._formaFinanziamento_valore_testo_checkFormaFinanziamento)?has_content)]							
+											[#if messages._formaFinanziamento_valore_checkFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]													
+												 <span class="txtError">
+												    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+												 </span>
+												</th>
+												[#assign erroriFormeAgev = true] 
+										    [/#if]
+									    [/#if] 
+									      
+									<td>
+										${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!}
+									</td>
+																
+									<td> 							    
+									    [#assign erroriFormeAgev = false] 
+									    	[#if ((messages._formaFinanziamento_valore_testo)?has_content)]
+									    		[#if messages._formaFinanziamento_valore_idFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]
+									    							    
+									    			<input type="text" id="id_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(item.importoFormaAgevolazione)!?html}" 
+									    				name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoFormaAgevolazione" class="long" 
+									    				style="border: 1px solid red; text-align:right;" />							
+									    		[/#if]
+									    	[/#if]
+									    [#if erroriFormeAgev==false]
+									      <input type="text" id="id_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" 
+									      	value="${FTL_PLACEHOLDER}(item.importoFormaAgevolazione)!?html}" name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoFormaAgevolazione" 
+									      	class="long" style="text-align: right" disabled="disabled" />
+									    [/#if]							
+									</td>							
+								</tr>
+							[/#if]
+						[/#list]
+                        <tr class="skip">
+							<th scope="row"></th>
+							<td>
+								<strong>Totale: </strong>
+							</td>
+							<td>
+								<input type="text" id="id_formaFinanziamento_importoRichiesto" value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}" 
+									name="_formaFinanziamento.importoRichiesto" class="long" style="text-align: right" readonly="readonly"  />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</td>
+			<td>
+			</td>
+		</tr>
+	  </table>
+	</#if>	
+</div>

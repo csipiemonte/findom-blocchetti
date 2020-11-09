@@ -1,0 +1,307 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+	[#-- _entiProgetto --]
+
+	<#-- note di dipendenze da altre commonalities: nessuna -->
+	
+	<h4>
+		<span id="toggle_handle_entiProgetto" class="toggle_handle collapse">Dati riepilogativi dell'Ente/degli Enti		
+		</span>
+	</h4>
+								
+	<div class="toggle_target_entiProgetto" id="id_tabella_entiProgetto">
+	
+		<p style="font-style:italic; font-weight:normal;"></p>
+		[#if "UCO" == codiceTipologiaBeneficiario! || "RTE" == codiceTipologiaBeneficiario!]
+							
+		<table class="myovertable tablesorter" summary="...." id="id_lista_enti">
+			
+			<col width="25%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />		
+			<col width="15%" />
+			<col width="10%" />				
+			<thead>
+				<tr>						
+			    <th>Denominazione dell'Ente</th>
+				<th>Popolazione</th>
+				<th>Classificazione del Comune</th>
+				<th>Partecipa al progetto</th>				
+				<th>Dispone di un Piano comunale dell'illuminazione approvato</th>
+				<th>Dispone di un PAES approvato</th>		
+				</tr>
+			</thead>
+						
+			[#if (entiProgettoList)?has_content]
+			[#list entiProgettoList as item]
+							
+			<tr>
+				<td>
+				
+					<select name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte" 
+						id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+						style="width: 95%;" disabled="disabled">
+						
+						<option value=""></option>
+						[#list entiList as curInt]
+						[#if !(!curInt?has_content || !curInt?is_hash)]
+						[#if curInt.codice == (item.codiceEnte)!]
+							<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>									   
+						[#else]
+							<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>										  
+						[/#if]
+						[/#if]
+						[/#list]
+									
+					</select>
+					</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].popolazione" 
+						id="id_dettEnte_popolazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.popolazione!?html}" readonly="readonly" class="long" style="text-align: right"/>				
+				</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].classificazione" 
+						id="id_dettEnte_classificazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.classificazione!?html}" readonly="readonly" class="long"/>				
+				</td>
+				
+				<td>					
+				[#if item.partecipazioneProgetto == "checked"]																			
+					<input type="checkbox" class="noborder"
+						id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"
+						checked="checked"							
+						disabled="disabled"
+						/>
+					
+				[#else]										
+					<input type="checkbox" class="noborder"
+						id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"													
+						disabled="disabled"
+						/>
+				[/#if]				
+									
+				</td>
+				
+				<td>
+					<table style=" margin-bottom: 1px;" id="pianoComunale_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.pianoComunale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.pianoComunale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								</td>
+							</tr>
+					</table>
+				</td>
+				
+				<td>
+					<table style=" margin-bottom: 1px;" id="paes_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.paes)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.paes)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								</td>
+							</tr>
+					</table>
+				</td>
+			</tr>
+						
+			[/#list]
+			[/#if]
+		</table>
+		
+		<div class="totalePopolazione" id="id_totalePopolazione">
+		<table class="formTable" summary="...." id="id_table_totalePopolazione">
+			<col width="30%" />
+			<col width="20%" />
+			<col width="50%" />
+			<tr>
+				<th> <label for="id_entiProgetto_totalePopolazioneGruppo">Totale popolazione comuni </label></th>							
+				<td>
+				<input type="text" id="id_entiProgetto_totalePopolazioneGruppo"
+			           name="_entiProgetto.totalePopolazioneGruppo"
+			           value="${FTL_PLACEHOLDER}(totalePopolazioneGruppo)!?html}" 
+			           class="long" readonly="readonly"
+			    />				
+				</td>
+				<td></td>				
+			</tr>
+			<tr>
+				<th> <label for="id_totalePopolazione">Totale popolazione comuni partecipanti</label></th> 
+							
+				<td>							
+				<input type="text" id="id_entiProgetto_totalePopolazione"
+					name="_entiProgetto.totalePopolazione"
+					value="${FTL_PLACEHOLDER}(totalePopolazione)!?html}" 
+					class="long" 
+					readonly="readonly"/>
+				
+				</td>				
+			</tr>
+		</table>		
+		</div>
+		
+		[#elseif "COM" == codiceTipologiaBeneficiario! || "PRV" == codiceTipologiaBeneficiario! || "CME" == codiceTipologiaBeneficiario!]
+		<table class="myovertable tablesorter" summary="...." id="id_lista_enti">
+			<col width="25%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />		
+			<col width="15%" />
+			<col width="10%" />					
+			<thead>
+				<tr>			
+				<th>Denominazione dell'Ente</th>
+				<th>Popolazione</th>
+				<th>Classificazione del Comune</th>
+				<th>Partecipa al progetto</th>				
+				<th>Dispone di un Piano comunale dell'illuminazione approvato</th>
+				<th>Dispone di un PAES approvato</th>		
+				</tr>
+			</thead>
+						
+			[#if (entiProgettoList)?has_content]
+			[#list entiProgettoList as item]
+							
+			<tr>
+				<td>
+				
+				 			
+				<select name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte" 
+					id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+					style="width: 95%;" disabled="disabled">
+						
+					<option value=""></option>
+					[#list entiList as curInt]
+					[#if !(!curInt?has_content || !curInt?is_hash)]
+					[#if curInt.codice == (item.codiceEnte)!]						
+						<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>									   
+					[#else]
+						<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>										  
+					[/#if]
+					[/#if]
+					[/#list]
+									
+				</select>
+	
+				</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].popolazione" 
+						id="id_dettEnte_popolazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.popolazione!?html}" readonly="readonly" class="long" style="text-align: right"/>				
+				</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].classificazione" 
+						id="id_dettEnte_classificazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.classificazione!?html}" readonly="readonly" class="long"/>				
+				</td>
+				
+				<td>					
+																					
+				<input type="checkbox" class="noborder"
+					id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"
+					checked="checked"	
+					disabled="disabled"					
+					/>			
+									
+				</td>			
+				
+				<td>
+					<table style=" margin-bottom: 1px;" id="pianoComunale_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.pianoComunale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.pianoComunale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pianoComunale" id="id_ente_pianoComunale_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								</td>
+							</tr>
+					</table>
+				</td>
+				
+				<td>
+					<table style=" margin-bottom: 1px;" id="paes_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.paes)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.paes)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].paes" id="id_ente_paes_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								</td>
+							</tr>
+					</table>
+				</td>
+			</tr>
+						
+			[/#list]
+			[/#if]
+						
+		</table>
+		[/#if]
+		
+		</div>
+		
+	

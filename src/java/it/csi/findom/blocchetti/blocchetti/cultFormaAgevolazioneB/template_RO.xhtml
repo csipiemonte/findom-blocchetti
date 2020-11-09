@@ -1,0 +1,357 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _formaAgevolazioneB RO --]
+<#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+[#-- ---------------------------------------------------------------------------- Parametri di calcolo inizio --]
+
+<h4>
+	<span id="toggle_handle_parametriCalcolo" class="toggle_handle collapse">
+		Parametri di calcolo
+    </span>
+</h4>
+
+<div class="toggle_target_parametriCalcolo">
+	<table class="formTable" summary="....">		
+		<col width="30%" />
+		<col width="70%" />
+		
+		<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "false" >
+			<!-- Quota parte per spese generali e di funzionamento -->
+			<tr id="idQuotaParteSpeseGeneraliFunzionamento">
+				<th>
+					<label for="id_perc_quota_parte">
+						Quota parte per spese generali e di funzionamento
+					</label>
+				</th>
+				
+				<td style="vertical-align: bottom" >
+					<input type="text" 
+					       id="id_perc_quota_parte"
+					       name="_formaAgevolazioneB.percQuotaParteSpeseGenFunz"
+						   value="${FTL_PLACEHOLDER}(percQuotaParteSpeseGenFunz)!?html}"
+						   readonly="readonly" style="text-align: right" />
+				</td>	
+			</tr>
+		</#if>
+		
+		
+		<!-- Percentuale massima contributo erogabile -->
+		<tr>	
+			<th>
+				<label for="id_perc_massima_contrib_erogabile">
+					Percentuale massima contributo erogabile
+				</label>
+			</th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_perc_massima_contrib_erogabile"
+			       name="_formaAgevolazioneB.percMassimaContributoErogabile"
+				   value="${FTL_PLACEHOLDER}(percMassimaContributoErogabile)!?html}"
+				   readonly="readonly" style="text-align: right" />
+			</td>
+		</tr>
+		
+		<!-- Importo minimo erogabile -->
+		[#if importoMinimoErogabile?has_content]	
+			[#if importoMinimoErogabile != "0,00"]	
+				<tr>	
+					<th>
+						<label for="id_importo_minimo_erogabile">
+							Importo minimo erogabile
+						</label>
+					</th>
+					
+					<td style="vertical-align: bottom" >
+						<input type="text" 
+					       id="id_importo_minimo_erogabile"
+					       name="_formaAgevolazioneB.importoMinimoErogabile"
+						   value="${FTL_PLACEHOLDER}(importoMinimoErogabile)!?html}"
+						   readonly="readonly" style="text-align: right" />&#160;&#8364;
+					</td>			
+		        </tr>
+		     [/#if]
+		[/#if]   
+		
+		<!-- Importo massimo erogabile -->
+		[#if importoMassimoErogabile?has_content ]	
+				<tr>	
+					<th>
+						<label for="id_importo_massimo_erogabile">
+							Importo massimo erogabile
+						</label>
+					</th>
+					
+					<td style="vertical-align: bottom" >
+						<input type="text" 
+					       id="id_importo_massimo_erogabile"
+					       name="_formaAgevolazioneB.importoMassimoErogabile"
+						   value="${FTL_PLACEHOLDER}(importoMassimoErogabile)!?html}"
+						   readonly="readonly" style="text-align: right" />&#160;&#8364;
+					</td>			
+		        </tr>
+		[/#if] 
+		
+		
+		[#-- Contributo piu elevato ultimi 3 anni inizio contributoMaxUltimiTreAnni - --]
+		 <#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "true" >
+				<tr>	
+					<th>
+						<label for="lbl_cntrb_max_ultimi_tre_anni">
+							Contributo più elevato nell'ultimo triennio
+						</label>
+					</th>
+					
+					<td style="vertical-align: bottom" >
+						<input type="text" 
+					       id="id_cntrb_max_ultimi_tre_anni"
+					       name="_formaAgevolazioneB.contributoMaxUltimiTreAnni"
+						   value="${FTL_PLACEHOLDER}(contributoMaxUltimiTreAnni)!?html}"
+						   readonly="readonly" style="text-align: right" />&#160;&#8364;
+					</td>			
+		        </tr>
+		 </#if>
+		[#-- Contributo piu elevato ultimo 3 anni fine   - --] 
+		
+	</table>
+</div>
+[#-- ---------------------------------------------------------------------------- Parametri di calcolo fine  --]
+	
+	
+	
+[#-- ---------------------------------------------------------------------------- Elementi di calcolo inizio --]		
+<h4>
+	<span id="toggle_handle_elementiCalcolo" class="toggle_handle collapse">
+		Elementi di calcolo
+    </span>
+</h4>
+
+
+<div class="toggle_target_elementiCalcolo">
+	<table class="formTable" summary="....">		
+		<col width="30%" />
+		<col width="70%" />
+		
+		<!-- A. Spese connesse all'attivita -->
+		<tr>			
+			<th>
+				<label for="id_spese_connesse_attivita">
+					A. Spese complessive 
+				</label>
+			</th>
+			
+			<td style="vertical-align: bottom" >
+				<input type="text" 
+			       id="id_importo_spese_connesse_attivita"
+                   name="_formaAgevolazioneB.speseConnesseAttivita"
+				   value="${FTL_PLACEHOLDER}(speseConnesseAttivita)!?html}"
+				   readonly="readonly" style="text-align: right"/>&#160;&#8364;	
+			</td>
+		</tr>
+		
+		<!-- B. Spese generali e di funzionamento -->
+		<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "false" >
+			<tr id="idSpeseGeneraliFunzionamento">			
+				<th>
+					<label for="id_spese_generali_funz">
+						B. Spese generali e di funzionamento
+					</label>
+				</th>
+				
+				<td style="vertical-align: bottom" >
+					<input type="text" 
+				       id="id_spese_generali_funz"
+				       name="_formaAgevolazioneB.speseGeneraliFunz"
+					   value="${FTL_PLACEHOLDER}(speseGeneraliEFunz)!?html}"
+					   readonly="readonly" style="text-align: right" />&#160;&#8364;
+				</td>			
+			</tr>
+		</#if>
+		
+		
+		
+		<!-- B2. Spese generali e di funzionamento in quota parte -->
+		<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "false" >
+			<tr id="idSpeseGeneraliFunzionamentoQuotaParte">			
+				<th>
+					<label for="id_spese_generali_funz_qp">
+						B2. Spese generali e di funzionamento in quota parte
+					</label>
+				</th>
+				
+				<td style="vertical-align: bottom">
+					<input type="text" 
+				       id="id_spese_generali_funz_qp"
+				       name="_formaAgevolazioneB.speseGeneraliFunzQP"
+					   value="${FTL_PLACEHOLDER}(speseGeneraliEFunzQP)!?html}"
+					   readonly="readonly" style="text-align: right" />&#160;&#8364;
+				</td>			
+			</tr>
+		</#if>
+		
+		
+		
+		<!-- Totale delle spese effettive (A + B2) standard -->
+		<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "false" >
+			<tr id="idTotaleSpeseEffettive">			
+				<th>
+					<label for="id_totale_spese_effettive">
+						Totale delle spese effettive (A + B2)
+					</label>
+				</th>
+				
+				<td style="vertical-align: bottom" >
+					<input type="text" 
+				       id="id_totale_spese_effettive"
+				       name="_formaAgevolazioneB.totaleSpeseEffettive"
+					   value="${FTL_PLACEHOLDER}(totaleSpeseEffettive)!?html}"
+					   readonly="readonly" style="text-align: right" />&#160;&#8364;
+				</td>			
+			</tr>
+		</#if>
+		
+		
+		
+		<!-- C. Totale delle entrate -->
+		<tr id="idTotaleEntrate">			
+			<th>
+				<label for="id_totale_entrate">
+					C. Totale delle entrate
+				</label>
+			</th>
+			<td style="vertical-align: bottom" >
+				<input type="text" 
+				       id="id_totale_entrate"
+				       name="_formaAgevolazioneB.totaleEntrate"
+					   value="${FTL_PLACEHOLDER}(totaleEntrate)!?html}"
+					   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>			
+		</tr>
+		
+		<!-- D.Differenza (A + B2 - C) -->
+		<tr id="idDifferenza">			
+			<th>
+				<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "true" >
+					<label for="id_differenza">D.Differenza (A - C)</label>
+				<#else>
+					<label for="id_differenza">D.Differenza (A + B2 - C)</label>
+				</#if>
+			</th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_differenza"
+			       name="_formaAgevolazioneB.differenza"
+				   value="${FTL_PLACEHOLDER}(differenzaEU)!?html}"
+				   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>
+		</tr>
+		
+	</table>
+</div>
+
+[#-- ---------------------------------------------------------------------------- Elementi di calcolo fine --]
+
+
+
+[#-- ---------------------------------------------------------------------------- Importi inizio           --]
+<h4>
+	<span id="toggle_handle_importi" class="toggle_handle collapse">
+		Importi
+    </span>
+</h4>
+
+
+<div class="toggle_target_importi">
+	<table class="formTable" summary="....">		
+		<col width="30%" />
+		<col width="70%" />
+		
+		<!-- Importo erogabile -->
+		<tr>			
+			<th>
+				<label for="id_importo_erogabile">
+					Importo erogabile *
+				</label></th>
+			
+			<td style="vertical-align: bottom" >
+				<input type="text" 
+			       id="id_importo_erogabile"
+			       name="_formaAgevolazioneB.importoErogabile"
+				   value="${FTL_PLACEHOLDER}(importoErogabile)!?html}"
+				   style="text-align: right" readonly="readonly" />&#160;&#8364;
+			</td>			
+		</tr>
+		
+		<!-- Importo richiesto -->
+		<tr>			
+			<th>
+				<label for="id_importo_richiesto">
+					Importo richiesto
+				</label>
+			</th>
+			
+			<td id="td_importo_richiesto" style="vertical-align: bottom" >
+				<input type="text" 
+				       id="id_importo_richiesto"
+				       pattern="[0-9]+([,][0-9]+)?"
+				       name="_formaAgevolazioneB.importoRichiesto"
+				       title="Digitare un numero con virgola. Es.: 1000,00"
+					   value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}"
+					   readonly="readonly" onchange="formatta();"
+					   style="text-align: right" />&#160;&#8364; <img src="/ris/resources/application/finanziamenti/findomweb/css/im/pimgpsh_fullsize_distr_2.jpg"
+  						title="L'importo richiesto si compila automaticamente al raggiungimento del saldo contabile previsto = 0" style="width: 34px; height: 28px;" />
+				
+			</td>			
+		</tr>
+		
+		[#-- Saldo contabile previsto --]
+		<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "true" >
+			<tr>			
+				<th>
+					<label for="lbl_saldo_contabile_previsto">
+						Saldo contabile previsto
+					</label></th>
+				
+				<td style="vertical-align: bottom" >
+					<input type="text" 
+				       id="id_saldo_contabile_previsto"
+				       name="_formaAgevolazioneB.saldoContabilePrevisto"
+					   value="${FTL_PLACEHOLDER}(saldoContabilePrevisto)!?html}"
+					   style="text-align: right" readonly="readonly" />&#160;&#8364; <img src="/ris/resources/application/finanziamenti/findomweb/css/im/pimgpsh_fullsize_distr_2.jpg"
+  						title="Il saldo contabile previsto &#232; dato da Totale delle spese complessive (A) - Totale delle entrate (C) - Importo erogabile" style="width: 34px; height: 28px;" />
+				</td>			
+			</tr>
+		</#if>
+		
+		<!-- Percentuale contributo erogabile -->
+		<#if _cultFormaAgvB_cntb_max_ultimi_tre_anni == "false" >
+			<tr id="percentualeContributoErogabile">			
+				<th>
+					<label for="lbl_perc_contrib_erogabile">Percentuale contributo erogabile</label>
+				</th>
+				
+				<td id="td_perc_contrib_erogabile" style="vertical-align: bottom" >
+					<input type="text" 
+					       id="id_perc_contrib_erogabile"
+					       name="_formaAgevolazioneB.percentualeContributoErogabile"
+						   value="${FTL_PLACEHOLDER}(percentualeContributoErogabile)!?html}"
+						   onchange="formatta();"
+						   readonly="readonly"
+						   style="text-align: right" /> <bold>%</bold>
+				</td>			
+			</tr>
+		</#if>
+
+    </table>
+[#-- ---------------------------------------------------------------------------- Importi fine           --]
+    
+    <p style="font-style:italic; font-weight:normal;">
+	    * Il valore riportato nel campo 'Importo erogabile' è dato dal calcolo: A x Percentuale massima contributo erogabile prevista dal bando. <br/>
+	    Non può comunque essere:<br/> 
+	    - inferiore all'importo minimo erogabile previsto dal bando<br/>
+	    - superiore alla differenza fra le Spese complessive e le Entrate (campo D);<br/>
+	    - superiore all'Importo massimo erogabile previsto dal bando;<br/>
+	    - superiore al 'Contributo più elevato nell'ultimo triennio' fornito da RP per ciascun beneficiario.
+    </p>
+</div>	

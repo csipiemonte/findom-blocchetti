@@ -1,0 +1,256 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _legaleRappresentante RO --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<h4>
+	<#if _legaleRappresentante_toggle_dinamico_label?has_content >
+		 <span id="toggle_handle_LegRappr" class="toggle_handle collapse">
+			<label for="id_indirizzo_pec">
+				${_legaleRappresentante_toggle_dinamico_label}
+			</label>
+		 </span>
+	<#else>
+		<span id="toggle_handle_LegRappr" class="toggle_handle collapse">
+			Legale rappresentante
+		</span>
+	</#if>
+</h4>
+
+		[#-- Jira: 1824 - --]
+		<#if _lr_domanda_firmata_dgt_label?has_content >
+			 <p style="font-style:italic; font-weight:normal;">
+			 	<label for="id_indirizzo_pec">${_lr_domanda_firmata_dgt_label}</label>
+			 </p>
+		<#else>
+			  <p style="font-style:italic; font-weight:normal;">
+			  	<label for="id_indirizzo_pec"></label>
+			  </p>
+		</#if>
+		
+        <br></br> 
+	<div class="toggle_target_LegRappr">
+		<table class="formTable" summary="....">
+			<col width="30%" />
+			<col width="70%" />
+			<tr>							
+				<th> <label for="id_legaleRappresentante_codiceFiscale">Codice Fiscale</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.codiceFiscale" 
+					       value="${FTL_PLACEHOLDER}(_legaleRappresentante.codiceFiscale)!?html}" 
+					       id="id_legaleRappresentante_codiceFiscale" class="short" readonly="readonly" />
+				</td>			
+			</tr>
+			<tr>
+				<th> <label for="id_legaleRappresentante_cognome">Cognome</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.cognome" 
+							value="${FTL_PLACEHOLDER}(_legaleRappresentante.cognome)!?html}" 
+							id="id_legaleRappresentante_cognome" class="long" readonly="readonly" />
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_legaleRappresentante_nome">Nome</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.nome" 
+					       value="${FTL_PLACEHOLDER}(_legaleRappresentante.nome)!?html}" 
+					       id="id_legaleRappresentante_nome" class="long" readonly="readonly" />
+				</td>
+			</tr>
+			<tr>
+				<th>Luogo di nascita </th>
+				<td>
+					[#if "Italia" == (_legaleRappresentante.luogoNascita)!]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legaleRappresentante_luogoNascitaIt" value="Italia" checked="checked" />
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legaleRappresentante_luogoNascitaIt" value="Italia" disabled="disabled" />
+					[/#if]
+
+					<label for="id_legaleRappresentante_luogoNascitaIt">Italia</label>
+                             [#if "Italia" == (_legaleRappresentante.luogoNascita)!]
+					<div id="italiaSel" class="spaceBottom">
+						<label for="id_legaleRappresentante_provinciaNascita">Provincia</label>
+						<input type="text" name="_legaleRappresentante.provinciaNascitaDescrizione" value="${FTL_PLACEHOLDER}(_legaleRappresentante.provinciaNascitaDescrizione)!?html}" id="id_legaleRappresentante_provinciaNascita" class="medium" readonly="readonly" />
+						
+						<label for="id_legaleRappresentante_comuneNascita">Comune</label>
+						<input type="text" name="_legaleRappresentante.comuneNascitaDescrizione" value="${FTL_PLACEHOLDER}(_legaleRappresentante.comuneNascitaDescrizione)!?html}" id="id_legaleRappresentante_comuneNascita" class="medium" readonly="readonly" />
+					</div>
+		            [#else]
+		            <div id="italiaSel" class="spaceBottom">
+						<label for="id_legaleRappresentante_provinciaNascita">Provincia</label>
+						<input type="text" name="_legaleRappresentante.provinciaNascitaDescrizione" value="" id="id_legaleRappresentante_provinciaNascita" class="medium" readonly="readonly" />
+						
+						<label for="id_legaleRappresentante_comuneNascita">Comune</label>
+						<input type="text" name="_legaleRappresentante.comuneNascitaDescrizione" value="" id="id_legaleRappresentante_comuneNascita" class="medium" readonly="readonly" />
+					</div>
+		            [/#if]
+
+			<#if _legalerappresentante_res_prov_piemonte =="false">
+					[#if "Estero" == (_legaleRappresentante.luogoNascita)!]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legaleRappresentante_luogoNascitaEst" value="Estero" checked="checked" />
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legaleRappresentante_luogoNascitaEst" value="Estero" disabled="disabled" />
+					[/#if]
+
+					<label for="id_legaleRappresentante_luogoNascitaEst">Stato estero</label>
+					<div id="esteroSel">
+						<label for="id_legaleRappresentante_statoEsteroNascita">Stato estero</label>
+						<input type="text" name="_legaleRappresentante.statoEsteroNascitaDescrizione" 
+						       value="${FTL_PLACEHOLDER}(_legaleRappresentante.statoEsteroNascitaDescrizione)!?html}" 
+						       id="id_legaleRappresentante_statoEsteroNascita" class="medium" readonly="readonly" />
+					</div>
+			  </#if>		
+					
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_dataNascita">Data di nascita</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.dataNascita" 
+					       value="${FTL_PLACEHOLDER}(_legaleRappresentante.dataNascita)!?html}" 
+					       id="id_dataNascita" class="short" readonly="readonly" />
+				</td>	
+			</tr>
+			<tr>
+				<th> <label for="id_legaleRappresentante_descrTipoDocRiconoscimento">Tipo documento di riconoscimento</label>  </th>
+				<td>
+				    <input type="text" name="_legaleRappresentante.documento.descrizioneTipoDocRiconoscimento" 
+				           value="${FTL_PLACEHOLDER}(_legaleRappresentante.documento.descrizioneTipoDocRiconoscimento)!?html}" 
+				           id="id_legaleRappresentante_descrTipoDocRiconoscimento" class="medium" readonly="readonly" />
+				</td>
+			</tr>
+			<tr>
+				<th><label for="id_legaleRappresentante_numDocumentoRiconoscimento">N. documento</label></th>
+				<td>
+					<input type="text" name="_legaleRappresentante.documento.numDocumentoRiconoscimento" 
+					       value="${FTL_PLACEHOLDER}(_legaleRappresentante.documento.numDocumentoRiconoscimento)!?html}" 
+						   id="id_legaleRappresentante_numDocumentoRiconoscimento" 
+						   class="medium" readonly="readonly"/>								
+				</td>
+			</tr>
+			<tr>
+				<th><label for="id_legaleRappresentante_docRilasciatoDa">Rilasciato da</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.documento.docRilasciatoDa" 
+					       value="${FTL_PLACEHOLDER}(_legaleRappresentante.documento.docRilasciatoDa)!?html}" 
+						   id="id_legaleRappresentante_docRilasciatoDa" 
+						   class="long" readonly="readonly"/>								
+				</td>
+			</tr>						
+			<tr>
+				<th><label for="id_legaleRappresentante_dataRilascioDoc">Data rilascio</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.documento.dataRilascioDoc" 
+					       value="${FTL_PLACEHOLDER}(_legaleRappresentante.documento.dataRilascioDoc)!?html}" 
+						   id="id_legaleRappresentante_dataRilascioDoc" 									
+						   class="short" readonly="readonly"/>
+				</td>
+			</tr>
+
+		</table>
+
+	<#if _legaleRappresentante_presenza_residenza =="true">
+
+		<h5>Residenza</h5>
+		<table class="formTable" summary="....">
+			<col width="30%" />
+			<col width="70%" />
+			
+			<tr>
+				<th>Stato</th>
+				<td >
+					[#if "Italia" == (_legaleRappresentante.luogoResidenza)!]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legaleRappresentante_luogoResidenzaIt" value="Italia" checked="checked" />
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legaleRappresentante_luogoResidenzaIt" value="Italia" disabled="disabled" />
+					[/#if]
+
+					<label for="id_legaleRappresentante_luogoResidenzaIt">Italia</label>
+					<div id="italiaSel_res" class="spaceBottom">
+						<label for="id_legaleRappresentante_provinciaResidenza">Provincia</label>
+						<input type="text" name="_legaleRappresentante.provinciaResidenza" value="${FTL_PLACEHOLDER}(_legaleRappresentante.provinciaResidenzaDescrizione)!?html}" id="id_legaleRappresentante_provinciaResidenza" class="medium" readonly="readonly" />
+						
+						<label for="id_legaleRappresentante_comuneResidenza">Comune</label>
+						<input type="text" name="_legaleRappresentante.comuneResidenza" value="${FTL_PLACEHOLDER}(_legaleRappresentante.comuneResidenzaDescrizione)!?html}" id="id_legaleRappresentante_comuneResidenza" class="medium" readonly="readonly" />
+					</div>
+
+					[#if "Estero" == (_legaleRappresentante.luogoResidenza)!]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legaleRappresentante_luogoResidenzaEst" value="Estero" checked="checked" />
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legaleRappresentante_luogoResidenzaEst" value="Estero" disabled="disabled" />
+					[/#if]
+
+					<label for="id_legaleRappresentante_luogoResidenzaEst">Stato estero</label>
+					<div id="esteroSel_res">
+						<label for="id_legaleRappresentante_statoEsteroResidenza">Stato estero</label>
+						<input type="text" name="_legaleRappresentante.statoEsteroResidenza" value="${FTL_PLACEHOLDER}(_legaleRappresentante.statoEsteroResidenzaDescrizione)!?html}" id="id_legaleRappresentante_statoEsteroResidenza" class="medium" readonly="readonly" />
+
+						<label for="id_legaleRappresentante_statoEsteroCitta">Città estera</label>
+						<input type="text" name="_legaleRappresentante.cittaEsteraResidenza" value="${FTL_PLACEHOLDER}(_legaleRappresentante.cittaEsteraResidenza)!?html}" id="id_legaleRappresentante_statoEsteroCitta" class="medium" readonly="readonly" />
+					</div>
+				</td>
+			</tr>
+
+			<tr>
+				<th> <label for="id_legaleRappresentante_indirizzo">Indirizzo</label> </th>
+				<td colspan="3">
+					<input type="text" name="_legaleRappresentante.indirizzo" 
+					        value="${FTL_PLACEHOLDER}(_legaleRappresentante.indirizzo)!?html}" 
+					        id="id_legaleRappresentante_indirizzo" 
+							class="medium" style="width:80%" readonly="readonly"/>
+		
+
+			    <label for="id_legaleRappresentante_numcivico">N. civico</label>
+			    <input type="text" name="_legaleRappresentante.numCivico" 
+			           value="${FTL_PLACEHOLDER}(_legaleRappresentante.numCivico)!?html}" 
+			           id="id_legaleRappresentante_numcivico" 
+					   class="short" style="width:5%" readonly="readonly"/>
+							</td>
+			</tr>
+
+			<tr>
+			     <th> <label for="id_legaleRappresentante_cap">CAP</label>  </th>
+			     <td  colspan="3">							  
+				    <input type="text" name="_legaleRappresentante.cap" value="${FTL_PLACEHOLDER}(_legaleRappresentante.cap)!?html}" 
+					       id="id_legaleRappresentante_cap" 
+						   class="short" readonly="readonly"/>
+				 </td> 
+			</tr>
+
+		</table>
+	</#if>		       
+      <#if _legaleRappresentante_presenza_soggetto_delegato == "true" >	
+		
+		<h5>Delegato</h5>
+		<p style="font-style:italic; font-weight:normal;">Valorizzare se si intende indicare un soggetto delegato con potere di firma che firmerà digitalmente il documento</p>
+		<table class="formTable" summary="....">
+			<col width="30%" />
+			<col width="70%" />						
+			<tr>
+			   <th> <label for="id_presenza_soggetto_delegato_si">Soggetto delegato</label>  
+			      <p style="font-style:italic; font-weight:normal;">Selezionare l'opzione 'No' implica eliminare eventuali dati inseriti nella sezione 'Soggetto delegato'</p>
+						   </th>
+						   <td>
+						   [#if "si" == (_legaleRappresentante.presenzaSoggettoDelegato)!]
+						   <input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+								  id="id_presenza_soggetto_delegato_si" value="si" checked="checked" tabindex="1" /> Sì
+									
+						   <input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+								  id="id_presenza_soggetto_delegato_no" value="no" tabindex="2" disabled="disabled"/> No
+						   [#else]
+						   <input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+								  id="id_presenza_soggetto_delegato_si" value="si" tabindex="1" disabled="disabled"/> Sì
+								  
+						   <input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+								  id="id_presenza_soggetto_delegato_no" value="no" checked="checked" tabindex="2"/> No
+						   [/#if]					
+						</td>										
+					   </tr>
+				  					   
+				   </table>
+         	 </#if>	
+</div>
+        

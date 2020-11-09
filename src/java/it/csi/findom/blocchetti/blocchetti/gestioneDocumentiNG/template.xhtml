@@ -1,0 +1,328 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _gestioneDocumenti --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<p><i>Per la compilazione verificare quanto indicato nelle <a href="${FTL_PLACEHOLDER}urlPagRegoleCompilazione}">Regole di compilazione</a></i> </p>
+
+<h4 class="titTab_hide">Elenco documenti allegati</h4>
+
+[#if errorsIndexMap?has_content]
+	<div class="stdMessagePanel feedback">
+		<div class="feedKo">
+			<p><strong>Attenzione!</strong><br/>L'operazione non risulta andata a buon fine.
+			<br/>${FTL_PLACEHOLDER}(errorsIndexMap._allegati)!}</p>
+		</div>
+	</div>
+[/#if]
+
+[#-- box per i messaggi di successo --]
+[#if operIndexOk?has_content]
+	<div class="stdMessagePanel feedback">
+		<div class="feedCorrect">
+			<p>${FTL_PLACEHOLDER}operIndexOk}</p>
+		</div>
+	</div>
+[/#if]
+
+
+
+[#if documentiObblMancantiList?has_content]
+	<div class="stdMessagePanel feedback">
+		<div class="feedWarning">
+		<p>Elenco dei documenti obbligatori per il beneficiario selezionato.<br /> 
+			Attenzione! Gli allegati obbligatori potrebbero variare in base alle indicazioni del Bando:<br />
+			<ul>[#list documentiObblMancantiList as doc]
+				<li>${FTL_PLACEHOLDER}(doc.descrizione)!}</li>
+			[/#list]</ul>
+		</p>
+		</div>
+	</div>
+[/#if]
+
+[#-- box che riporta l'elenco dei documenti obbligatori NON ancora inseriti dall'utente --]
+<#if msgDocumentiOpzionaliPerBando == "true" >
+	[#if msg_allegati_opzionali_per_bando == "true" ]
+		<div class="stdMessagePanel feedback">
+			<div class="feedWarning">
+			<p>Altri documenti obbligatori:<br /> 
+				Attenzione! Gli allegati obbligatori potrebbero variare in base alle indicazioni del Bando:<br />
+				<ul>
+					<li> Qualifica professionale in corso di validità - Allegato OBBLIGATORIO per le Guide Turistiche (ATECO 79.90.20), PENA LA NON RICEVIBILITA' DELLA DOMANDA</li>
+					<li> Attestato di qualifica professionale rilasciato dalle associazioni professionali – Allegato OBBLIGATORIO per interpreti e traduttori (ATECO 74.30), PENA LA NON RICEVIBILITA' DELLA DOMANDA</li>
+					<li> Statuto – Allegato OBBLIGATORIO per le associazioni con partita IVA (ATECO 94.99.2) e per quelle con il solo codice fisale, PENA LA NON RICEVIBILITA' DELLA DOMANDA</li>
+				</ul>
+			</p>
+			</div>
+		</div>
+	[/#if]
+</#if>
+
+<!--INIZIO ELENCO ALLEGATI -->
+<div >
+	<table summary="...." class="myovertable">
+		<col width="6%" />
+		<col width="50%" />
+		<col width="40%" />
+		<col width="4%" />
+		<thead>
+			<tr>
+				<th scope="col">Azioni</th>
+				<th scope="col">Tipologia</th>
+				<th scope="col">Nome documento allegato</th>
+				[#if stringaIdTipolDifferibili?has_content]
+				<th scope="col">Documento extra soglia</th>
+				[/#if]
+			</tr>
+		</thead>
+		<tbody>
+		[#if (allegatiList)?has_content]
+			[#assign i = 0]
+			[#list allegatiList as item]
+			[#-- genero una nuova lista per poter ordinare gli elementi --]
+			[#assign i = i + 1]
+			[#if i == 1]
+			[#-- primo elemento --]
+				[#assign listaAllegatiOrd = [{"descrTipologia":(item.documento.descrTipologia)!,
+											"idFile": (item.documento.idFile)!,
+											"nomeFile": (item.documento.nomeFile)!,
+											"idTipologia": (item.documento.idTipologia!),
+											"differito": (item.documento.differito)!,
+											"chiaveSorting" : (item.documento.descrTipologia) + ' ' + (item.documento.nomeFile)!}]]
+			[#else]
+			[#-- elementi successivi, appendo alla lista --]
+				[#assign listaAllegatiOrd = listaAllegatiOrd +
+											[{"descrTipologia":(item.documento.descrTipologia)!,
+											"idFile": (item.documento.idFile)!,
+											"nomeFile": (item.documento.nomeFile)!,
+											"idTipologia": (item.documento.idTipologia!),
+											"differito": (item.documento.differito)!,
+											"chiaveSorting" : (item.documento.descrTipologia) + ' ' + (item.documento.nomeFile)!}]]
+			[/#if]
+			[/#list]
+			
+			[#list (listaAllegatiOrd)?sort_by("chiaveSorting") as item]
+			<tr>
+				<th scope="row">
+					<span class="cancel" title="">
+						<a href="/${FTL_PLACEHOLDER}(urlContextSportello)!}/caricaAllegati.do?deletedoc=${FTL_PLACEHOLDER}(item.idFile)!}" class="" id="id_eliminaDoc" title="Eliminazione file"  >
+							<span class="nascosto">elimina</span>
+						</a>
+					</span>
+				[#if errorsIndexMap?has_content]
+				  [#if (errorsIndexMap._allegati_delete)??]
+					[#if errorOnElement! == item.idFile]
+						<span class="txtError">
+						<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+						<span>	${FTL_PLACEHOLDER}(errorsIndexMap._allegati_delete)!} </span>
+						</span>
+					[/#if]
+				  [/#if]
+				[/#if]
+				</th>
+				<td>${FTL_PLACEHOLDER}(item.descrTipologia)!}	</td>
+				<td> <a href="/${FTL_PLACEHOLDER}(urlContextSportello)!}/caricaAllegati.do?viewedoc=${FTL_PLACEHOLDER}(item.idFile)!}">${FTL_PLACEHOLDER}(item.nomeFile)!}</a> 
+				[#if errorsIndexMap?has_content]
+				  [#if (errorsIndexMap._allegati_read)??]
+					[#if errorOnElement! == item.idFile]
+						<span class="txtError">
+						<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+						<span>	${FTL_PLACEHOLDER}(errorsIndexMap._allegati_read)!} </span>
+						</span>
+					[/#if]
+				  [/#if]
+				[/#if]
+				</td>
+				[#if stringaIdTipolDifferibili?has_content]
+				<td><center>
+					[#if stringaIdTipolDifferibili?contains("["+item.idTipologia!+"]")]
+						[#if "true" == (item.differito)!]											  
+						<input type="checkbox" class="noborder" id="id_documento_differibile_${FTL_PLACEHOLDER}item_index}" checked="checked" disabled="disabled" />
+						[#else]										
+						<input type="checkbox" class="noborder" id="id_documento_differibile_${FTL_PLACEHOLDER}item_index}" disabled="disabled" />
+						[/#if]
+					[#else]
+					[/#if]								
+				</center>
+				</td>
+				[/#if]
+			</tr>
+			[/#list]
+		[#else]
+			<!-- non esistono documenti insertiti dall'utente -->
+			<tr>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				[#if stringaIdTipolDifferibili?has_content]
+				<td>-</td>
+				[/#if]
+			</tr>
+		[/#if]
+		</tbody>
+	</table>
+
+	<div class="commandPanel noSpaceButton">
+		<div class="button left">
+			<span class="highlighted">
+			   <a href="#" class="uploadFile4" id="id_uploadDoc" title="Aggiungi allegato" onclick="writeAndOpenModaleUpload()" >
+					<span class="nascosto">Aggiungi allegato</span>
+					Aggiungi allegato
+				</a>
+			</span>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	var mappaDocDifferibili = {};
+	[#-- popolo una mappa con chiavi gli id dei documenti che possono essere differibili --]
+	[#if (documentiList)?has_content]
+		[#list documentiList as item] 
+			[#if item.differibile?has_content]
+				mappaDocDifferibili["${FTL_PLACEHOLDER}item.idallegato!}"] = "${FTL_PLACEHOLDER}item.differibile!}";
+			[/#if]
+		[/#list]
+	[/#if]
+	
+	function setDifferibilita(){
+		[#if stringaIdTipolDifferibili?has_content]	
+		
+			if( $('#id_idTipologiaNewDoc').val() in mappaDocDifferibili){
+				[#-- documento differibile, visualizzo la checkbox differibile --]
+				$("#id_docDifferibile").attr("disabled", false);
+			}else{							
+				[#-- documento NON differibile, nascondo la checkbox differibile --]
+				$("#id_docDifferibile").removeAttr('checked'); [#-- in caso sia checked --]
+				$("#id_docDifferibile").attr("disabled", true);
+			}
+		[/#if]
+	}
+
+	function writeAndOpenModaleUpload() {
+		var htmlModale = '<div id="id_modale_uploadFileWO">';
+		htmlModale += '<div id="dialog_target">';
+		htmlModale += '	 <h3>Upload File</h3>';
+		htmlModale += '	 <div class="dialogPanel">';
+		htmlModale += '	  <div class="stdMessagePanel"><div class="feedInfo"><p>Allegare un file di	dimensione massima pari a 5Mb. o in alternativa selezionare, se previsto, il checkbox \'Documento extra soglia\'</p></div></div>';
+		htmlModale += '	  <form method="post" id="idUpldfile" action="/${FTL_PLACEHOLDER}(urlContextSportello)!}/caricaAllegati.do" enctype="multipart/form-data">';
+							
+		htmlModale += '    <table class="formTable" summary="dati di riepilogo">';
+		htmlModale += '    	<colgroup>';
+		htmlModale += '    		<col width="20%" />';
+		htmlModale += '    		<col width="80%" />';
+		htmlModale += '    	</colgroup>';
+	
+	[#if (documentiList)?has_content]
+		htmlModale += '  <tr>';
+		htmlModale += '    	<th scope="row">';
+		htmlModale += '    		<label for="id_idTipologiaNewDocLabel">Tipologia di documento</label>	';
+		htmlModale += '    	</th>';
+		htmlModale += '		<td>';
+		htmlModale += '    		<select style="width:95%;" id="id_idTipologiaNewDoc" name="idTipologiaNewDoc" onChange="setDifferibilita()">';
+		htmlModale += '    			<option value="9999">selezionare una tipologia....</option>';
+		[#list documentiList as item]  
+			htmlModale += '    		<option value="${FTL_PLACEHOLDER}item.idallegato}">${FTL_PLACEHOLDER}item.descrizione}</option>';
+		[/#list]
+		htmlModale += '    		</select>';
+		htmlModale += '    	</td>';
+		htmlModale += '	</tr>';
+		
+		[#if stringaIdTipolDifferibili?has_content]
+			htmlModale += ' <tr>';
+			htmlModale += '    	<th scope="row">';
+			htmlModale += '    		<label for="id_docDifferibile">Documento extra soglia</label>	';
+			htmlModale += '    	</th>';
+			htmlModale += '		<td>';
+			htmlModale += '			<input type="checkbox" class="noborder" id="id_docDifferibile" name="docDifferibile"/>';
+			htmlModale += ' <p style="font-style:italic; font-weight:normal;">Dichiaro che invierò il documento secondo le modalità alternative previste dal bando in quanto la dimensione del file è superiore alla soglia massima di 5Mb </p>';
+			htmlModale += '		</td>';
+			htmlModale += '	</tr>';
+		[/#if]
+		
+		htmlModale += '    	<tr>';
+		htmlModale += '    		<th scope="row"></th>';
+		htmlModale += '		<td>';
+		htmlModale += '    		<input type="file" name="upFile" value="" class="fileBrowser medium" id="id_upload_file" />';
+		htmlModale += '    	</td>';
+		htmlModale += '		</tr>';
+		
+	[#else]
+		htmlModale += '  <tr>';
+		htmlModale += '    		<th scope="row">';
+		htmlModale += '    			<label for="id_idTipologiaNewDoc">Tipologia di documento</label>	';
+		htmlModale += '    		</th>';
+		htmlModale += '		<td>';
+		htmlModale += '    		<select id="id_idTipologiaNewDoc" name="idTipologiaNewDoc" class="medium" disabled="disabled">';
+		htmlModale += '    			<option value="">Documenti non disponibili</option>';
+		htmlModale += '    		</select>';
+		htmlModale += '    		<input type="hidden" name="idTipologiaNewDoc" value="" />';
+		htmlModale += '    	</td>';
+		htmlModale += '	</tr>';
+	[/#if]
+	
+		htmlModale += '</table>';
+		htmlModale += '	   <input type="submit" id="id_upload_fileWO" name="carica" value="Salva" hidden="hidden" />';
+		htmlModale += '   </form><br/>';
+		htmlModale += '	 </div>';
+		
+		htmlModale += '  <div class="commandPanel noSpaceButton">';
+		htmlModale += '   <div class="button left"><span class="close_js"><input type="submit" value="Torna indietro" id="id_upload_button" onclick="confirm_close_modale_updateWO()" /></span></div>';
+		htmlModale += '   <div class="button right"><span class="go highlighted">';
+		htmlModale += '    <input type="submit" value="Salva" id="id_upload_button" onclick="confirm_modale_updateWO(); " /></span>';
+		htmlModale += '   </div>';
+		htmlModale += '  </div>';
+		htmlModale += '</div>';
+		htmlModale += '</div>';
+
+		$("#exec").after(htmlModale);
+		
+		openModaleUploadWO();
+	}
+						
+	function openModaleUploadWO() {
+		
+		$("#id_modale_uploadFileWO").dialog({
+			
+			title: "Selezione allegati alla domanda",
+			width: 600,
+			modal: true,
+			bgiframe: false,
+			resizable: true,
+			draggable: true,
+			chiudi: false,
+			load: function(dialog_target) {
+				jQuery("span.close_js", dialog_target).jbutton({
+					text : 'no, chiudi',
+					callback : function (el) {
+						$(el).parents(".ui-dialog-content:eq(0)").dialog("close");
+					}
+				});
+			}
+		});
+	}
+
+	function confirm_close_modale_updateWO(){
+		$('body').find("#id_modale_uploadFileWO").remove();
+		$("#id_modale_uploadFileWO").dialog("close");
+	}
+	
+	function confirm_modale_updateWO(){						
+		if($.trim($('#id_upload_file').val()).length){							
+			// se è stato selezionato un file settiamo a false il check sulla differibilita' (se presente)
+			[#if stringaIdTipolDifferibili?has_content] 
+				document.getElementById("id_docDifferibile").checked = false;
+			[/#if]
+		}
+		$("#id_modale_uploadFileWO").dialog("close");
+		$("#id_upload_fileWO").click();
+		
+	}									
+
+</script>
+	
+<!--FINE DOCUMENTI ALLEGATI -->

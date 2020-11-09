@@ -1,0 +1,21 @@
+[#--
+ * Copyright Regione Piemonte - 2020
+ * SPDX-License-Identifier: EUPL-1.2-or-later
+ --]
+	[#macro classShortError errorList][#if errorList?has_content]short error[#else]short[/#if][/#macro]
+	[#macro classMediumError errorList][#if errorList?has_content]medium error[#else]medium[/#if][/#macro]
+	[#macro classLongError errorList][#if errorList?has_content]long error[#else]long[/#if][/#macro]
+	[#macro classGeneralError errorList classNormal classError][#if errorList?has_content]${FTL_PLACEHOLDER}classError}[#else]${FTL_PLACEHOLDER}classNormal}[/#if][/#macro]
+	[#macro contextualErrors errorList]
+		[#if errorList?has_content]
+			<span class="txtError">
+				<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+				<span>
+					errore:<br />
+					[#list errorList as errorItem]
+						${FTL_PLACEHOLDER}errorItem}
+					[/#list]
+				</span>
+			</span>
+		[/#if]
+	[/#macro]

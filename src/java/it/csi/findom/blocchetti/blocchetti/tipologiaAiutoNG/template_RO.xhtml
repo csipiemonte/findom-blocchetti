@@ -1,0 +1,104 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _tipologiaAiuto RO --]
+
+<#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+
+<h4>
+	<span id="toggle_handle_tipologieaiuto" class="toggle_handle collapse">Tipologie di agevolazione</span>
+</h4>
+
+<div class="toggle_target_tipologieaiuto">
+   <p style="font-style: italic; font-weight: normal;">Indicare la base giuridica su cui viene richiesta l'agevolazione:</p>
+   <table class="formTable" summary="....">
+		<col width="5%" />
+		<col width="90%" />
+		<col width="5%" />
+		<tr>
+			<td></td>
+			<td>
+				<table summary="...." id="id_tipologia_aiuti"
+					class="myovertable tablesorter target_toggle_checkbox_1">
+					[#if esistonoDettagli == "true"]
+					<col width="5%" />
+					<col width="45%" />
+					<col width="45%" />
+					[#else]
+					<col width="5%" />
+					<col width="95%" />
+					[/#if]
+					<thead>
+						<tr>
+							<th scope="col"></th>
+							<th scope="col">Base Giuridica</th> 
+							[#if esistonoDettagli == "true"]
+							   <th scope="col">Dettaglio</th> 
+							[/#if]
+						</tr>
+					</thead>
+					<tbody>
+
+						[#list tipologiaAiutoList as item] 
+						[#if !(!item?has_content || !item?is_hash)]
+						<tr>
+							[#if item.checked == "true"]
+							<th scope="row"><input type="checkbox" class="noborder"
+								id="id_tipologia_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}" checked="checked" disabled="disabled" />
+							</th> [#else]
+							<th scope="row"><input type="checkbox" class="noborder"
+								id="id_tipologia_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}" disabled="disabled" />
+							</th> [/#if]
+							<td>${FTL_PLACEHOLDER}(item.descrTipoAiuto)!?html} 								
+							</td> 
+							[#if esistonoDettagli == "true"]
+							<td colspan="2" style="padding: 0px">
+								<table style="margin-bottom: 0px" id="id_tab_dett_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}">
+									<colgroup>
+										<col width="10%" />
+										<col width="90%" />
+									</colgroup>
+									[#if item.dettaglioAiutoList?has_content] 
+									[#list item.dettaglioAiutoList as item2]
+									<tr>
+										[#if item2.checked == "true"]
+										<th scope="row">
+											<input type="checkbox" class="noborder" id="id_dett_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+													checked="checked"  disabled="disabled" />
+										</th> 
+										[#else]
+										<th scope="row">
+											<input type="checkbox" class="noborder" id="id_dett_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+                                            		disabled="disabled" />
+										</th> 
+										[/#if]
+										[#if item2.linkDettAiuto?has_content]
+										<td>${FTL_PLACEHOLDER}(item2.descrDettAiuto)!?html} 										         
+				                            <a href="${FTL_PLACEHOLDER}(item2.linkDettAiuto)!?html}" target="_blank">
+				                               <img style="vertical-align: bottom" 
+				                                   src="/ris/resources/application/finanziamenti/findomweb/css/im/ico_help_s.png" border="0"
+				                                   title="${FTL_PLACEHOLDER}(item2.linkDettAiuto)!?html}" height="20px" width="20px"/></a> 
+				                        </td>
+				                        [#else]  
+				                        <td>${FTL_PLACEHOLDER}(item2.descrDettAiuto)!?html} 
+									    </td>    
+				                        [/#if]
+									</tr>
+									[/#list] [/#if]
+								</table>
+							</td> 
+							[/#if]
+						</tr>
+						[/#if] 
+						[/#list]
+
+					</tbody>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+</div>
+				

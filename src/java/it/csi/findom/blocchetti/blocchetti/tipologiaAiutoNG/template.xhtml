@@ -1,0 +1,276 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+ [#-- _tipologiaAiuto --] 
+ <#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+<script type="text/javascript">
+//<![CDATA[	
+           
+function impostaCheckDettaglio(id) {
+	// console.log("call impostaCheckDettaglio: "+id);
+	[#list tipologiaAiutoList as item]
+		[#if item?has_content]
+	        if(${FTL_PLACEHOLDER}(item.idTipoAiuto)!} == id){
+
+	        	[#if item.numDettagli != "0"]							     
+			        [#if item.numDettagli == "1"]							       
+			           if (document.getElementById("id_tipologia_aiuto_"+ id).checked) {
+			        	   // console.log("cecco il dettaglio unico...");					          							         
+			              $('#id_tab_dett_aiuto_'+id+' tbody tr th input:checkbox').attr('checked', true);							             
+			              $('#id_tab_dett_aiuto_'+id+'.checkDettaglio').attr('value', true);
+			               	
+			           }else{
+			        	   // console.log("dececco il dettaglio unico...");
+			    	       $('#id_tab_dett_aiuto_'+id+' tbody tr th input:checkbox').attr('checked', false);							    	      
+			        	   $('#id_tab_dett_aiuto_'+id+'.checkDettaglio').attr('value', false);				
+			        	   // // console.log("dececco il dettaglio unico");		    	     
+				       }
+                    [#else]                                   
+                       if (!document.getElementById("id_tipologia_aiuto_"+ id).checked) {
+                    	  // console.log("piu' di un dettaglio: dececcato la tipologia---> dececco tutti dettagli");
+                	      $('#id_tab_dett_aiuto_'+id+' tbody tr th input:checkbox').attr('checked', false);
+                	      $('#id_tab_dett_aiuto_'+id+'.checkDettaglio').attr('value', false);
+                	      // // console.log("dececco tutti dettagli");
+			           }
+                    [/#if]
+                [/#if]							  
+		  }
+	     [/#if]
+	 [/#list]
+							
+}
+
+function impostaHiddenCheckedTipologiaAiuto(idTipologia){
+	// console.log("call impostaHiddenCheckedTipologiaAiuto 01");
+	 if (document.getElementById("id_tipologia_aiuto_"+ idTipologia).checked) {
+		 // console.log(idTipologia+" selezionata 02");
+		 $('#id_checked_tipologia_aiuto_'+idTipologia).attr('value', "true");
+		 $('#id_checked_tipologia_aiuto_'+idTipologia).attr('checked', true);
+		 $('#id_tipologia_aiuto_'+idTipologia).attr('checked', true);
+	 }else{
+		 // console.log(idTipologia+" NON selezionata 03");
+		 $('#id_checked_tipologia_aiuto_'+idTipologia).attr('value', "false");
+		 $('#id_checked_tipologia_aiuto_'+idTipologia).attr('checked', false);
+		 $('#id_tipologia_aiuto_'+idTipologia).attr('checked', false);
+	 }
+}
+
+function impostaCheckTipologiaAiuto(idTipologia, idDettaglio){	
+	// console.log("call impostaCheckTipologiaAiuto 02");
+	if (document.getElementById("id_dett_aiuto_"+ idDettaglio).checked) {
+         $('#id_tipologia_aiuto_'+idTipologia).attr('checked', true);
+         $('#id_checked_tipologia_aiuto_'+idTipologia).attr('checked', true);
+         $('#id_checked_tipologia_aiuto_'+idTipologia).attr('value', "true");
+	}											
+}
+
+function impostaHiddenCheckedDettaglioAiuto(idDettIntervento){
+	// console.log("call impostaHiddenCheckedDettaglioAiuto 03");
+	 if (document.getElementById("id_dett_aiuto_"+ idDettIntervento).checked) {
+		 $('#id_checked_dettaglio_aiuto_'+idDettIntervento).attr('value', "true");
+	 }else{
+		 $('#id_checked_dettaglio_aiuto_'+idDettIntervento).attr('value', "false");
+	 }
+}
+	
+//]]> 					 	
+</script>
+
+<p>Per la compilazione verificare quanto indicato nelle <a href="${FTL_PLACEHOLDER}urlPagRegoleCompilazione}" target="_blank">Regole di compilazione</a> </p>
+
+<h4>
+	<span id="toggle_handle_tipologieaiuto" class="toggle_handle collapse">Tipologie di agevolazione
+	[@contextualErrors errorList=(messages._tipologiaAiuto)![] /]
+	</span>
+</h4>
+
+<div class="toggle_target_tipologieaiuto">
+   <p style="font-style: italic; font-weight: normal;">Indicare la base giuridica su cui viene richiesta l'agevolazione:</p>
+   <table class="formTable" summary="....">
+		<col width="5%" />
+		<col width="90%" />
+		<col width="5%" />
+		<tr>
+			<td></td>
+			<td>
+				<table summary="...." id="id_tipologia_aiuti"
+					class="myovertable tablesorter target_toggle_checkbox_1">
+					[#if esistonoDettagli == "true"]
+					<col width="5%" />
+					<col width="45%" />
+					<col width="45%" />
+					[#else]
+					<col width="5%" />
+					<col width="95%" />
+					[/#if]
+					<thead>
+						<tr>
+							<th scope="col"></th>
+							<th scope="col">Base Giuridica</th> 
+							[#if esistonoDettagli == "true"]
+							   <th scope="col">Dettaglio</th> 
+							[/#if]
+						</tr>
+					</thead>
+					<tbody>
+
+						[#list tipologiaAiutoList as item] 
+						[#if !(!item?has_content || !item?is_hash)]
+						<!-- disabled="disabled" in prod per MPMI -->
+						<tr>
+							[#if item.checked == "true"]
+							<th scope="row"><input type="checkbox" class="noborder"
+								id="id_tipologia_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}" checked="checked" 
+	                            onclick="impostaCheckDettaglio(${FTL_PLACEHOLDER}(item.idTipoAiuto)!}); impostaHiddenCheckedTipologiaAiuto(${FTL_PLACEHOLDER}(item.idTipoAiuto)!});" />
+							</th> 
+							[#else]
+							<th scope="row"><input type="checkbox" class="noborder"
+								id="id_tipologia_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}"
+	                            onclick="impostaCheckDettaglio(${FTL_PLACEHOLDER}(item.idTipoAiuto)!}); impostaHiddenCheckedTipologiaAiuto(${FTL_PLACEHOLDER}(item.idTipoAiuto)!});" />
+							</th> 
+							[/#if]
+							<td>${FTL_PLACEHOLDER}(item.descrTipoAiuto)!?html} 
+							    <input type="hidden" id="id_checked_tipologia_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}"
+									   value="${FTL_PLACEHOLDER}(item.checked)!?html}"
+									   name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].checked" />
+								
+								<input type="hidden" value="${FTL_PLACEHOLDER}(item.idTipoAiuto)!?html}"
+									   name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].idTipoAiuto" />
+														
+								<input type="hidden" value="${FTL_PLACEHOLDER}(item.descrTipoAiuto)!?html}"
+									   name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].descrTipoAiuto" />
+								
+								<input type="hidden" value="${FTL_PLACEHOLDER}(item.codTipoAiuto)!?html}"
+									   name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].codTipoAiuto" />
+								
+							</td> 
+							[#if esistonoDettagli == "true"]
+							<td colspan="2" style="padding: 0px">
+								<table style="margin-bottom: 0px"
+									id="id_tab_dett_aiuto_${FTL_PLACEHOLDER}(item.idTipoAiuto)!}">
+									<colgroup>
+										<col width="10%" />
+										<col width="90%" />
+									</colgroup>
+									
+									[#if item.dettaglioAiutoList?has_content] 
+									[#list item.dettaglioAiutoList as item2]
+									<tr>
+										
+										[#assign erroriDettAiuto = false] [#-- diventa true se ci sono errori e quindi la versione buona e' questa e non quella sotto; se resta false la versione buona e' quella sotto --]
+							            [#if ((messages._dettAiuto_valore_testo)?has_content)]
+							            [#if messages._dettAiuto_valore_idDettAiuto?seq_contains(item2.idDettAiuto)]	
+										
+										
+										
+										<th scope="row">
+										
+										[#if item2.checked == "true"]
+										<input type="checkbox" class="noborder"
+											id="id_dett_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+											checked="checked"
+                                            onclick="impostaCheckTipologiaAiuto(${FTL_PLACEHOLDER}(item2.idTipoAiutoDett)!}, ${FTL_PLACEHOLDER}(item2.idDettAiuto)!}); 
+                                            	     impostaHiddenCheckedDettaglioAiuto(${FTL_PLACEHOLDER}(item2.idDettAiuto)!});" />
+										
+										[#else]
+										<input type="checkbox" class="noborder"
+											id="id_dett_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+                                            onclick="impostaCheckTipologiaAiuto(${FTL_PLACEHOLDER}(item2.idTipoAiutoDett)!}, ${FTL_PLACEHOLDER}(item2.idDettAiuto)!});  
+                                            	     impostaHiddenCheckedDettaglioAiuto(${FTL_PLACEHOLDER}(item2.idDettAiuto)!});" />
+										 
+										[/#if]
+										<span class="txtError">
+							               <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+								           <span>
+								              errore:<br />${FTL_PLACEHOLDER}messages._dettAiuto_valore_testo?first}
+						                   </span>
+							            </span>
+							            
+							            </th>
+							            
+										[#assign erroriDettAiuto = true] [#-- per evitare di stampare la versione sotto--]
+							            [/#if]
+							            [/#if]
+							
+							            [#if erroriDettAiuto==false] [#-- non ci sono errori quindi stampo il campo pulito--]
+										
+										   [#if item2.checked == "true"]
+										   <th scope="row"><input type="checkbox" class="noborder"
+											   id="id_dett_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+											   checked="checked"
+                                               onclick="impostaCheckTipologiaAiuto(${FTL_PLACEHOLDER}(item2.idTipoAiutoDett)!}, ${FTL_PLACEHOLDER}(item2.idDettAiuto)!}); 
+                                            	     impostaHiddenCheckedDettaglioAiuto(${FTL_PLACEHOLDER}(item2.idDettAiuto)!});" />
+										   </th> 
+										   [#else]
+										     <th scope="row"><input type="checkbox" class="noborder"
+											   id="id_dett_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+                                               onclick="impostaCheckTipologiaAiuto(${FTL_PLACEHOLDER}(item2.idTipoAiutoDett)!}, ${FTL_PLACEHOLDER}(item2.idDettAiuto)!});  
+                                            	     impostaHiddenCheckedDettaglioAiuto(${FTL_PLACEHOLDER}(item2.idDettAiuto)!});" />
+										     </th> 
+										   [/#if]
+										
+								        [/#if]		
+										
+										[#if item2.linkDettAiuto?has_content]
+										<td>${FTL_PLACEHOLDER}(item2.descrDettAiuto)!?html} 
+										    <input	type="hidden" class="checkDettaglio"
+												id="id_checked_dettaglio_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+												value="${FTL_PLACEHOLDER}(item2.checked)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].checked" />											
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.idDettAiuto)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].idDettAiuto" />
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.idTipoAiutoDett)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].idTipoAiutoDett" />											
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.descrDettAiuto)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].descrDettAiuto" />
+				                           	<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.codiceDettAiuto)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].codiceDettAiuto" />
+												
+				                            <a href="${FTL_PLACEHOLDER}(item2.linkDettAiuto)!?html}" target="_blank">
+				                              <img style="vertical-align: bottom" 
+				                                   src="/ris/resources/application/finanziamenti/findomweb/css/im/ico_help_s.png" border="0"
+				                                   title="${FTL_PLACEHOLDER}(item2.linkDettAiuto)!?html}" height="20px" width="20px"/></a> 
+				                        </td>
+				                        [#else]  
+				                        <td>${FTL_PLACEHOLDER}(item2.descrDettAiuto)!?html} 
+										    <input	type="hidden" class="checkDettaglio"
+												id="id_checked_dettaglio_aiuto_${FTL_PLACEHOLDER}(item2.idDettAiuto)!}"
+												value="${FTL_PLACEHOLDER}(item2.checked)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].checked" />											
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.idDettAiuto)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].idDettAiuto" />											
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.idTipoAiutoDett)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].idTipoAiutoDett" />											
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.descrDettAiuto)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].descrDettAiuto" />
+											<input type="hidden"
+												value="${FTL_PLACEHOLDER}(item2.codiceDettAiuto)!?html}"
+												name="_tipologiaAiuto.tipologiaAiutoList[${FTL_PLACEHOLDER}item_index}].dettaglioAiutoList[${FTL_PLACEHOLDER}item2_index}].codiceDettAiuto" />
+				                        </td>    
+				                        [/#if]
+										
+									</tr>
+									[/#list] [/#if]
+								</table>
+							</td> 
+							[/#if]
+						</tr>
+						[/#if] 
+						[/#list]
+
+					</tbody>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+</div>

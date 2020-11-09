@@ -1,0 +1,268 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+ [#-- _formaAgevolazione --] <#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+<script type="text/javascript">
+/* cultFormaAgevolazione */
+
+	$(window).on('load',function () 
+	{
+		// console.log("test: pagina caricata: ");
+		$("#id_errore_").remove();
+		$("#id_importo_richiesto").removeClass("txtError"); 
+		$("#id_importo_richiesto").removeClass("error"); 
+		$("#idErrImporto").replaceWith("");
+		
+	});
+function formatta()
+{
+	  var importo = $("#id_importo_richiesto").val();		// 10.00
+	  
+	  if(validaDecimaleJs(importo, false, false, false))
+	  {	
+	     var importoFormattato = formattaDecimalePerVisualizzazione(importo);
+
+		 $("#id_errore_").remove();
+		 $("#id_importo_richiesto").removeClass("error");
+
+		 if($('#id_td_importo').find('.txtError').length!=0){
+		   $('#id_td_importo').find('.txtError').replaceWith("");
+		 }
+		 $("#idErrImporto").replaceWith("");
+			
+         $('#id_importo_richiesto').attr('value', importoFormattato);
+      }
+}
+
+</script>
+
+[#if viewWarningAgevolazioni == "true"]	
+<div class="stdMessagePanel feedback">
+	<div class='feedWarning'>
+		L'importo erogabile &#232; stato  calcolato in base ai valori inseriti per Spese e Entrate. Verificare gli importi e confermare.<br/>
+	</div>
+</div>
+[/#if]
+
+[#if viewWarningImportiAgevolazioni == "true"]	
+<div class="stdMessagePanel feedback">
+	<div class='feedWarning'>
+		Contattare Numero Verde per Assistenza tecnica.<br/>
+		[#if importoMinimoErogabile?has_content]
+			${FTL_PLACEHOLDER}(importoMinimoErogabile)!}
+		[/#if]
+	</div>
+</div>
+[/#if]
+
+
+[#if msgWarning?has_content || msgWarningCostiSuppl?has_content]	
+<div class="stdMessagePanel feedback">
+  <div class='feedWarning'>${FTL_PLACEHOLDER}(msgWarning)!}<br /> 
+                           ${FTL_PLACEHOLDER}(msgWarningCostiSuppl)!}
+  <br/>
+  </div>
+</div>
+[/#if]
+
+<h4>
+	<span id="toggle_handle_parametriCalcolo"
+		class="toggle_handle collapse">Parametri di calcolo
+    </span>
+</h4>
+
+<div class="toggle_target_parametriCalcolo">
+<table class="formTable" summary="....">		
+		<col width="30%" />
+		<col width="70%" />
+		<tr>
+			<th><label for="id_perc_quota_parte">Quota parte per spese generali e di funzionamento</label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_perc_quota_parte"
+			       name="_formaAgevolazione.percQuotaParteSpeseGenFunz"
+				   value="${FTL_PLACEHOLDER}(percQuotaParteSpeseGenFunz)!?html}"
+				   readonly="readonly" style="text-align: right" />
+			</td>	
+		</tr>
+		
+		<tr>	
+			<th>
+				<label for="id_perc_massima_contrib_erogabile">
+					Percentuale massima contributo erogabile
+				</label>
+			</th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_perc_massima_contrib_erogabile"
+			       name="_formaAgevolazione.percMassimaContributoErogabile"
+				   value="${FTL_PLACEHOLDER}(percMassimaContributoErogabile)!?html}"
+				   readonly="readonly" style="text-align: right" />
+			</td>
+		</tr>
+		
+	[#if importoMinimoErogabile?has_content]	
+		[#if importoMinimoErogabile != "0,00"]	
+			<tr>	
+				<th><label for="id_importo_minimo_erogabile">Importo minimo erogabile</label></th>
+				<td style="vertical-align: bottom" >
+				<input type="text" 
+				       id="id_importo_minimo_erogabile"
+				       name="_formaAgevolazione.importoMinimoErogabile"
+					   value="${FTL_PLACEHOLDER}(importoMinimoErogabile)!?html}"
+					   readonly="readonly" style="text-align: right" />&#160;&#8364;
+				</td>			
+	        </tr>
+	     [/#if]
+	[/#if]   
+	
+	[#if importoMassimoErogabile?has_content ]	
+			<tr>	
+				<th><label for="id_importo_massimo_erogabile">Importo massimo erogabile</label></th>
+				<td style="vertical-align: bottom" >
+				<input type="text" 
+				       id="id_importo_massimo_erogabile"
+				       name="_formaAgevolazione.importoMassimoErogabile"
+					   value="${FTL_PLACEHOLDER}(importoMassimoErogabile)!?html}"
+					   readonly="readonly" style="text-align: right" />&#160;&#8364;
+				</td>			
+	        </tr>
+	[/#if]        
+</table>
+</div>
+			
+<h4>
+	<span id="toggle_handle_elementiCalcolo"
+		class="toggle_handle collapse">Elementi di calcolo
+		[@contextualErrors errorList=(messages._formaAgevolazione)![] /] 
+    </span>
+</h4>
+
+
+<div class="toggle_target_elementiCalcolo">
+	<table class="formTable" summary="....">		
+		<col width="30%" />
+		<col width="70%" />
+		
+		<tr>			
+			<th><label for="id_spese_connesse_attivita">A. Spese connesse all'attivit&#224; </label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_importo_spese_connesse_attivita"
+                   name="_formaAgevolazione.speseConnesseAttivita"
+				   value="${FTL_PLACEHOLDER}(speseConnesseAttivita)!?html}"
+				   readonly="readonly" style="text-align: right"/>&#160;&#8364;	
+			</td>
+		</tr>
+		
+		<tr>			
+			<th><label for="id_spese_generali_funz">B. Spese generali e di funzionamento</label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_spese_generali_funz"
+			       name="_formaAgevolazione.speseGeneraliFunz"
+				   value="${FTL_PLACEHOLDER}(speseGeneraliEFunz)!?html}"
+				   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>			
+		</tr>
+		
+		<tr>			
+			<th><label for="id_spese_generali_funz_qp">B2. Spese generali e di funzionamento in quota parte</label></th>
+			<td style="vertical-align: bottom">
+			<input type="text" 
+			       id="id_spese_generali_funz_qp"
+			       name="_formaAgevolazione.speseGeneraliFunzQP"
+				   value="${FTL_PLACEHOLDER}(speseGeneraliEFunzQP)!?html}"
+				   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>			
+		</tr>
+		
+		<tr>			
+			<th><label for="id_totale_spese_effettive">Totale delle spese effettive (A + B2)</label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_totale_spese_effettive"
+			       name="_formaAgevolazione.totaleSpeseEffettive"
+				   value="${FTL_PLACEHOLDER}(totaleSpeseEffettive)!?html}"
+				   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>			
+		</tr>
+		
+		<tr>			
+			<th><label for="id_totale_entrate">C. Totale delle entrate</label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_totale_entrate"
+			       name="_formaAgevolazione.totaleEntrate"
+				   value="${FTL_PLACEHOLDER}(totaleEntrate)!?html}"
+				   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>			
+		</tr>
+		
+		<tr>			
+			<th><label for="id_differenza">D.Differenza (A + B2 - C)</label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_differenza"
+			       name="_formaAgevolazione.differenza"
+				   value="${FTL_PLACEHOLDER}(differenzaEU)!?html}"
+				   readonly="readonly" style="text-align: right" />&#160;&#8364;
+			</td>
+					
+		</tr>
+		
+	</table>
+</div>
+
+<h4>
+	<span id="toggle_handle_importi"
+		class="toggle_handle collapse">Importi
+    </span>
+</h4>
+
+
+<div class="toggle_target_importi">
+	<table class="formTable" summary="....">		
+		<col width="30%" />
+		<col width="70%" />
+		
+		<tr>			
+			<th><label for="id_importo_erogabile">Importo erogabile *</label></th>
+			<td style="vertical-align: bottom" >
+			<input type="text" 
+			       id="id_importo_erogabile"
+			       name="_formaAgevolazione.importoErogabile"
+				   value="${FTL_PLACEHOLDER}(importoErogabile)!?html}"
+				   style="text-align: right" readonly="readonly" />&#160;&#8364;
+			[@contextualErrors errorList=(messages._formaAgevolazione_importoErogabile)![] /]
+			</td>			
+		</tr>
+		<tr>			
+			<th>
+				<label for="id_importo_richiesto">Importo richiesto</label>
+			</th>
+			
+			<td id="td_importo_richiesto" style="vertical-align: bottom" >
+				<input type="text" 
+				       id="id_importo_richiesto"
+				       pattern="[0-9]+([,][0-9]+)?"
+				       name="_formaAgevolazione.importoRichiesto"
+				       title="Digitare un numero con virgola. Es.: 1000,00"
+					   value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}"
+					   onchange="formatta();"
+					   style="text-align: right" />&#160;&#8364;
+				
+				[@contextualErrors errorList=(messages._formaAgevolazione_importoRichiesto)![] /]
+			</td>			
+		</tr>
+    </table>
+    <p style="font-style:italic; font-weight:normal;">
+    * Il valore riportato nel campo 'Importo erogabile' è dato dal calcolo: (A + B2) x Percentuale massima contributo erogabile prevista dal bando. <br/>
+    Non può comunque essere:<br/> 
+    - superiore alla differenza fra le Spese effettive e le Entrate (campo D) <br/>
+    - superiore all'Importo massimo erogabile previsto dal bando.</p>
+</div>		
+
+

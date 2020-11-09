@@ -1,0 +1,84 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _descrizioneFiera --]
+
+<#-- note di dipendenze da altre commonalities: ?!? -->
+
+<script type="text/javascript">
+	
+	$(window).on('load',function () {
+		// console.log("debug: sei in blocchetti.descrizioneFiera ...");	
+		// console.log("debug: versione:05 ...");	        		
+	});
+	
+	function setDescrizioneStatoEsteroSL() {
+		// console.log("debug: fx setDescrizioneStatoEsteroSL chiamata!");
+		$("#id_descrizioneFiera_statoEsteroDescrizione").val($("#id_descrizioneFiera_statoEstero option:selected").text());
+	}
+
+</script>
+
+<style>
+	#id_descrizioneFiera_statoEstero {
+	    width: 27%;
+	}
+</style>
+
+
+
+<h4>
+	<span id="toggle_handle_DescFiera" class="toggle_handle collapse">Descrizione della fiera</span>
+</h4>
+
+<div class="toggle_target_DescFiera">
+	
+	<table class="formTable" summary="....">
+	<colgroup>
+		<col width="20%" />
+		<col width="80%" />
+	</colgroup>
+		<tbody>	
+		  	<tr>
+		  		 <th scope="row">
+		  		 	<label for="id_nomeFiera">Nome e date (INIZIO-FINE)<br/>della manifestazione fieristica <br/>a cui si intende partecipare</label>
+		  		 </th>
+		  		 <td>
+		  		 	<input type="text" 
+							name="_descrizioneFiera.nomeFiera"
+							placeholder="Digitare Nome fiera e data inizio e fine (gg/mm/aaaa)-(gg/mm/aaaa)"
+							maxlength="500"
+							width="65%"
+							value="${FTL_PLACEHOLDER}(_descrizioneFiera.nomeFiera)!?html}"
+							id="id_descrizioneFiera_nomeFiera"
+							class="[@classMediumError errorList=(messages._descrizioneFiera_nomeFiera)![] /]" />
+							[@contextualErrors errorList=(messages._descrizioneFiera_nomeFiera)![] /]
+		  		 </td>
+		  	</tr>
+		  	
+		  	<tr>	 
+		  		 <th scope="row">
+					<label for="id_descrizioneFiera_statoEstero">Nazione estera in cui si svolge<br/>la manifestazione fieristica</label>
+				 </th>
+				 <td>
+				 	<select name="_descrizioneFiera.statoEstero" id="id_descrizioneFiera_statoEstero" 
+							class="[@classLongError errorList=(messages._descrizioneFiera_statoEstero)![] /]"
+							onchange="setDescrizioneStatoEsteroSL()">
+							<option value="">Seleziona...</option>
+						[#list statoEsteroSLList as item]
+							[#if item.codice?string == (_descrizioneFiera.statoEstero)!]
+								<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+							[#else]
+							<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+							[/#if]
+						[/#list]
+					</select>
+						[@contextualErrors errorList=(messages._descrizioneFiera_statoEstero)![] /]
+						<input type="hidden" name="_descrizioneFiera.statoEsteroDescrizione" id="id_descrizioneFiera_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_descrizioneFiera.statoEsteroDescrizione)!?html}" />
+						<input type="hidden" name="_descrizioneFiera.statoEsteroDescrizione" id="id_descrizioneFiera_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_descrizioneFiera.statoEsteroDescrizione)!?html}" /><input type="hidden" name="_descrizioneFiera.statoEsteroDescrizione" id="id_descrizioneFiera_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_descrizioneFiera.statoEsteroDescrizione)!?html}" />
+		  		 </td>
+		  	</tr>
+		  </tbody>	
+	</table>
+</div>

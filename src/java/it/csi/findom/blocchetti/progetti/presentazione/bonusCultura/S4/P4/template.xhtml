@@ -1,0 +1,54 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+
+<div id="document">
+	<![CDATA[
+		[@InjectModel][/@InjectModel]
+	]]>
+
+
+	[#-- MACRO: sono valide per ogni sezione o pagina --]
+	[#-- include "../../../macros/warningclass.bsh" // NON USATA  --]
+	<#include "../../../../../../../../../../blocchetti/macros/errorclass.bsh">
+	
+	[#-- COMMON: parti di codice comune a piu pagine --]
+	[#-- include "../../../macros/contenutiHeader.bsh"  // NON USATA --]
+	
+	[#-- FINE MACRO --]
+
+	[#if accessoForbidden]
+	[#-- qui visualizzo messaggio per accesso fraudolento --]
+	<div id="S4">
+			<div id="S4_P4">
+				<!-- AGGR_hideAllPageButtons -->
+				Accesso non consentito.
+			</div>
+	</div>
+	[#else]
+		[#if (formState == "BZ") || (formState == "OK") || (formState == "OW") || (formState == "KO")]
+
+		<!-- PARTE IN LETTURA/SCRITTURA-->
+		<#include "../../../../../../../../../../blocchetti/javascripts/disableEnterKey.js">
+		<#include "../../../../../../../../../../blocchetti/javascripts/decimalValues.js">
+
+		<div id="S4">
+			<div id="S4_P4">
+				<!-- AGGR_hideButton_RESET_PAGE -->				
+				<#include "../../../../../blocchetti/tipologiaAiutoNG/template.xhtml">
+			</div><!--/S4_P4 -->
+		</div><!--/S4 -->
+
+		[#else]
+
+		<!-- PARTE IN SOLA LETTURA-->
+		<div id="S4">
+			<div id="S4_P4">
+				<!-- AGGR_hideAllPageButtons -->
+				<#include "../../../../../blocchetti/tipologiaAiutoNG/template_RO.xhtml">
+			</div><!--/S4_P4 -->			
+		</div><!--/S4 -->
+		[/#if]
+	[/#if]
+</div>

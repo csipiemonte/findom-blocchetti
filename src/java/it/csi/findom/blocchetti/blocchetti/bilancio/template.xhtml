@@ -1,0 +1,1115 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+--]
+		    [#-- _bilancio --]	
+		    
+
+<script type="text/javascript">
+
+  // console.log("10 dic 2019 17.00 ");
+
+  function controllaFormato(val){
+	// console.log("controlla formato: " + val);
+  }
+     
+  function formattaDecimalePerCalc(val){
+      retVal = val;
+      if(val.indexOf(',')!=-1){
+      	retVal = retVal.replace(',','.');
+      }
+      return retVal;
+  }
+
+
+
+  function formattaDecimalePerVis(val){
+  	val = (Math.round(val*100)/100).toFixed(2)
+      retVal = String(val);
+      if(retVal.indexOf('.')!=-1){
+         retVal = retVal.replace('.',',');
+      }
+      return retVal;
+  }
+
+
+
+  function verificaFormatoNumerico(val){
+
+      if(val.indexOf(',')!=-1){
+    	  val = val.replace(',','.');
+    	  decimali = val.substring(val.indexOf('.')+1);
+    	  if(decimali.length>2){
+             return false;
+         }
+      }
+      if(!$.isNumeric(val)){
+   	   return false;
+      }               
+      if(val.indexOf('E')!=-1){
+   	   return false;
+      }
+      if(val.indexOf('e')!=-1){
+   	   return false;
+      }                               
+      return true;
+   }
+       
+
+
+ function calcolaEbitda(par){
+ 	var ebitda = 0;
+ 	var totaleValoreProduzione = 0;
+ 	var totaleCostiProduzione = 0;
+ 	var ammortamentiImm = 0;
+ 	var ammortamentiMat = 0;
+
+ 	// console.log("calcolaEbitda par vale: " + par);
+   	
+ 	<#if _bilancio_totaleValoreProduzione == "true" >
+ 		if(verificaFormatoNumerico($("#id_totaleValoreProduzione"+par).val()) ){
+ 			totaleValoreProduzione = Number(formattaDecimalePerCalc($("#id_totaleValoreProduzione"+par).val())); 
+ 			// console.log("bil1 calcolaEbitda:  " + totaleValoreProduzione); 
+ 		}
+ 	</#if>
+   	
+ 	<#if _bilancio_totaleCostiProduzione == "true" >
+ 		if(verificaFormatoNumerico($("#id_totaleCostiProduzione"+par).val()) ){
+ 			totaleCostiProduzione = Number(formattaDecimalePerCalc($("#id_totaleCostiProduzione"+par).val()));   
+ 			// console.log("bil2 calcolaEbitda:  " + totaleCostiProduzione); 
+ 		}
+ 	</#if>
+ 	
+ 	<#if _bilancio_ammortamentiImm == "true" >
+ 		if(verificaFormatoNumerico($("#id_ammortamentiImm"+par).val()) ){
+ 			ammortamentiImm = Number(formattaDecimalePerCalc($("#id_ammortamentiImm"+par).val()));    
+ 			// console.log("bil3 calcolaEbitda:  " + ammortamentiImm);
+		}            		
+ 	</#if>
+   	
+   	<#if _bilancio_ammortamentiMat == "true" >
+   		if(verificaFormatoNumerico($("#id_ammortamentiMat"+par).val()) ){
+   			ammortamentiMat = Number(formattaDecimalePerCalc($("#id_ammortamentiMat"+par).val()));  
+   			// console.log("bil4 calcolaEbitda:  " + ammortamentiMat);   	        		
+		}
+   	</#if>
+   	
+   	 	ebitda = (totaleValoreProduzione - totaleCostiProduzione) + ammortamentiImm + ammortamentiMat;
+   	 	$("#id_ebitda"+par).val(formattaDecimalePerVis(ebitda));  
+   	 	// console.log("bil5 calcolaEbitda:  " + ebitda);      
+   	
+  }
+
+
+
+
+       function calcolaEbit(par)
+       {
+       	var ebit = 0;
+       	var totaleValoreProduzione = 0;
+       	var totaleCostiProduzione = 0;
+       	var proventiFinanziari = 0;
+       	var proventiGestioneAccessoria = 0;
+       	var oneriGestioneAccessoria = 0;
+
+       	// console.log("calcolaEbit par vale: " + par);
+       	
+       	<#if _bilancio_totaleValoreProduzione == "true" >
+       		if(verificaFormatoNumerico($("#id_totaleValoreProduzione"+par).val()) ){
+       			totaleValoreProduzione = Number(formattaDecimalePerCalc($("#id_totaleValoreProduzione"+par).val())); 
+       			// console.log("bil6 calcolaEbit:  " + totaleValoreProduzione); 
+       		}
+       	</#if>
+       	
+       	<#if _bilancio_totaleCostiProduzione == "true" >
+       		if(verificaFormatoNumerico($("#id_totaleCostiProduzione"+par).val()) ){
+       			totaleCostiProduzione = Number(formattaDecimalePerCalc($("#id_totaleCostiProduzione"+par).val()));  
+       			// console.log("bil7 calcolaEbit:  " + totaleCostiProduzione);  
+       		}
+       	</#if>
+       	
+       	<#if _bilancio_proventiFinanziari == "true" >
+       		if(verificaFormatoNumerico($("#id_proventiFinanziari"+par).val()) ){
+       			proventiFinanziari = Number(formattaDecimalePerCalc($("#id_proventiFinanziari"+par).val())); 
+       			// console.log("bil8 calcolaEbit:  " + proventiFinanziari);     
+   			}            		
+       	</#if>
+       	
+       	<#if _bilancio_proventiGestioneAccessoria == "true" >
+        	if(verificaFormatoNumerico($("#id_proventiGestioneAccessoria"+par).val()) ){
+        		proventiGestioneAccessoria = Number(formattaDecimalePerCalc($("#id_proventiGestioneAccessoria"+par).val())); 
+        		// console.log("bil9 calcolaEbit:  " + proventiGestioneAccessoria);    	        		
+			}
+       	</#if>
+       	
+       	<#if _bilancio_oneriGestioneAccessoria == "true" >
+       		if(verificaFormatoNumerico($("#id_oneriGestioneAccessoria"+par).val()) ){
+       			oneriGestioneAccessoria = Number(formattaDecimalePerCalc($("#id_oneriGestioneAccessoria"+par).val())); 
+       			// console.log("bil10 calcolaEbit:  " + oneriGestioneAccessoria);     	        		
+			}
+   		</#if>
+
+   		 <#if _bilancio_ebit == "true" >
+       	    ebit = (totaleValoreProduzione - totaleCostiProduzione) + proventiFinanziari + proventiGestioneAccessoria - oneriGestioneAccessoria;
+       	    $("#id_ebit"+par).val(formattaDecimalePerVis(ebit));
+       	 	// console.log("bil11 calcolaEbit:  " + ebit); 
+       	 </#if>        
+       	
+       }
+     
+ </script>
+
+		[#if !((_bilancio)?has_content)]
+			[#if (mostraMsgAAEP == "S")]
+			<div class="stdMessagePanel feedback">
+				<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sul Registro delle Imprese. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+			</div>
+			[/#if]
+		[/#if]
+			
+		<h4>
+			<span id="toggle_handle_01" class="toggle_handle collapse">Dati di bilancio</span>
+		</h4>
+		
+	<!-- 1: Empowerment Finanziamento inserire nuova frase: Riportare i dati relativi agli ultimi due bilanci chiusi e approvati -->
+	<#if _datiBilancio_bilanci_chiusi_customLabel == "true" >
+		<p style="font-style:italic; font-weight:normal;">Riportare i dati relativi agli ultimi due bilanci chiusi e approvati</p>
+	<#else>
+		<p style="font-style:italic; font-weight:normal;">Riportare i dati relativi agli ultimi due bilanci chiusi e approvati/in corso di approvazione</p>
+	</#if>	
+		<div class="toggle_target_01">
+			<table class="formTable" summary="....">
+			    <colgroup>
+			       <col width="50%" />
+				   <col width="16%" />
+				   <col width="16%" />
+				   <col width="18%" />	
+				 </colgroup>
+				 
+			    <#if _bilancio_anno == "true" >
+			    <tr>
+			       <th> </th>
+			       <td>
+			           <table>
+			           <colgroup>
+			              <col width="85%" />
+				          <col width="15%" />
+				       </colgroup>
+			           <tr>
+			           <td style="border:none; text-align: center">
+			           	<label for="id_anno">Ultimo esercizio finanziario chiuso</label>
+			           	</td>
+			           <td style="border:none;"></td>
+			           </tr>
+			           <tr><td style="border:none; text-align: left" >
+				       <input type="text" name="_bilancio.anno" value="${FTL_PLACEHOLDER}bilMap.anno!?html}" 					       
+				       id="id_anno" class="[@classLongError errorList=(messages._bilancio_anno)![] /] calendarioCustom2" style="width: 82%;"/>
+				       [@contextualErrors errorList=(messages._bilancio_anno)![] /]
+				       <span id="id_bilancioanno_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+				       </td>
+				        <td style="border:none;"></td>
+				       </tr>
+				       </table>
+			       </td>
+			       <td>
+			           <table>
+			           <colgroup>
+			              <col width="85%" />
+				          <col width="15%" />
+				       </colgroup>
+			           <tr>
+			           <td style="border:none; text-align: left"><label for="id_annoPrec">Penultimo esercizio finanziario chiuso</label></td>
+			           <td style="border:none;"></td>
+			           </tr>
+			           <tr><td style="border:none;text-align: left">
+				       <input type="text" name="_bilancio.annoPrec" value="${FTL_PLACEHOLDER}bilMap.annoPrec!?html}"
+				       id="id_annoPrec" class="[@classLongError errorList=(messages._bilancio_annoPrec)![] /] calendarioCustom2" style="width: 82%;"/>
+				       [@contextualErrors errorList=(messages._bilancio_annoPrec)![] /]
+				       <span id="id_bilancioannoPrec_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+				       </td>
+				        <td style="border:none;"></td>
+				       </tr>
+				       </table>
+			       </td>
+			        <td>
+			       </td>
+			    </tr>				  
+			    </#if>
+			    
+			    <!-- : 20/04/2018 - inizio -->
+			    <#if _bilancio_anno_readonly == "true" >
+				    	<tr>
+					       <th> </th>
+					       <td>
+					           <table>
+					           <colgroup>
+					              <col width="85%" />
+						          <col width="15%" />
+						       </colgroup>
+						       
+					           <tr>
+						           <td style="border:none; text-align: center;">
+						           	<label for="id_anno" >
+						           		<b>Ultimo esercizio finanziario chiuso</b>
+						           	</label>
+						           </td>
+						           <td style="border:none;"></td>
+					           </tr>
+					           <tr>
+						           	<td style="border:none; text-align: left" >
+							       		<input type="text" name="_bilancio.anno" value="${FTL_PLACEHOLDER}bilMap.anno!?html}"				       
+							       			id="id_anno" readonly="readonly" class="[@classLongError errorList=(messages._bilancio_anno)![] /] calendarioCustom" style="width: 82%; text-align: center" />
+							       				[@contextualErrors errorList=(messages._bilancio_anno)![] /]
+							       			<!-- <span id="id_bilancioanno_calendario" class="txt_help"></span>  -->
+							       </td>
+							        <td style="border:none;"></td>
+						       </tr>
+						       
+						       <tr>
+						       	<td style="border:none; text-align: center" >
+						       		<input type="hidden" name="_bilancio.fonteDatiAnno" value="${FTL_PLACEHOLDER}bilMap.fonteDatiAnno!?html}" />
+						       	</td>
+						       </tr>
+						       
+						       </table>
+					       </td>
+					       <td>
+					           <table>
+					           <colgroup>
+					              <col width="85%" />
+						          <col width="15%" />
+						       </colgroup>
+					           <tr>
+					           <td style="border:none; text-align: center"><label for="id_annoPrec"><b>Penultimo esercizio finanziario chiuso</b></label></td>
+					           <td style="border:none;"></td>
+					           </tr>
+					           <tr><td style="border:none;text-align: left">
+						       <input type="text" name="_bilancio.annoPrec" value="${FTL_PLACEHOLDER}bilMap.annoPrec!?html}"
+						       id="id_annoPrec" readonly="readonly" class="[@classLongError errorList=(messages._bilancio_annoPrec)![] /] calendarioCustom" style="width: 82%; text-align: center" />
+						       [@contextualErrors errorList=(messages._bilancio_annoPrec)![] /]
+						       <!-- <span id="id_bilancioannoPrec_calendario" class="txt_help"></span>  -->
+						       </td>
+						        <td style="border:none;"></td>
+						       </tr>
+						       
+						       <tr>
+						       	<td style="border:none; text-align: center" >
+									<input type="hidden" name="_bilancio.fonteDatiAnnoPrec" value="${FTL_PLACEHOLDER}bilMap.fonteDatiAnnoPrec!?html}" />
+						       	</td>
+						       </tr>
+						       
+						       </table>
+					       </td>
+					        <td>
+					       </td>
+					    </tr>				  
+			    </#if>
+			    <!-- : 20/04/2018 - fine -->
+				<#if _bilancio_speseRS == "true" >
+				<tr>
+			       <th> <label for="id_speseRS">Spese di R&amp;S</label> </th>
+			       <td>				       	   
+				       <input type="text" name="_bilancio.speseRS" value="${FTL_PLACEHOLDER}(bilMap.speseRS)!?html}" id="id_speseRS" class="[@classMediumError errorList=(messages._bilancio_speseRS)![] /]"
+				       style="text-align: right; width: 80%" />
+				       [@contextualErrors errorList=(messages._bilancio_speseRS)![] /]
+			       </td>				       
+			       <td>
+				       <input type="text" name="_bilancio.speseRSPrec" value="${FTL_PLACEHOLDER}(bilMap.speseRSPrec)!?html}" 
+				       id="id_speseRSPrec" onchange="controllaFormato('id_speseRSPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_speseRSPrec)![] /]" 
+				       style="text-align:right; width: 80%" />
+				       [@contextualErrors errorList=(messages._bilancio_speseRSPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    <#if _bilancio_creditiVsClienti == "true" >
+				<tr>
+			       <th> <label for="id_totCreditiVsClienti">Totale crediti verso clienti</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.totCreditiVsClienti" value="${FTL_PLACEHOLDER}bilMap.totCreditiVsClienti!?html}" 
+				       id="id_totCreditiVsClienti" onchange="controllaFormato('id_totCreditiVsClienti')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totCreditiVsClienti)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totCreditiVsClienti)![] /]
+			       </td>				       
+			       <td>
+				       <input type="text" name="_bilancio.totCreditiVsClientiPrec" value="${FTL_PLACEHOLDER}bilMap.totCreditiVsClientiPrec!?html}" 
+				       id="id_totCreditiVsClientiPrec" onchange="controllaFormato('id_totCreditiVsClientiPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totCreditiVsClientiPrec)![] /]" 
+				       style="text-align:right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totCreditiVsClientiPrec)![] /]
+			       </td>				       				       
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>	
+			    <#if _bilancio_creditiCommScad == "true" >
+				<tr>
+			       <th> <label for="id_creditiCommScad">Crediti commerciali - solo se scaduti</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.creditiCommScad" value="${FTL_PLACEHOLDER}bilMap.creditiCommScad!?html}" 
+				       id="id_creditiCommScad" onchange="controllaFormato('id_creditiCommScad')" 
+				       class="[@classMediumError errorList=(messages._bilancio_creditiCommScad)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_creditiCommScad)![] /]
+			       </td>				       
+			       <td>
+				       <input type="text" name="_bilancio.creditiCommScadPrec" value="${FTL_PLACEHOLDER}bilMap.creditiCommScadPrec!?html}" 
+				       id="id_creditiCommScadPrec" onchange="controllaFormato('id_creditiCommScadPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_creditiCommScadPrec)![] /]" 
+				       style="text-align:right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_creditiCommScadPrec)![] /]
+			       </td>				       				       
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>					    
+			    <#if _bilancio_disponibilitaLiquide == "true" >
+				<tr>
+			       <th> 
+			       		<label for="id_disponibilitaLiquide">
+			       			Disponibilit&#224; liquide (Voce C.IV "Totale disponibilit&#224;
+			       			liquide" dello Stato Patrimoniale Attivo)
+			       		</label> 
+			       </th>
+			       
+			       <td>
+				       <input type="text" name="_bilancio.disponibilitaLiquide" value="${FTL_PLACEHOLDER}bilMap.disponibilitaLiquide!?html}" 
+				       id="id_disponibilitaLiquide"  
+				       class="[@classMediumError errorList=(messages._bilancio_disponibilitaLiquide)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_disponibilitaLiquide)![] /]
+			       </td>
+			       
+			       <td>
+				       <input type="text" name="_bilancio.disponibilitaLiquidePrec" value="${FTL_PLACEHOLDER}bilMap.disponibilitaLiquidePrec!?html}" 
+				       id="id_disponibilitaLiquidePrec" onchange="controllaFormato('id_disponibilitaLiquidePrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_disponibilitaLiquidePrec)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_disponibilitaLiquidePrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			     </#if>
+			    
+			    <#if _bilancio_totaleBilancio == "true" >
+				<tr>
+			       <th> <label for="id_totaleBilancio">Totale bilancio (Totale attivo)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.totaleBilancio" value="${FTL_PLACEHOLDER}bilMap.totaleBilancio!?html}" 
+				       id="id_totaleBilancio" onchange="controllaFormato('id_totaleBilancio')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totaleBilancio)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totaleBilancio)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.totaleBilancioPrec" value="${FTL_PLACEHOLDER}bilMap.totaleBilancioPrec!?html}" 
+				       id="id_totaleBilancioPrec" onchange="controllaFormato('id_totaleBilancioPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totaleBilancioPrec)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totaleBilancioPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_totalePatrimonio == "true" >
+			    <tr>
+			       <th> <label for="id_totalePatrimonio">Totale Patrimonio netto</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.totalePatrimonio" value="${FTL_PLACEHOLDER}bilMap.totalePatrimonio!?html}" 
+				       id="id_totalePatrimonio" onchange="controllaFormato('id_totalePatrimonio')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totalePatrimonio)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totalePatrimonio)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.totalePatrimonioPrec" value="${FTL_PLACEHOLDER}bilMap.totalePatrimonioPrec!?html}" 
+				       id="id_totalePatrimonioPrec" onchange="controllaFormato('id_totalePatrimonioPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totalePatrimonioPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totalePatrimonioPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+			    
+			    <#if _bilancio_debitiSoci == "true" >
+			    <tr>
+			       <th> <label for="id_debitiSoci">Debiti verso soci per finanziamenti (voce D 3 Stato Patrimoniale Passivo "Totale debiti verso soci per finanziamenti")</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiSoci" value="${FTL_PLACEHOLDER}bilMap.debitiSoci!?html}" 
+				       id="id_debitiSoci" onchange="controllaFormato('id_debitiSoci')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiSoci)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiSoci)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiSociPrec" value="${FTL_PLACEHOLDER}bilMap.debitiSociPrec!?html}" 
+				       id="id_debitiSociPrec" onchange="controllaFormato('id_debitiSociPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiSociPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiSociPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			       
+			    </tr>	
+			    </#if>
+			    
+			    <#if _bilancio_debitiBanche == "true" >
+			    <tr>
+			       <th> <label for="id_debitiBanche">Debiti verso banche (Voce D 4 Stato Patrimoniale Passivo "Totale debiti verso banche")</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiBanche" value="${FTL_PLACEHOLDER}bilMap.debitiBanche!?html}" 
+				       id="id_debitiBanche" onchange="controllaFormato('id_debitiBanche')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiBanche)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiBanche)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiBanchePrec" value="${FTL_PLACEHOLDER}bilMap.debitiBanchePrec!?html}" 
+				       id="id_debitiBanchePrec" onchange="controllaFormato('id_debitiBanchePrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiBanchePrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiBanchePrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+			    
+			    <#if _bilancio_debitiVsFornitori == "true" >
+			    <tr>
+			       <th> <label for="id_debitiVsFornitori">Totale debiti verso fornitori</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiVsFornitori" value="${FTL_PLACEHOLDER}bilMap.debitiVsFornitori!?html}" 
+				       id="id_debitiVsFornitori" onchange="controllaFormato('id_debitiVsFornitori')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiVsFornitori)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiVsFornitori)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiVsFornitoriPrec" value="${FTL_PLACEHOLDER}bilMap.debitiVsFornitoriPrec!?html}" 
+				       id="id_debitiVsFornitoriPrec" onchange="controllaFormato('id_debitiVsFornitoriPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiVsFornitoriPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiVsFornitoriPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+			    
+			    <#if _bilancio_debitiFornScad == "true" >
+			    <tr>
+			       <th> <label for="id_debitiFornScad">Debiti verso fornitori - solo se scaduti</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiFornScad" value="${FTL_PLACEHOLDER}bilMap.debitiFornScad!?html}" 
+				       id="id_debitiFornScad" onchange="controllaFormato('id_debitiFornScad')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiFornScad)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiFornScad)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiFornScadPrec" value="${FTL_PLACEHOLDER}bilMap.debitiFornScadPrec!?html}" 
+				       id="id_debitiFornScadPrec" onchange="controllaFormato('id_debitiFornScadPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiFornScadPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiFornScadPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+
+			    <#if _bilancio_debitiImpreseCollegate == "true" >
+			    <tr>
+			       <th> <label for="id_debitiImpreseCollegate">Debiti verso imprese collegate (Voce D 10 Stato Patrimoniale Passivo "Totale debiti verso imprese collegate")</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiImpreseCollegate" value="${FTL_PLACEHOLDER}bilMap.debitiImpreseCollegate!?html}" 
+				       id="id_debitiImpreseCollegate" onchange="controllaFormato('id_debitiImpreseCollegate')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiImpreseCollegate)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiImpreseCollegate)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiImpreseCollegatePrec" value="${FTL_PLACEHOLDER}bilMap.debitiImpreseCollegatePrec!?html}" 
+				       id="id_debitiImpreseCollegatePrec" onchange="controllaFormato('id_debitiImpreseCollegatePrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiImpreseCollegatePrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiImpreseCollegatePrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    <#if _bilancio_debitiControllanti == "true" >
+			    <tr>
+			       <th> <label for="id_debitiControllanti">Debiti verso controllanti (Voce D 11 Stato Patrimoniale Passivo "Totale debiti verso controllanti")</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiControllanti" value="${FTL_PLACEHOLDER}bilMap.debitiControllanti!?html}" 
+				       id="id_debitiControllanti" onchange="controllaFormato('id_debitiControllanti')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiControllanti)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiControllanti)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiControllantiPrec" value="${FTL_PLACEHOLDER}bilMap.debitiControllantiPrec!?html}" 
+				       id="id_debitiControllantiPrec" onchange="controllaFormato('id_debitiControllantiPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiControllantiPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiControllantiPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+
+				<#if _bilancio_debitiTributari == "true" >
+			    <tr>
+			       <th> <label for="id_debitiTributari">Totale debiti tributari</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiTributari" value="${FTL_PLACEHOLDER}bilMap.debitiTributari!?html}" 
+				       id="id_debitiTributari" onchange="controllaFormato('id_debitiTributari')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiTributari)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiTributari)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiTributariPrec" value="${FTL_PLACEHOLDER}bilMap.debitiTributariPrec!?html}" 
+				       id="id_debitiTributariPrec" onchange="controllaFormato('id_debitiTributariPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiTributariPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiTributariPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+			    
+			    <#if _bilancio_debitiTributariScad == "true" >
+			    <tr>
+			       <th> <label for="id_debitiTributariScad">Debiti tributari – solo se scaduti</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.debitiTributariScad" value="${FTL_PLACEHOLDER}bilMap.debitiTributariScad!?html}" 
+				       id="id_debitiTributariScad" onchange="controllaFormato('id_debitiTributariScad')"
+				       class="[@classMediumError errorList=(messages._bilancio_debitiTributariScad)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiTributariScad)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.debitiTributariScadPrec" value="${FTL_PLACEHOLDER}bilMap.debitiTributariScadPrec!?html}" 
+				       id="id_debitiTributariScadPrec" onchange="controllaFormato('id_debitiTributariScadPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_debitiTributariScadPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_debitiTributariScadPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>	
+			    </#if>
+			    
+			    <#if _bilancio_ricavi == "true" >
+			    <tr>
+			       <th> <label for="id_ricavi">Ricavi (voce A1 conto economico)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.ricavi" value="${FTL_PLACEHOLDER}bilMap.ricavi!?html}" 
+				       id="id_ricavi" onchange="controllaFormato('id_ricavi')"
+				       class="[@classMediumError errorList=(messages._bilancio_ricavi)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ricavi)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.ricaviPrec" value="${FTL_PLACEHOLDER}bilMap.ricaviPrec!?html}" 
+				       id="id_ricaviPrec" onchange="controllaFormato('id_ricaviPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ricaviPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ricaviPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_totaleValoreProduzione == "true" >
+			    <tr>
+			       <th> <label for="id_totaleRicavi">Totale Valore della produzione (voce A del conto economico)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.totaleValoreProduzione" value="${FTL_PLACEHOLDER}bilMap.totaleValoreProduzione!?html}" 
+				       id="id_totaleValoreProduzione" onchange="controllaFormato('id_totaleValoreProduzione');calcolaEbitda('');calcolaEbit('')"
+				       class="[@classMediumError errorList=(messages._bilancio_totaleValoreProduzione)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totaleValoreProduzione)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.totaleValoreProduzionePrec" value="${FTL_PLACEHOLDER}bilMap.totaleValoreProduzionePrec!?html}" 
+				       id="id_totaleValoreProduzionePrec" onchange="controllaFormato('id_totaleValoreProduzionePrec');calcolaEbitda('Prec');calcolaEbit('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totaleValoreProduzionePrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totaleValoreProduzionePrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_variazioneLavoriInCorso == "true" >
+			    <tr>
+			       <th> <label for="id_variazioneLavoriInCorso">Variazioni dei lavori in corso su ordinazione (voce A 3 del conto economico)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.variazioneLavoriInCorso" value="${FTL_PLACEHOLDER}bilMap.variazioneLavoriInCorso!?html}" 
+				       id="id_variazioneLavoriInCorso" onchange="controllaFormato('id_variazioneLavoriInCorso')"
+				       class="[@classMediumError errorList=(messages._bilancio_variazioneLavoriInCorso)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_variazioneLavoriInCorso)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.variazioneLavoriInCorsoPrec" value="${FTL_PLACEHOLDER}bilMap.variazioneLavoriInCorsoPrec!?html}" 
+				       id="id_variazioneLavoriInCorsoPrec" onchange="controllaFormato('id_variazioneLavoriInCorsoPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_variazioneLavoriInCorsoPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_variazioneLavoriInCorsoPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_ammortamentiImm == "true" >
+			    <tr>
+			       <th> <label for="id_ammortamentiImm">Ammortamenti immateriali (Voce B 10 a) del conto economico)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.ammortamentiImm" value="${FTL_PLACEHOLDER}bilMap.ammortamentiImm!?html}" 
+				       id="id_ammortamentiImm" onchange="controllaFormato('id_ammortamentiImm');calcolaEbitda('')"
+				       class="[@classMediumError errorList=(messages._bilancio_ammortamentiImm)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ammortamentiImm)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.ammortamentiImmPrec" value="${FTL_PLACEHOLDER}bilMap.ammortamentiImmPrec!?html}" 
+				       id="id_ammortamentiImmPrec" onchange="controllaFormato('id_ammortamentiImmPrec');calcolaEbitda('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ammortamentiImmPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ammortamentiImmPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_ammortamentiMat == "true" >
+			    <tr>
+			       <th> <label for="id_ammortamentiMat">Ammortamenti materiali (Voce B 10 b) del conto economico)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.ammortamentiMat" value="${FTL_PLACEHOLDER}bilMap.ammortamentiMat!?html}" 
+				       id="id_ammortamentiMat" onchange="controllaFormato('id_ammortamentiMat');calcolaEbitda('')"
+				       class="[@classMediumError errorList=(messages._bilancio_ammortamentiMat)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ammortamentiMat)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.ammortamentiMatPrec" value="${FTL_PLACEHOLDER}bilMap.ammortamentiMatPrec!?html}" 
+				       id="id_ammortamentiMatPrec" onchange="controllaFormato('id_ammortamentiMatPrec');calcolaEbitda('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ammortamentiMatPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ammortamentiMatPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_totaleCostiProduzione == "true" >
+			    <tr>
+			       <th> <label for="id_totaleCostiProduzione">Totale Costi della produzione (voce B del conto economico)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.totaleCostiProduzione" value="${FTL_PLACEHOLDER}bilMap.totaleCostiProduzione!?html}" 
+				       id="id_totaleCostiProduzione" onchange="controllaFormato('id_totaleCostiProduzione');calcolaEbitda('');calcolaEbit('')"
+				       class="[@classMediumError errorList=(messages._bilancio_totaleCostiProduzione)![] /]" 
+				        style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totaleCostiProduzione)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.totaleCostiProduzionePrec" value="${FTL_PLACEHOLDER}bilMap.totaleCostiProduzionePrec!?html}" 
+				       id="id_totaleCostiProduzionePrec" onchange="controllaFormato('id_totaleCostiProduzionePrec');calcolaEbitda('Prec');calcolaEbit('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_totaleCostiProduzionePrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_totaleCostiProduzionePrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			  
+			    
+			    <#if _bilancio_proventiFinanziari == "true" >
+			    <tr>
+			       <th> <label for="id_proventiFinanziari">Proventi finanziari (Voce C16 del conto economico "Totale altri proventi finanziari")</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.proventiFinanziari" value="${FTL_PLACEHOLDER}bilMap.proventiFinanziari!?html}" 
+				       id="id_proventiFinanziari" onchange="controllaFormato('id_proventiFinanziari');calcolaEbit('')" 
+				       class="[@classMediumError errorList=(messages._bilancio_proventiFinanziari)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_proventiFinanziari)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.proventiFinanziariPrec" value="${FTL_PLACEHOLDER}bilMap.proventiFinanziariPrec!?html}" 
+				       id="id_proventiFinanziariPrec" onchange="controllaFormato('id_proventiFinanziariPrec');calcolaEbit('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_proventiFinanziariPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_proventiFinanziariPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_interessiPassivi == "true" >
+			    <tr>
+			       <th> <label for="id_interessiPassivi">Interessi passivi rettificati (Voce C 17 del conto economico "Totale interessi e altri oneri finanziari")</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.interessiPassivi" value="${FTL_PLACEHOLDER}bilMap.interessiPassivi!?html}" 
+				       id="id_interessiPassivi" onchange="controllaFormato('id_interessiPassivi')" 
+				       class="[@classMediumError errorList=(messages._bilancio_interessiPassivi)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_interessiPassivi)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.interessiPassiviPrec" value="${FTL_PLACEHOLDER}bilMap.interessiPassiviPrec!?html}" 
+				       id="id_interessiPassiviPrec" onchange="controllaFormato('id_interessiPassiviPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_interessiPassiviPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_interessiPassiviPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_proventiGestioneAccessoria == "true" >
+			    <tr>
+			       <th> <label for="id_proventiGestioneAccessoria">Proventi gestione accessoria</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.proventiGestioneAccessoria" value="${FTL_PLACEHOLDER}bilMap.proventiGestioneAccessoria!?html}" 
+				       id="id_proventiGestioneAccessoria" onchange="controllaFormato('id_proventiGestioneAccessoria');calcolaEbit('')"
+				       class="[@classMediumError errorList=(messages._bilancio_proventiGestioneAccessoria)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_proventiGestioneAccessoria)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.proventiGestioneAccessoriaPrec" value="${FTL_PLACEHOLDER}bilMap.proventiGestioneAccessoriaPrec!?html}" 
+				       id="id_proventiGestioneAccessoriaPrec" onchange="controllaFormato('id_proventiGestioneAccessoriaPrec');calcolaEbit('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_proventiGestioneAccessoriaPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_proventiGestioneAccessoriaPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_oneriGestioneAccessoria == "true" >
+			    <tr>
+			       <th> <label for="id_oneriGestioneAccessoria">Oneri gestione accessoria</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.oneriGestioneAccessoria" value="${FTL_PLACEHOLDER}bilMap.oneriGestioneAccessoria!?html}" 
+				       id="id_oneriGestioneAccessoria" onchange="controllaFormato('id_oneriGestioneAccessoria');calcolaEbit('')"
+				       class="[@classMediumError errorList=(messages._bilancio_oneriGestioneAccessoria)![] /]" 
+				       style="text-align: right; width: 80%"   />
+				       [@contextualErrors errorList=(messages._bilancio_oneriGestioneAccessoria)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.oneriGestioneAccessoriaPrec" value="${FTL_PLACEHOLDER}bilMap.oneriGestioneAccessoriaPrec!?html}" 
+				       id="id_oneriGestioneAccessoriaPrec" onchange="controllaFormato('id_oneriGestioneAccessoriaPrec');calcolaEbit('Prec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_oneriGestioneAccessoriaPrec)![] /]"
+				       style="text-align: right; width: 80%"   />
+				       [@contextualErrors errorList=(messages._bilancio_oneriGestioneAccessoriaPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_ebitda == "true" >
+			    <tr>
+			       <th> <label for="id_ebitda">EBITDA (Differenza tra valori e costi della produzione + Ammortamenti materiali + Ammortamenti immateriali)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.ebitda" value="${FTL_PLACEHOLDER}(ebitda)!?html}" 
+				       id="id_ebitda" onchange="controllaFormato('id_ebitda')"
+				       class="[@classMediumError errorList=(messages._bilancio_ebitda)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ebitda)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.ebitdaPrec" value="${FTL_PLACEHOLDER}(ebitdaPrec)!?html}" 
+				       id="id_ebitdaPrec" onchange="controllaFormato('id_ebitdaPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ebitdaPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ebitdaPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_ebit == "true" >
+			    <tr>
+			       <th> <label for="id_ebit">EBIT (Differenza tra valori e costi della produzione + Proventi finanziari + Proventi gestione accessoria - Oneri gestione accessoria)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.ebit" value="${FTL_PLACEHOLDER}(ebit)!?html}" 
+				       id="id_ebit" onchange="controllaFormato('id_ebit')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ebit)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ebit)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.ebitPrec" value="${FTL_PLACEHOLDER}(ebitPrec)!?html}" 
+				       id="id_ebitPrec" onchange="controllaFormato('id_ebitPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ebitPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ebitPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_indiceRotazione == "true" >
+			    <tr>
+			       <th> <label for="id_indiceRotazione">Indice di rotazione del magazzino (scarico di magazzino/ scorta media)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.indiceRotazione" value="${FTL_PLACEHOLDER}bilMap.indiceRotazione!?html}" 
+				       id="id_indiceRotazione" onchange="controllaFormato('id_indiceRotazione')"
+				       class="[@classMediumError errorList=(messages._bilancio_indiceRotazione)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_indiceRotazione)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.indiceRotazionePrec" value="${FTL_PLACEHOLDER}bilMap.indiceRotazionePrec!?html}" 
+				       id="id_indiceRotazionePrec" onchange="controllaFormato('id_indiceRotazionePrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_indiceRotazionePrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_indiceRotazionePrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_dso == "true" >
+			    <tr>
+			       <th> <label for="id_dso">DSO (Days Sales Outstanding) Tempo Medio di Incasso dei crediti</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.dso" value="${FTL_PLACEHOLDER}bilMap.dso!?html}" 
+				       id="id_dso" onchange="controllaFormato('id_dso')"
+				       class="[@classMediumError errorList=(messages._bilancio_dso)![] /]" 
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_dso)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.dsoPrec" value="${FTL_PLACEHOLDER}bilMap.dsoPrec!?html}" 
+				       id="id_dsoPrec" onchange="controllaFormato('id_dsoPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_dsoPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_dsoPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			    </#if>
+			    
+			    <#if _bilancio_dpo == "true" >
+			    <tr>
+			       <th> <label for="id_dpo">DPO (Days payable outstanding) Tempo Medio di pagamento dei fornitori</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.dpo" value="${FTL_PLACEHOLDER}bilMap.dpo!?html}" 
+				       id="id_dpo" onchange="controllaFormato('id_dpo')"
+				       class="[@classMediumError errorList=(messages._bilancio_dpo)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_dpo)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.dpoPrec" value="${FTL_PLACEHOLDER}bilMap.dpoPrec!?html}" 
+				       id="id_dpoPrec" onchange="controllaFormato('id_dpoPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_dpoPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_dpoPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			     </#if>
+			     
+			     <#if _bilancio_ula == "true" >
+			    <tr>
+			       <th> <label for="id_ula">U.L.A. (unit&#224;� lavorative annue)</label> </th>
+			       <td>
+				       <input type="text" name="_bilancio.ula" value="${FTL_PLACEHOLDER}bilMap.ula!?html}" 
+				       id="id_ula" onchange="controllaFormato('id_ula')"
+				       class="[@classMediumError errorList=(messages._bilancio_ula)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ula)![] /]
+			       </td>
+			       <td>
+				       <input type="text" name="_bilancio.ulaPrec" value="${FTL_PLACEHOLDER}bilMap.ulaPrec!?html}" 
+				       id="id_ulaPrec" onchange="controllaFormato('id_ulaPrec')" 
+				       class="[@classMediumError errorList=(messages._bilancio_ulaPrec)![] /]"
+				       style="text-align: right; width: 80%"  />
+				       [@contextualErrors errorList=(messages._bilancio_ulaPrec)![] /]
+			       </td>
+			       <td>
+			       </td>
+			    </tr>
+			     </#if>
+			</table>
+			
+		<#-- valori provenienti da AAEP, vengono inseriti solo la prima volta -->
+		[#if aaepMap?has_content]
+			
+			<input type="hidden" name="_bilancioAAEP.anno" value="${FTL_PLACEHOLDER}aaepMap.anno!?html}" />
+			<input type="hidden" name="_bilancioAAEP.annoPrec" value="${FTL_PLACEHOLDER}aaepMap.annoPrec!?html}" />
+			<#if _bilancio_speseRS == "true" >
+			<input type="hidden" name="_bilancioAAEP.speseRS" value="${FTL_PLACEHOLDER}aaepMap.speseRS!?html}" />
+			<input type="hidden" name="_bilancioAAEP.speseRSPrec" value="${FTL_PLACEHOLDER}aaepMap.speseRSPrec!?html}" />
+			</#if>
+			<#if _bilancio_creditiVsClienti == "true" >
+			<input type="hidden" name="_bilancioAAEP.totCreditiVsClienti" value="${FTL_PLACEHOLDER}aaepMap.totCreditiVsClienti!?html}" />
+			<input type="hidden" name="_bilancioAAEP.totCreditiVsClientiPrec" value="${FTL_PLACEHOLDER}aaepMap.totCreditiVsClientiPrec!?html}" />
+			</#if>
+			<#if _bilancio_creditiCommScad == "true" >
+			<input type="hidden" name="_bilancioAAEP.creditiCommScad" value="${FTL_PLACEHOLDER}aaepMap.creditiCommScad!?html}" />
+			<input type="hidden" name="_bilancioAAEP.creditiCommScadPrec" value="${FTL_PLACEHOLDER}aaepMap.creditiCommScadPrec!?html}" />
+			</#if>
+			<#if _bilancio_disponibilitaLiquide == "true" >
+			<input type="hidden" name="_bilancioAAEP.disponibilitaLiquide" value="${FTL_PLACEHOLDER}aaepMap.disponibilitaLiquide!?html}" />
+			<input type="hidden" name="_bilancioAAEP.disponibilitaLiquidePrec" value="${FTL_PLACEHOLDER}aaepMap.disponibilitaLiquidePrec!?html}" />
+			</#if>
+			<#if _bilancio_totaleBilancio == "true" >
+			<input type="hidden" name="_bilancioAAEP.totaleBilancio" value="${FTL_PLACEHOLDER}aaepMap.totaleBilancio!?html}" />
+			<input type="hidden" name="_bilancioAAEP.totaleBilancioPrec" value="${FTL_PLACEHOLDER}aaepMap.totaleBilancioPrec!?html}" />
+			</#if>
+			<#if _bilancio_totalePatrimonio == "true" >
+			<input type="hidden" name="_bilancioAAEP.totalePatrimonio" value="${FTL_PLACEHOLDER}aaepMap.totalePatrimonio!?html}" />
+			<input type="hidden" name="_bilancioAAEP.totalePatrimonioPrec" value="${FTL_PLACEHOLDER}aaepMap.totalePatrimonioPrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiSoci == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiSoci" value="${FTL_PLACEHOLDER}aaepMap.debitiSoci!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiSociPrec" value="${FTL_PLACEHOLDER}aaepMap.debitiSociPrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiBanche == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiBanche" value="${FTL_PLACEHOLDER}aaepMap.debitiBanche!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiBanchePrec" value="${FTL_PLACEHOLDER}aaepMap.debitiBanchePrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiVsFornitori == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiVsFornitori" value="${FTL_PLACEHOLDER}aaepMap.debitiVsFornitori!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiVsFornitoriPrec" value="${FTL_PLACEHOLDER}aaepMap.debitiVsFornitoriPrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiFornScad == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiFornScad" value="${FTL_PLACEHOLDER}aaepMap.debitiFornScad!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiFornScadPrec" value="${FTL_PLACEHOLDER}aaepMap.debitiFornScadPrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiImpreseCollegate == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiImpreseCollegate" value="${FTL_PLACEHOLDER}aaepMap.debitiImpreseCollegate!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiImpreseCollegatePrec" value="${FTL_PLACEHOLDER}aaepMap.debitiImpreseCollegatePrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiControllanti == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiControllanti" value="${FTL_PLACEHOLDER}aaepMap.debitiControllanti!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiControllantiPrec" value="${FTL_PLACEHOLDER}aaepMap.debitiControllantiPrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiTributari == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiTributari" value="${FTL_PLACEHOLDER}aaepMap.debitiTributari!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiTributariPrec" value="${FTL_PLACEHOLDER}aaepMap.debitiTributariPrec!?html}" />
+			</#if>
+			<#if _bilancio_debitiTributariScad == "true" >
+			<input type="hidden" name="_bilancioAAEP.debitiTributariScad" value="${FTL_PLACEHOLDER}aaepMap.debitiTributariScad!?html}" />
+			<input type="hidden" name="_bilancioAAEP.debitiTributariScadPrec" value="${FTL_PLACEHOLDER}aaepMap.debitiTributariScadPrec!?html}" />
+			</#if>
+			<#if _bilancio_ricavi == "true" >
+			<input type="hidden" name="_bilancioAAEP.ricavi" value="${FTL_PLACEHOLDER}aaepMap.ricavi!?html}" />
+			<input type="hidden" name="_bilancioAAEP.ricaviPrec" value="${FTL_PLACEHOLDER}aaepMap.ricaviPrec!?html}" />
+			</#if>
+			<#if _bilancio_totaleValoreProduzione == "true" >
+			<input type="hidden" name="_bilancioAAEP.totaleValoreProduzione" value="${FTL_PLACEHOLDER}aaepMap.totaleValoreProduzione!?html}" />
+			<input type="hidden" name="_bilancioAAEP.totaleValoreProduzionePrec" value="${FTL_PLACEHOLDER}aaepMap.totaleValoreProduzionePrec!?html}" />
+			</#if>
+			<#if _bilancio_variazioneLavoriInCorso == "true" >
+			<input type="hidden" name="_bilancioAAEP.variazioneLavoriInCorso" value="${FTL_PLACEHOLDER}aaepMap.variazioneLavoriInCorso!?html}" />
+			<input type="hidden" name="_bilancioAAEP.variazioneLavoriInCorsoPrec" value="${FTL_PLACEHOLDER}aaepMap.variazioneLavoriInCorsoPrec!?html}" />
+			</#if>
+			<#if _bilancio_ammortamentiImm == "true" >
+			<input type="hidden" name="_bilancioAAEP.ammortamentiImm" value="${FTL_PLACEHOLDER}aaepMap.ammortamentiImm!?html}" />
+			<input type="hidden" name="_bilancioAAEP.ammortamentiImmPrec" value="${FTL_PLACEHOLDER}aaepMap.ammortamentiImmPrec!?html}" />
+			</#if>
+			<#if _bilancio_ammortamentiMat == "true" >
+			<input type="hidden" name="_bilancioAAEP.ammortamentiMat" value="${FTL_PLACEHOLDER}aaepMap.ammortamentiMat!?html}" />
+			<input type="hidden" name="_bilancioAAEP.ammortamentiMatPrec" value="${FTL_PLACEHOLDER}aaepMap.ammortamentiMatPrec!?html}" />
+			</#if>
+			<#if _bilancio_totaleCostiProduzione == "true" >
+			<input type="hidden" name="_bilancioAAEP.totaleCostiProduzione" value="${FTL_PLACEHOLDER}aaepMap.totaleCostiProduzione!?html}" />
+			<input type="hidden" name="_bilancioAAEP.totaleCostiProduzionePrec" value="${FTL_PLACEHOLDER}aaepMap.totaleCostiProduzionePrec!?html}" />
+			</#if>
+			<#if _bilancio_proventiFinanziari == "true" >
+			<input type="hidden" name="_bilancioAAEP.proventiFinanziari" value="${FTL_PLACEHOLDER}aaepMap.proventiFinanziari!?html}" />
+			<input type="hidden" name="_bilancioAAEP.proventiFinanziariPrec" value="${FTL_PLACEHOLDER}aaepMap.proventiFinanziariPrec!?html}" />
+			</#if>
+			<#if _bilancio_interessiPassivi == "true" >
+			<input type="hidden" name="_bilancioAAEP.interessiPassivi" value="${FTL_PLACEHOLDER}aaepMap.interessiPassivi!?html}" />
+			<input type="hidden" name="_bilancioAAEP.interessiPassiviPrec" value="${FTL_PLACEHOLDER}aaepMap.interessiPassiviPrec!?html}" />
+			</#if>
+			<#if _bilancio_proventiGestioneAccessoria == "true" >
+			<input type="hidden" name="_bilancioAAEP.proventiGestioneAccessoria" value="${FTL_PLACEHOLDER}aaepMap.proventiGestioneAccessoria!?html}" />
+			<input type="hidden" name="_bilancioAAEP.proventiGestioneAccessoriaPrec" value="${FTL_PLACEHOLDER}aaepMap.proventiGestioneAccessoriaPrec!?html}" />
+			</#if>
+			<#if _bilancio_oneriGestioneAccessoria == "true" >
+			<input type="hidden" name="_bilancioAAEP.oneriGestioneAccessoria" value="${FTL_PLACEHOLDER}aaepMap.oneriGestioneAccessoria!?html}" />
+			<input type="hidden" name="_bilancioAAEP.oneriGestioneAccessoriaPrec" value="${FTL_PLACEHOLDER}aaepMap.oneriGestioneAccessoriaPrec!?html}" />
+			</#if>
+			<#if _bilancio_indiceRotazione == "true" >
+			<input type="hidden" name="_bilancioAAEP.indiceRotazione" value="${FTL_PLACEHOLDER}aaepMap.indiceRotazione!?html}" />
+			<input type="hidden" name="_bilancioAAEP.indiceRotazionePrec" value="${FTL_PLACEHOLDER}aaepMap.indiceRotazionePrec!?html}" />
+			</#if>
+			<#if _bilancio_dso == "true" >
+			<input type="hidden" name="_bilancioAAEP.dso" value="${FTL_PLACEHOLDER}aaepMap.dso!?html}" />
+			<input type="hidden" name="_bilancioAAEP.dsoPrec" value="${FTL_PLACEHOLDER}aaepMap.dsoPrec!?html}" />
+			</#if>
+			<#if _bilancio_dpo == "true" >
+			<input type="hidden" name="_bilancioAAEP.dpo" value="${FTL_PLACEHOLDER}aaepMap.dpo!?html}" />
+			<input type="hidden" name="_bilancioAAEP.dpoPrec" value="${FTL_PLACEHOLDER}aaepMap.dpoPrec!?html}" />
+			</#if>
+			<#if _bilancio_ula == "true" >
+			<input type="hidden" name="_bilancioAAEP.ula" value="${FTL_PLACEHOLDER}aaepMap.ula!?html}" />
+			<input type="hidden" name="_bilancioAAEP.ulaPrec" value="${FTL_PLACEHOLDER}aaepMap.ulaPrec!?html}" />
+			</#if>
+		[/#if]
+		</div>
+		
+		<div class="commandPanel">
+			<!-- ButtonsTag BEGIN -->
+			<div class="button left">
+				<span> 
+				<input type="submit" id="pulisci_campi"  value="Pulisci i campi"
+			  		name="_command:LabelCommand:C_pulisci_campi_bilancio;RenderCommand:2030" />
+				</span>
+			</div> 
+			<div class="button left">
+				<span>
+				<input type="submit" name="_command:RESTORE_PAGE" value="Ripristina valori iniziali"  />
+				</span>
+			</div>
+			<div class="button left">
+				<span class="save highlighted">
+				<input type="submit" name="_command:SAVE_PAGE" value="Salva"  />
+			</span>
+			</div>
+		</div>
+<!-- ButtonsTag END -->

@@ -1,0 +1,325 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _dimensioni RO --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+			
+<!--  Jira: 1587 inizio Risorse umane codice standard -->
+<#if _dimensioni_risorse_umane == "true">	
+	<h4>
+		<span id="toggle_handle_01" class="toggle_handle collapse">Risorse umane
+		</span>
+	</h4>
+	
+	<!-- Jira: 1525   inizio -->
+	<#if _dimensioni_lblRisorseUmaneCustom == "true" >	
+		<p style="font-style:italic; font-weight:normal;">
+			Specificare le U.L.A. (Unit&#224; lavorative annue) rilevate al momento della presentazione della domanda sulla Misura Empowerment Internazionale - Linea A
+		</p>
+	<#else>
+		<p style="font-style:italic; font-weight:normal;">
+			U.L.A. (Unit&#224; lavorative annue) rilevate al momento della presentazione della domanda
+		</p>
+	</#if>
+	
+	[#if (notaCollaboratore)?has_content]	
+		<p style="font-style:italic; font-weight:normal;">
+			La categoria Collaboratori esterni include: borsisti, personale a contratto per ricerca e didattica, 
+			collaborazioni di tipo tecnico/scientifico, componenti esterni degli Organi Istituzionali, 
+			collaborazioni gestionali 
+	</p>
+	[/#if]
+	
+	
+	<div class="toggle_target_01">
+		<table class="formTable" summary="....">
+		    <col width="25%" />
+			<col width="20%" />
+			<col width="30%" />	
+			<col width="25%" />				
+		    <tr>
+				<td></td>
+				<td colspan="2">
+					<table summary="...." id="id_risorse_umane"
+						class="myovertable tablesorter target_toggle_checkbox_1">
+						<col width="25%"/>
+						<col width="25%"/>								
+						<col width="25%"/>								
+						<col width="25%"/>
+						<thead>
+							<tr>
+								<th scope="col"></th>
+								<th scope="col">Uomini</th>																				
+								<th scope="col">Donne</th>
+								<th scope="col">Totale</th>
+							</tr>
+						</thead>
+						<tbody>								   
+							[#list risorseUmaneList as item]
+							<tr>
+								<td ><input type="hidden" name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].categoria"
+						            id="id_categoria_${FTL_PLACEHOLDER}item_index}" disabled="disabled"							
+						            value="${FTL_PLACEHOLDER}item.categoria!?html}"  />${FTL_PLACEHOLDER}item.categoria!}
+						        </td>
+
+								[#if item_has_next]								
+								<td>
+								[#assign errAz = false]
+								[#if ((messages._dimensioni_risorseUmaneList_numUomini)?has_content)]
+									[#if messages._dimensioni_risorseUmaneList_numUomini_riga?seq_contains(item_index+"U")]
+									<input type="text" style="text-align: right" 
+									    name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].numUomini"
+							            id="id_numUomini_${FTL_PLACEHOLDER}item_index}"	maxlength="6" 
+							            value="${FTL_PLACEHOLDER}item.numUomini!?html}"
+							            disabled="disabled" class="long error"
+							            onchange="aggiornaTotali(${FTL_PLACEHOLDER}item_index})"  />
+							            <span class="txtError">
+											<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+											<span> errore:<br />${FTL_PLACEHOLDER}messages._dimensioni_risorseUmaneList_numUomini?first} </span>
+										</span>
+									[#assign errAz = true]
+									[/#if]
+								[/#if]
+								[#if errAz==false]
+									<input type="text" style="text-align: right" 
+									    name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].numUomini"
+									    disabled="disabled"
+							            id="id_numUomini_${FTL_PLACEHOLDER}item_index}"	maxlength="6" 
+							            value="${FTL_PLACEHOLDER}item.numUomini!?html}"  class="long"
+							            onchange="aggiornaTotali(${FTL_PLACEHOLDER}item_index})"  />
+								[/#if]
+						        </td>
+
+						        <td >
+						        [#assign errAz = false]
+								[#if ((messages._dimensioni_risorseUmaneList_numDonne)?has_content)]
+									[#if messages._dimensioni_risorseUmaneList_numDonne_riga?seq_contains(item_index+"D")]
+									<input type="text" style="text-align: right" 
+									disabled="disabled"
+									name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].numDonne"
+						            id="id_numDonne_${FTL_PLACEHOLDER}item_index}"	maxlength="6" 
+						            value="${FTL_PLACEHOLDER}item.numDonne!?html}"   class="long error"
+						            onchange="aggiornaTotali(${FTL_PLACEHOLDER}item_index})" />
+						            <span class="txtError">
+										<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+										<span> errore:<br />${FTL_PLACEHOLDER}messages._dimensioni_risorseUmaneList_numDonne?first} </span>
+									</span>
+						           [#assign errAz = true]
+									[/#if]
+								[/#if]
+								[#if errAz==false]
+									<input type="text" style="text-align: right" 
+									disabled="disabled"
+									name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].numDonne"
+						            id="id_numDonne_${FTL_PLACEHOLDER}item_index}"	maxlength="6" 
+						            value="${FTL_PLACEHOLDER}item.numDonne!?html}"   class="long"
+						            onchange="aggiornaTotali(${FTL_PLACEHOLDER}item_index})" />
+								 [/#if]
+						        </td>
+
+						        [#else]	
+						        <td><input type="text" style="text-align: right" disabled="disabled"
+						            name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].numUomini"
+						            id="id_numUomini_${FTL_PLACEHOLDER}item_index}"	 
+						            value="${FTL_PLACEHOLDER}item.numUomini!?html}" readonly="readonly" />
+						        </td>
+						        <td><input type="text" style="text-align: right" disabled="disabled"
+						            name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].numDonne"
+						            id="id_numDonne_${FTL_PLACEHOLDER}item_index}"							
+						            value="${FTL_PLACEHOLDER}item.numDonne!?html}" readonly="readonly" />
+						        </td>
+						        [/#if]
+								
+								<td>
+								<input type="text" style="text-align: right" disabled="disabled"
+								       name="_dimensioni.risorseUmaneList[${FTL_PLACEHOLDER}item_index}].totale"
+							           id="id_totale_${FTL_PLACEHOLDER}item_index}" class="long"							
+							           value="${FTL_PLACEHOLDER}item.totale!?html}" readonly="readonly" />
+						        </td>
+							</tr>
+							[/#list]
+
+						</tbody>
+					</table>
+				</td>
+				<td>
+				</td>
+			</tr>
+		</table>				
+	</div>
+<#else>
+		<!-- Nasconde blocco di codice -->
+</#if>
+<!-- fine Risorse umane codice standard -->	
+	
+		[#if (flagPubblicoPrivato==1)]
+				<h4>
+					<span id="toggle_handle_03" class="toggle_handle collapse">Dimensione d'impresa</span>
+				</h4>
+				<div class="toggle_target_03">
+	
+			<table class="formTable" summary="....">
+				<col width="25%" />
+				<col width="20%" />
+				<col width="30%" />		
+				<col width="25%" />		
+				
+				<#if _dimensioni_dim_impresa == "false">
+					[#-- versione std --] 
+						<tr>
+							<td></td>
+							<th>Dimensione dell'impresa </th>
+							<td>
+							    <select name="_dimensioni.idDimensioneImpresa"
+										id="id_dimensioni_dimImpresa" class="[@classLongError errorList=(messages._dimensioni_dimImpresa)![] /]"
+										onchange="setDescrizioneDimensioneImpresa();submitForm()" disabled="disabled">									
+											<option value="-1"></option> 
+											[#list classificazioneDimensioniImpresaList as item] 									
+												[#if ""+item.codice == (_dimensioni.idDimensioneImpresa)!]
+												    <option value="${FTL_PLACEHOLDER}item.codice!?html}" disabled="disabled" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+												[#else]
+												    <option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+												[/#if] 
+											[/#list]
+								</select>
+							</td>
+							<td></td>
+						</tr>
+				<#else>
+					[#-- versione custom --]
+					[#-- Nasconde blocco di codice --]
+				</#if>
+			</table>
+		[/#if] 
+		
+		<#if _ente_impresa_dimensioni == "true" >
+		[#if (flagPubblicoPrivato==1)]
+	    [#if viewSezioneDimensioniImpresa=="true"]				
+		<h5></h5>				
+		<table class="formTable" summary="....">
+			<col width="25%" />
+			<col width="20%" />
+			<col width="30%" />	
+			<col width="25%" />
+			<tr>
+			<td></td>
+			<td colspan="2">
+				<table summary="...." id="id_dimensioni_impresa"
+					class="myovertable tablesorter target_toggle_checkbox_1">
+					<col width="20%" />
+					<col width="20%" />
+					<col width="30%" />
+					<col width="30%" />
+					<thead>
+						<tr>
+							<th scope="col">Anno</th>
+							<th scope="col">ULA (unità-lavorative-anno)</th>
+							<th scope="col">Fatturato  (voce A1 conto economico)</th>
+							<th scope="col">Totale Bilancio Annuale (totale attivo)</th>
+						</tr>
+						</thead>
+						<tbody>
+						  [#if (datiImpresaList)?has_content]
+							[#list datiImpresaList  as item]
+							<tr>										
+								<td>
+									<input 
+										type="hidden" 
+										disabled="disabled"
+										name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].anno"
+						            	id="id_anno_${FTL_PLACEHOLDER}item_index}"							
+						            	value="${FTL_PLACEHOLDER}item.anno!?html}" /> 
+						            		${FTL_PLACEHOLDER}item.anno!}
+						        </td>
+
+						        <td>
+						        [#assign errAz = false]
+								[#if ((messages._dimensioni_datiImpresaList_ula)?has_content)]
+									[#if messages._dimensioni_datiImpresaList_ula_riga?seq_contains(item_index+"U")]
+									<input type="text" style="text-align: right"
+									disabled="disabled"
+									    name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].ula"
+							            id="id_${FTL_PLACEHOLDER}item_index}" class="long error"
+							            value="${FTL_PLACEHOLDER}item.ula!?html}" />
+						            <span class="txtError">
+										<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+										<span>errore:<br />${FTL_PLACEHOLDER}messages._dimensioni_datiImpresaList_ula?first}</span>
+									</span>
+						            [#assign errAz = true]
+									[/#if]
+								[/#if]
+								[#if errAz==false]
+									<input type="text" style="text-align: right"
+									disabled="disabled"
+									name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].ula"
+						            id="id_${FTL_PLACEHOLDER}item_index}" class="long"
+						            value="${FTL_PLACEHOLDER}item.ula!?html}" />
+								[/#if]
+						        </td>
+						        
+						        <td>
+						         [#assign errAz = false]
+								[#if ((messages._dimensioni_datiImpresaList_fatturato)?has_content)]
+									[#if messages._dimensioni_datiImpresaList_fatturato_riga?seq_contains(item_index+"F")]
+									<input type="text" style="text-align: right" 
+									disabled="disabled"
+									name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].fatturato"
+						            id="id_${FTL_PLACEHOLDER}item_index}" class="long error"
+						            value="${FTL_PLACEHOLDER}item.fatturato!?html}" />
+						            <span class="txtError">
+										<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+										<span> errore:<br />${FTL_PLACEHOLDER}messages._dimensioni_datiImpresaList_fatturato?first} </span>
+									</span>
+						            [#assign errAz = true]
+									[/#if]
+								[/#if]
+								[#if errAz==false]
+									<input type="text" style="text-align: right" disabled="disabled" 
+									name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].fatturato"
+						            id="id_${FTL_PLACEHOLDER}item_index}" class="long"
+						            value="${FTL_PLACEHOLDER}item.fatturato!?html}" />
+								[/#if]
+						        </td>
+
+						        <td>
+						        [#assign errAz = false]
+								[#if ((messages._dimensioni_datiImpresaList_totBilancio)?has_content)]
+									[#if messages._dimensioni_datiImpresaList_totBilancio_riga?seq_contains(item_index+"T")]
+									<input type="text" style="text-align: right" disabled="disabled"
+									name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].totBilancio"
+						            id="id_${FTL_PLACEHOLDER}item_index}" class="long error"
+						            value="${FTL_PLACEHOLDER}item.totBilancio!?html}" />
+						            <span class="txtError">
+										<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+										<span>
+											errore:<br />${FTL_PLACEHOLDER}messages._dimensioni_datiImpresaList_totBilancio?first}
+										</span>
+									</span>
+						            [#assign errAz = true]
+									[/#if]
+								[/#if]
+								[#if errAz==false]
+									<input type="text" style="text-align: right" disabled="disabled"
+									name="_dimensioni.datiImpresaList[${FTL_PLACEHOLDER}item_index}].totBilancio"
+						            id="id_${FTL_PLACEHOLDER}item_index}" class="long"
+						            value="${FTL_PLACEHOLDER}item.totBilancio!?html}" />
+								[/#if]
+						        </td>
+
+							</tr>
+							[/#list]
+							[/#if]
+						</tbody>
+				</table>
+			</td>
+			<td></td>
+			</tr>
+		</table>
+              [/#if]
+              [/#if]
+              </#if>
+	</div>
+	
+	

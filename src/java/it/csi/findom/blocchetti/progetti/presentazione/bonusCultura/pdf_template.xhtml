@@ -1,0 +1,867 @@
+[#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+--]
+	[#ftl/]
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<title>Stampa Modulo Domanda INDUSTRIA - bonusCultura </title>
+			<link rel="stylesheet" type="text/css" href="http://tst-www.sistemapiemonte.it/ris/resources/application/finanziamenti/findomweb/risstampe/css_stampa_bando00.css"/>
+			<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+		
+		<style type="text/css">
+	        div#orizzontale {
+	            width: 200px;
+	            margin: 0 auto;
+				width: 250px;
+				padding: 20px;
+	        }
+	    </style>
+		
+		</head>
+	
+		<!-- Verifica tipo di stampa: BOZZA o DEFINITIVO -->
+		[#if "DEFINITIVO" == (_domanda.statoStampa)!]
+			<body>
+		[#else] 
+			<!-- stampa Bozza, aggiunta fondino "BOZZA" su tutte le pagine -->
+			<body style="background-image: url('/ris/resources/application/finanziamenti/findomweb/risstampe/loghi/in_bozza.gif'); background-repeat: repeat-y;">	
+		
+		[/#if]
+	
+		<!-- Intestazione -->
+		[#if (_domanda.dataTrasmissione)?has_content]
+			[#if (_domanda.dataTrasmissione) == "-"]
+				[#assign dataTrasm = (_domanda.dataTrasmissione)]
+			[#else]	
+				<!-- considero il campo come contenente una data valida -->
+				[#assign dataTrasm = (_domanda.dataTrasmissione)?datetime("yyyy-MM-dd HH:mm:ss")?string("dd/MM/yyyy HH:mm")]
+			[/#if]
+		[#else]	
+			<!-- data Trasmissione non valorizzata -->
+			[#assign dataTrasm = ""]
+		[/#if]
+		
+		[#if (_domanda.dataConclusione)?has_content]
+			[#if (_domanda.dataConclusione) == "-"]
+				[#assign dataConclusione = (_domanda.dataConclusione)]
+			[#else]	
+				<!-- considero il campo come contenente una data valida -->
+				[#assign dataConclusione = (_domanda.dataConclusione)?datetime("yyyy-MM-dd HH:mm:ss")?string("dd/MM/yyyy HH:mm")]
+			[/#if]
+		[#else]	
+			<!-- data Conclusione non valorizzata -->
+			[#assign dataConclusione = ""]
+		[/#if]
+		
+		<div class="header">
+			<div style="float:left" class="fontNormal">Numero domanda: ${(_domanda.numeroDomanda)!?html}</div>
+			<!-- <div style="float:left;margin-left:50px" class="fontBold">Amministrazione Responsabile: REGIONE PIEMONTE</div> -->
+			[#if (_domanda.dataConclusione)?has_content]
+				<div style="float:left;margin-left:400px" class="fontNormal">Data: ${(dataConclusione)!}</div>			
+			[#else]	
+				[#if (_domanda.dataTrasmissione)?has_content]
+					<div style="float:left;margin-left:400px" class="fontNormal">Data: ${(dataTrasm)!}</div>		
+				[/#if]
+			[/#if]
+			[#if "BOZZA" == (_domanda.statoStampa)!]
+				<div style="float:right;" class="fontNormal">${(_domanda.statoStampa)!}</div>
+			[/#if]
+		</div>
+		<div style="clear: both;"> </div>
+	
+		<!-- Pie' di pagina -->
+		<div class="footer fontSerif10Bold">
+			<div class="fontSerif7Bold">
+				<div class="separatore"/>
+				<br/>
+			</div>
+			Pag. <span id="pagenumber"/> di <span id="pagecount"/>
+		</div>
+	
+	
+		<!-- PAGINA 1 - Frontespizio e dati Legale Rappresentante -->
+		<div style="clear: both;"> </div>
+		<br/>
+		
+		<!-- *** loghi ** -->  
+		<!--   
+	    <div class="riga1 cella1" style="left:0px;">
+			<div style="margin-top:-10px;">
+				<img src="/ris/resources/application/finanziamenti/findomweb/risstampe/loghi/unione_europea.jpg" height="100"/>
+			</div> 
+	    </div>
+	    
+	    <div class="riga1 cella2">
+			<div style="margin-top:-13px;">
+				<img src="/ris/resources/application/finanziamenti/findomweb/risstampe/loghi/repubblica_italiana.jpg" height="95"/>
+			</div>
+	    </div>
+	    -->
+	    <div id="orizzontale">
+	    
+			<div style="margin-top:10px;">
+				<img src="/ris/resources/application/finanziamenti/findomweb/risstampe/loghi/regione_piemonte.jpg" height="100" width="100%"/>
+			</div>
+	    	
+		</div>	
+		<div style="clear: both"> </div>
+		<br/>
+		<div style="width: 718px; left:0px;">
+			
+			<div style="float:right; margin-right:10px; text-align:right;">
+				<br/><br/>
+				<span class="fontSerif12Bold">A: Finpiemonte S.p.A.</span><br/>
+			</div>
+		</div>
+		
+		<div style="clear: both"> </div>
+		<br/>
+		<div style="width: 718px; left:0px; text-align:center" >
+			<!-- IMPOSTARE IN BASE AL BANDO -->
+			<span class="fontSerif18Bold">Bonus Cultura</span>
+			<br/><br/>
+			
+		</div>
+		
+		<div style="clear: both"> </div>
+		
+		<div style="clear: both"> </div>
+		<br/>	
+		
+		[#if "si" == (_legaleRappresentante.presenzaSoggettoDelegato)!?html ]
+		
+		<div class="paragrafoIntL fontSerif12"> 
+			Il / La   Sottoscritto / a
+			<br/>
+			Cognome <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.cognome)!?html}</span>  <span class="spazio40"/>
+			Nome <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.nome)!?html}</span> 
+			<br/>
+			Nato /a 
+			[#if "Italia" == (_soggettoDelegato.luogoNascita)!?html]
+				a <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.comuneNascitaDescrizione)!?html}</span>
+				<span class="spazio40"/>
+				Provincia <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.provinciaNascitaDescrizione)!?html}</span>
+			[#else]
+				in <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.statoEsteroNascitaDescrizione)!?html}</span>
+			[/#if]
+			<span class="spazio40"/>il <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.dataNascita)!}</span>
+			<br/>
+			Residente in 
+			[#if "Italia" == (_soggettoDelegato.luogoResidenza)!]
+				<span class="fontSerif12Bold spazio10">${(_soggettoDelegato.comuneResidenzaDescrizione)!?html}</span>
+				<span class="spazio40"/>
+				Provincia <span class="fontSerif12Bold spazio10">${(_soggettoDelegato.provinciaResidenzaDescrizione)!?html}</span>
+			[#else]
+				<span class="fontSerif12Bold spazio10">${(_soggettoDelegato.statoEsteroResidenzaDescrizione)!?html}</span>
+				<span class="spazio20"/>
+				citt&#224; <span class="fontSerif12Bold spazio10">${(_soggettoDelegato.cittaEsteraResidenza)!?html}</span>
+			[/#if]
+			<br/>
+			CAP <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.cap)!?html} </span> <span class="spazio40"/>
+			Indirizzo <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.indirizzo)!?html}</span>
+			<span class="spazio20"/>n. <span class="fontSerif12Bold spazio10"> ${(_soggettoDelegato.numCivico)!?html}</span> 
+			<br/>
+			Codice Fiscale
+			<span class="fontSerif12Bold spazio20">${(_soggettoDelegato.codiceFiscale)!?html}</span> 
+		</div>
+		<div class="paragrafoIntL fontSerif12"> 
+			Tipo Documento di riconoscimento
+			<span class="fontSerif12Bold spazio20">${(_soggettoDelegato.documento.descrizioneTipoDocRiconoscimento)!?html}</span> 
+			<span class="spazio40"/>
+			n. <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.documento.numDocumentoRiconoscimento)!?html}</span> 
+			<br/>
+			Rilasciato da <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.documento.docRilasciatoDa)!?html}</span> 
+			<span class="spazio40"/> 
+			in data <span class="fontSerif12Bold spazio20">${(_soggettoDelegato.documento.dataRilascioDoc)!} </span>
+			<br/>
+		</div>
+		
+		[#else]	
+		 
+		<div class="paragrafoIntL fontSerif12"> 
+			Il / La   Sottoscritto / a
+			<br/>
+			Cognome <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.cognome)!?html}</span>  <span class="spazio40"/>
+			Nome <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.nome)!?html}</span> 
+			<br/>
+			Nato /a 
+			[#if "Italia" == (_legaleRappresentante.luogoNascita)!?html]
+				a <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.comuneNascitaDescrizione)!?html}</span>
+				<span class="spazio40"/>
+				Provincia <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.provinciaNascitaDescrizione)!?html}</span>
+			[#else]
+				in <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.statoEsteroNascitaDescrizione)!?html}</span>
+			[/#if]
+			<span class="spazio40"/>il <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.dataNascita)!}</span>
+			<br/>
+			Residente in 
+			[#if "Italia" == (_legaleRappresentante.luogoResidenza)!]
+				<span class="fontSerif12Bold spazio10">${(_legaleRappresentante.comuneResidenzaDescrizione)!?html}</span>
+				<span class="spazio40"/>
+				Provincia <span class="fontSerif12Bold spazio10">${(_legaleRappresentante.provinciaResidenzaDescrizione)!?html}</span>
+			[#else]
+				<span class="fontSerif12Bold spazio10">${(_legaleRappresentante.statoEsteroResidenzaDescrizione)!?html}</span>
+				<span class="spazio20"/>
+				citt&#224; <span class="fontSerif12Bold spazio10">${(_legaleRappresentante.cittaEsteraResidenza)!?html}</span>
+			[/#if]
+			<br/>
+			CAP <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.cap)!?html} </span> <span class="spazio40"/>
+			Indirizzo <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.indirizzo)!?html}</span>
+			<span class="spazio20"/>n. <span class="fontSerif12Bold spazio10"> ${(_legaleRappresentante.numCivico)!?html}</span> 
+			<br/>
+			Codice Fiscale
+			<span class="fontSerif12Bold spazio20">${(_legaleRappresentante.codiceFiscale)!?html}</span> 
+		</div>
+		<div class="paragrafoIntL fontSerif12"> 
+			Tipo Documento di riconoscimento
+			<span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.descrizioneTipoDocRiconoscimento)!?html}</span> 
+			<span class="spazio40"/>
+			n. <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.numDocumentoRiconoscimento)!?html}</span> 
+			<br/>
+			Rilasciato da <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.docRilasciatoDa)!?html}</span> 
+			<span class="spazio40"/> 
+			in data <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.dataRilascioDoc)!} </span>
+			<br/>
+		</div>	
+		[/#if]	
+	
+		<div style="clear: both"> </div>
+		<br/>
+		<div class="paragrafoIntL" style="text-align:justify">
+			<span class="fontSerif12">
+				consapevole delle sanzioni penali previste in caso di dichiarazioni non veritiere e di falsit&#224; negli atti di cui all'art. 76 
+				del D.P.R. 28 dicembre 2000, n. 445 e della conseguente decadenza dei benefici di cui all'art. 75 del citato decreto, nella 
+				qualit&#224; di Legale rappresentante/Soggetto delegato con potere di firma dell'Ente/Impresa sotto indicato, chiede di essere ammesso all'agevolazione.
+			</span>
+		</div>	
+	
+		<div style="clear: both"> </div>
+		<br/>
+		<div class="paragrafo" style="text-align:center">
+			<span class="fontSerif12Bold">
+				E a tal fine DICHIARA, ai sensi degli artt. 46 e 47 del D.P.R. 28 dicembre 2000, n. 445:
+			</span>
+		</div>	
+	
+		<div class="page-break"/>
+	
+		
+		<!-- PAGINA 2 - Sezioni A.1 - A.2 -->
+		<div style="clear: both;"> </div>
+		<br/>
+		
+		<div class="paragrafoIntL fontSerif12Bold">
+			A. IMPRESA
+		</div>
+	
+		<div class="paragrafoIntL fontSerif12Bold">
+			A.1 Anagrafica
+		</div>
+		<div class="paragrafoIntL"> 
+			<div class="fontSerif12" style="float:left; width:250px">Denominazione o ragione sociale</div>
+			<div class="fontSerif12Bold" style="float:left; width:460px; line-height:1; padding-top:2px">${(_operatorePresentatore.denominazione?html)!}</div>
+			<br/><br/>
+			<div class="fontSerif12" style="float:left; width:250px">Forma giuridica</div>
+			<div class="fontSerif12Bold" style="float:left; width:460px; line-height:1; padding-top:2px">${(_operatorePresentatore.descrizioneFormaGiuridica?html)!}</div>
+			<br/><br/>
+			<div class="fontSerif12" style="float:left; width:250px">Codice Fiscale dell'ente/impresa</div>
+			<div class="fontSerif12Bold" style="float:left; width:460px; line-height:1; padding-top:2px">${(_operatorePresentatore.codiceFiscale)!?html}</div>
+			<br/><br/>
+			<div class="fontSerif12" style="float:left; width:250px">Partita IVA</div>
+			<div class="fontSerif12Bold" style="float:left; width:460px; line-height:1; padding-top:2px">${(_operatorePresentatore.partitaIva)!?html}</div>
+			<br/><br/>
+			
+		</div>
+		<div style="clear: both"> </div>
+		<br/><br/>
+		
+		<div class="paragrafoIntL fontSerif12Bold">
+			A.1.1 Sede legale
+		</div>	
+		<div class="paragrafoIntL fontSerif12">			
+			[#if "Italia" == (_sedeLegale.stato)!]
+				Comune <span class="fontSerif12Bold spazio20">${(_sedeLegale.comuneDescrizione)!?html}</span>  <span class="spazio40"/>
+				Prov. <span class="fontSerif12Bold spazio20">${(_sedeLegale.provinciaDescrizione)!?html}</span> 
+			[#else]
+				Stato estero <span class="fontSerif12Bold spazio40">${(_sedeLegale.statoEsteroDescrizione)!?html}</span>
+				<br/>
+				Citt&#224; estera <span class="fontSerif12Bold spazio40">${(_sedeLegale.cittaEstera)!?html}</span> 
+			[/#if]
+			<br/>
+			CAP <span class="fontSerif12Bold spazio20">${(_sedeLegale.cap)!?html} </span> <span class="spazio40"/>
+			Indirizzo <span class="fontSerif12Bold spazio20">${(_sedeLegale.indirizzo)!?html}</span>
+			<span class="spazio20"/>n. <span class="fontSerif12Bold spazio10"> ${(_sedeLegale.numCivico)!?html}</span> 
+			<br/>
+			Telefono <span class="fontSerif12Bold spazio20">${(_sedeLegale.telefono)!?html} </span> <span class="spazio40"/>
+			Indirizzo PEC <span class="fontSerif12Bold spazio20">${(_sedeLegale.pec)!?html}</span>
+			<br/>
+			Indirizzo Email <span class="fontSerif12Bold spazio20">${(_sedeLegale.email)!?html}</span>
+			<br/>
+		</div>	
+		
+		
+		[#if "si" == (_legaleRappresentante.presenzaSoggettoDelegato)! ]
+		<div class="paragrafoIntL fontSerif12Bold">
+			A.1.2 Legale Rappresentante 
+		</div>	
+		<div class="paragrafoIntL fontSerif12">
+		    Cognome <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.cognome)!?html}</span>  <span class="spazio40"/>
+			Nome <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.nome)!?html}</span> 
+			<br/>
+			Nato /a 
+			[#if "Italia" == (_legaleRappresentante.luogoNascita)!]
+				a <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.comuneNascitaDescrizione)!?html}</span>
+				<span class="spazio40"/>
+				Provincia <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.provinciaNascitaDescrizione)!?html}</span>
+			[#else]
+				in <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.statoEsteroNascitaDescrizione)!?html}</span>
+			[/#if]
+		    
+			<span class="spazio40"/>il <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.dataNascita)!}</span>
+			<br/>
+			Residente in 
+			[#if "Italia" == (_legaleRappresentante.luogoResidenza)!]
+				<span class="fontSerif12Bold spazio10">${(_legaleRappresentante.comuneResidenzaDescrizione)!?html}</span>
+				<span class="spazio40"/>
+				Provincia <span class="fontSerif12Bold spazio10">${(_legaleRappresentante.provinciaResidenzaDescrizione)!?html}</span>
+			[#else]
+				<span class="fontSerif12Bold spazio10">${(_legaleRappresentante.statoEsteroResidenzaDescrizione)!?html}</span>
+				<span class="spazio20"/>
+				citt&#224; <span class="fontSerif12Bold spazio10">${(_legaleRappresentante.cittaEsteraResidenza)!?html}</span>
+			[/#if]
+			<br/>
+			CAP <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.cap)!?html} </span> <span class="spazio40"/>
+			Indirizzo <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.indirizzo)!?html}</span>
+			<span class="spazio20"/>n. <span class="fontSerif12Bold spazio10"> ${(_legaleRappresentante.numCivico)!?html}</span> 
+			<br/>
+			Codice Fiscale
+			<span class="fontSerif12Bold spazio20">${(_legaleRappresentante.codiceFiscale)!?html}</span> 
+		</div>
+		<div class="paragrafoIntL fontSerif12"> 
+			Tipo Documento di riconoscimento
+			<span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.descrizioneTipoDocRiconoscimento)!?html}</span> 
+			<span class="spazio40"/>
+			n. <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.numDocumentoRiconoscimento)!?html}</span> 
+			<br/>
+			Rilasciato da <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.docRilasciatoDa)!?html}</span> 
+			<span class="spazio40"/> 
+			in data <span class="fontSerif12Bold spazio20">${(_legaleRappresentante.documento.dataRilascioDoc)!} </span>
+			<br/>
+		</div>		
+			
+		[/#if]		
+		<div style="clear: both;"> </div>
+	
+		<div class="paragrafoIntL fontSerif12Bold">
+			A.1.2 Estremi bancari  
+		</div>	
+		<div class="paragrafoIntL fontSerif12"> 
+			IBAN <span class="fontSerif12Bold spazio20">${(_estremiBancari.iban)!?html}</span>  <span class="spazio40"/>
+			BIC <span class="fontSerif12Bold spazio20">${(_estremiBancari.bic)!?html}</span> <span class="spazio40"/>
+			<br/>
+			Intestatario C/C <span class="fontSerif12Bold spazio20">${(_estremiBancari.intestatarioCC?html)!} </span> <span class="spazio40"/>
+		</div>
+		
+	
+		<!-- PAGINA 3 - Sezioni C.1 - C.2 -->
+		<div style="clear: both;"> </div>
+		
+		<div class="page-break"/>	
+		
+		<div class="paragrafoIntL fontSerif12Bold">
+			B Caratteristiche del progetto - iniziativa  
+		</div>
+		<div class="paragrafoIntL fontSerif12"> 
+			Tipologia di beneficiario 
+			<span class="fontSerif12Bold spazio20">
+				${(_domanda.descrTipologiaUtente?html)!} 
+				[#if (_caratteristicheProgetto.importoContributo)?has_content]
+					( ${((_caratteristicheProgetto.importoContributo)?replace(",", "."))?number?string["#,##0.00"]!} €)
+				[#else]
+					( - €)
+				[/#if]
+			</span>
+		</div>
+		
+		<div style="clear: both;"> </div>
+		<br/>
+		<!-- Colonna DETTAGLIO INTERVENTO: visibile SI/NO in base al BANDO -->
+		[#if (_caratteristicheProgetto.tipologiaInterventoList)?has_content]
+			<table>
+				<!-- intestazione colonne -->
+				<tr style="background-color: #A9A9A9">
+					<td class="colonnaSingola fontSerif10Bold" style="width:25px" height="30">
+						<div class="spazio10"/>
+					</td>
+					<td class="colonnaSingola fontSerif10Bold" style="width:675px" height="30">
+						<div class="spazio10">Tipologie di intervento</div>
+					</td>	
+					<!--  		
+					<td class="colonnaSingola fontSerif10Bold" style="width:375px" height="30">
+						<div class="spazio10">Dettaglio Intervento</div>
+					</td>
+					-->				
+				</tr>
+				<!-- dati -->
+				[#list (_caratteristicheProgetto.tipologiaInterventoList) as listaTipologieIntervento]
+					<!-- Tipologie di intervento -->
+					<tr>
+						<td class="colonnaSingola fontSerif10 centrato" style="width:25px">
+							<div class="checkMin"/>
+							[#if (listaTipologieIntervento.checked)! == "true"]
+								<div class="checkXMin">x</div>
+							[/#if]						
+						</td>					
+						<td class="colonnaSingola fontSerif10" style="width:675px">
+							<div class="spazio10">
+								<!-- ${(listaTipologieIntervento.codTipoIntervento)!} - -->
+								${(listaTipologieIntervento.descrTipoIntervento)!?html}
+							</div>
+						</td>
+						<!-- Dettagli intervento relativi all'intervento attuale 
+							<td class="colonnaSingola fontSerif10" style="width:375px">
+								<table>
+									[#if (listaTipologieIntervento.dettaglioInterventoList)?has_content]
+										[#list (listaTipologieIntervento.dettaglioInterventoList) as listaDettagliIntervento]	
+											<tr>
+												<td class="fontSerif10 centrato" style="width:25px">
+													<div class="checkMin"/>
+													[#if (listaDettagliIntervento.checked)! == "true"]
+														<div class="checkXMin">x</div>
+													[/#if]	
+												</td>
+												<td class="fontSerif10" style="width:350px">
+													<div class="spazio10">
+														${(listaDettagliIntervento.descrDettIntervento)!}
+													</div>
+												</td>							
+											</tr>
+										[/#list]
+									[#else]
+										<tr>
+											<td class="fontSerif10 centrato" style="width:25px"></td>
+											<td class="fontSerif10" style="width:350px"></td>
+										</tr>
+									[/#if]
+									
+								</table>
+							</td>
+						-->
+					</tr>	
+				[/#list]
+			</table>
+		[#else]
+			<!-- nessun record trovato -->
+			<div class="paragrafoIntL fontSerif12 fontItalic">
+				(Sezione non compilata dal beneficiario)
+			</div>		
+		[/#if]			
+			
+		<div style="clear: both;"> </div>
+	<br/>
+	<div class="paragrafoIntL fontSerif12Bold">
+		C Tipologie di aiuto  
+	</div>
+	
+	<!-- Tabella TIPOLOGIE DI AIUTO -->
+	[#if (_tipologiaAiuto.tipologiaAiutoList)?has_content]
+		<table>
+			<!-- intestazione colonne -->
+			<tr style="background-color: #A9A9A9">
+				<td class="colonnaSingola fontSerif10Bold" style="width:25px" height="30">
+					<div class="spazio10"/>
+				</td>
+				<td class="colonnaSingola fontSerif10Bold" style="width:300px" height="30">
+					<div class="spazio10">Base giuridica</div>
+				</td>
+				<!-- 
+				<td class="colonnaSingola fontSerif10Bold" style="width:375px" height="30">
+					<div class="spazio10">Dettaglio</div>
+				</td>
+				 -->				
+			</tr>
+			<!-- dati -->
+			[#list (_tipologiaAiuto.tipologiaAiutoList) as listaTipologieAiuto]
+				<!-- Tipologie di aiuto -->
+				<tr>
+					<td class="colonnaSingola fontSerif10 centrato" style="width:25px">
+						<div class="checkMin"/>
+						[#if (listaTipologieAiuto.checked)! == "true"]
+							<div class="checkXMin">x</div>
+						[/#if]						
+					</td>					
+					<td class="colonnaSingola fontSerif10" style="width:300px">
+						<div class="spazio10">${(listaTipologieAiuto.descrTipoAiuto)!?html}</div>
+					</td>
+					<!-- Dettagli relativi all'aiuto attuale 
+					<td class="colonnaSingola fontSerif10" style="width:375px">
+						<table>
+							[#if (listaTipologieAiuto.dettaglioAiutoList)?has_content]
+								[#list (listaTipologieAiuto.dettaglioAiutoList) as listaDettagliAiuto]	
+									<tr>
+										<td class="fontSerif10 centrato" style="width:25px">
+											<div class="checkMin"/>
+											[#if (listaDettagliAiuto.checked)! == "true"]
+												<div class="checkXMin">x</div>
+											[/#if]	
+										</td>
+										<td class="fontSerif10" style="width:350px">
+											<div class="spazio10">${(listaDettagliAiuto.descrDettAiuto)!?html}</div>
+										</td>							
+									</tr>
+								[/#list]
+							[#else]
+								<tr>
+									<td class="fontSerif10" style="width:375px"></td>
+								</tr>
+							[/#if]
+						</table>
+					</td>
+					-->
+				</tr>	
+			[/#list]
+		</table>
+	[#else]
+		<!-- nessun record trovato -->
+		<div class="paragrafoIntL fontSerif12 fontItalic">
+			(Sezione non compilata dal beneficiario)
+		</div>		
+	[/#if]	
+	
+		<br/>
+		<div class="paragrafoIntL fontSerif12Bold">
+			ALLEGATI 
+		</div>
+		<div class="paragrafo fontSerif12"> 
+			Elenco allegati (files uplodati: max 5 Mb.)
+		</div>	
+		<div style="clear: both;"> </div>
+		<br/>	
+		
+	    [#assign almenoUnDocNonDifferibile = "false"]
+		[#assign docDifferibili = "false"]
+		[#if (_allegati.allegatiList)?has_content]	
+		    [#list (_allegati.allegatiList) as curAllegato]				
+				[#if (curAllegato.documento.differito) == "true"]
+					[#assign docDifferibili="true" ]									
+				[#else]
+				    [#assign almenoUnDocNonDifferibile="true" ]
+				[/#if]
+			[/#list]
+				
+		    [#if almenoUnDocNonDifferibile=="true"]
+			<table cellpadding="10">
+				<tr style="background-color: #A9A9A9">				
+					<td class="colonnaSingola fontSerif10Bold centrato" style="width:485px" height="30">
+						Tipologia
+					</td>				
+					<td class="colonnaSingola fontSerif10Bold centrato" style="width:190px" height="30">
+						Nome documento allegato
+					</td>			
+				</tr>
+				[#list (_allegati.allegatiList) as listaAllegati]			
+					[#if (listaAllegati.documento.differito) == "false"]			
+					<tr>						
+						<td class="colonnaSingola fontSerif10" style="width:485px">
+							${(listaAllegati.documento.descrTipologia)!?html}
+						</td>
+						<td class="colonnaSingola fontSerif10" style="width:485px">
+							${(listaAllegati.documento.nomeFile)!?html}
+						</td>
+					</tr>
+					[/#if]				
+				[/#list]			
+			</table>
+			[/#if]
+		[#else]
+			<div class="paragrafoIntL fontSerif12 fontItalic">
+				(Sezione non compilata dal beneficiario)
+			</div>		
+		[/#if]		
+	
+		[#if (docDifferibili) == "true"]
+			<div class="paragrafo fontSerif12"> 
+				Elenco documenti che saranno inviati secondo le modalit&#224; alternative previste dal bando in quanto la dimensione del file &#232; superiore  alla soglia dimensionale di 5Mb.
+			</div>	
+			<div style="clear: both;"> </div>
+			<br/>		
+			<table cellpadding="10">
+				[#list (_allegati.allegatiList) as listaAllegati]	
+					[#if (listaAllegati.documento.differito) == "true"]
+					<tr>
+						<td class="fontSerif12Bold centrato" style="width:25px">	
+							-
+						</td>	
+						<td class="fontSerif12" style="width:675px">
+							${(listaAllegati.documento.descrTipologia)!?html}
+						</td>
+					</tr>
+			        [/#if]
+				[/#list]		
+			</table>
+		[/#if]
+		 
+		<div style="clear: both;"> </div>
+		<br/>		
+	
+		
+		<div class="page-break"/>	
+		<!-- PAGINA 4 - DICHIARAZIONI -->
+		<div style="clear: both;"> </div>
+		<br/>
+	
+		<div class="paragrafoIntL fontSerif12Bold">
+			IL SOTTOSCRITTO INOLTRE DICHIARA: 
+		</div>
+		[#assign numParag = 0]
+		<table cellpadding="10">
+		
+			<!-- 1 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>	
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					di avere sede legale e operativa in Piemonte e di svolgere la propria attivit&#224; in via esclusiva 
+					o comunque prevalente in ambito culturale o, per i soggetti imprese e operatori, di lavorare nel settore dell’indotto delle attivit&#224; culturali;	
+				</td>
+			</tr>
+			
+			<!-- 2 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					di non aver usufruito di altri Bonus da parte della Regione Piemonte;
+				</td>
+			</tr>
+			
+			<!-- 3 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}. 
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					di non aver intenzione di partecipare ad alcun Bando della Direzione Cultura, Turismo e Commercio per il 2020;
+				</td>
+			</tr>
+			
+			<!-- 4 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					che il presente Bonus deve essere utilizzato per spese correnti e non per investimenti;
+				</td>
+			</tr>
+			
+			<!-- 5 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					per i soggetti in possesso di partita IVA, che la stessa si attiva fosse attiva alla data del 29 maggio 2020; 
+				</td>
+			</tr>
+			
+			<!-- 6 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					per le sole Associazioni rientranti nel codice ATECO 94.99.2, di non svolgere attivit&#224; di somministrazione;
+				</td>
+			</tr>	
+			
+			
+			<!-- 7 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					che &#233; consapevole che la Regione Piemonte potr&#224; attivare, 
+				anche per il tramite di Finpiemonte o di altre Autorit&#224; istituzionalmente preposte, 
+				controlli ex-post a campione sulla veridicit&#224; delle dichiarazioni rilasciate 
+				e sull'effettivo utilizzo del Bonus, come previsto al precedente punto 4;
+				</td>
+			</tr>
+			
+			
+			<!-- 8 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					che l'IBAN indicato nella sezione A.4 &#233; intestato al soggetto beneficiario;
+				</td>
+			</tr>
+			
+			<!-- 9 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					che i dati e le informazioni fornite con la presente domanda ed i relativi allegati sono veritieri 
+					e di assumersi la responsabilit&#224; per le dichiarazioni e per gli impegni sottoscritti anche in caso di delega a terzo per il caricamento della domanda 
+					(a tal fine dovranno essere conservati una copia della delega e del modulo di domanda controfirmati dal delegante/dichiarante); 
+				</td>
+			</tr>
+			
+			
+			
+			<!-- 11 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					di non essere destinatario della sanzione amministrativa prevista all'art. 9 comma 2 lettera d) 
+				del d.lgs. 231/2001 consistente nell'esclusione da agevolazioni, finanziamenti, contributi o sussidi e dell'eventuale revoca di quelli gi&#224; concessi;
+				</td>
+			</tr>
+			
+			
+			
+			<!-- 12 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					di avere preso visione dell'informativa sul trattamento dei dati personali, resa, ai sensi dell'art. 13 
+					del Regolamento Generale sulla Protezione dei Dati (RGPD 679/2016), e sul sito di Finpiemonte S.p.A. (www.finpiemonte.it). 
+					Il sottoscritto dichiara altres&#236; di essere consapevole che tali dati saranno utilizzati per gestire la richiesta medesima e per le altre finalit&#224; indicate 
+					nell'informativa citata;
+				</td>
+			</tr>
+			
+			
+			
+			<!-- 13 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					di essere a conoscenza che Finpiemonte S.p.A. non intrattiene alcun rapporto particolare di collaborazione con societ&#224; 
+					o liberi professionisti che svolgano attivit&#224; di consulenza o assistenza nella presentazione della presente domanda; 
+					le eventuali deleghe a professionisti consulenti o societ&#224; terze nella presentazione della domanda costituiscono 
+					unicamente autorizzazione ad intrattenere contatti con Finpiemonte in nome e nell'interesse del sottoscritto 
+					senza alcuna agevolazione e/o privilegio.
+				</td>
+			</tr>
+			
+			
+			
+		</table>
+		
+		<!-- Impegni -->
+		<div style="clear: both;"> </div>
+		<div class="page-break"/>	
+		
+		<div class="paragrafoIntL fontSerif12Bold">
+			E SI IMPEGNA FIN D'ORA A:
+		</div>
+		
+		[#assign numParag = 0]	
+		<table cellpadding="10">	
+				
+			<!-- 1 -->
+			<tr>
+				<td class="fontSerif12" style="width:25px; text-align:right; vertical-align:top">	
+					[#assign numParag=numParag+1 ]
+					${numParag}.
+				</td>
+				<td class="fontSerif12" style="width:675px; text-align:justify">
+					consentire la pubblicazione e l'utilizzo dei propri dati per i fini previsti dalla legge;
+				</td>
+			</tr>
+				
+		</table>
+		
+		<div style="clear: both;"> </div>
+		<br/>
+		
+		<!-- Autorizzazioni e presa visione -->
+		<table>
+			<tr>
+				<td class="fontSerif12 centrato" style="width:25px; vertical-align:top">
+					<div class="checkMin"/>
+					[#if (_dichiarazioni.trattamentoDatiPersonali)! == "si"]
+						<div class="checkXMin">x</div>
+					[/#if]						
+				</td>	
+				<td class="fontSerif12" style="width:675px">
+					Il sottoscritto, in relazione al trattamento dei dati personali forniti con la presente richiesta, dichiara di avere preso visione 
+					delle due informative rese ai sensi dell'art. 13 del Regolamento Generale sulla Protezione dei Dati (RGPD 679/2016) pubblicate: <br/>
+					a) sul sito di Regione Piemonte, congiuntamente al bando, e <br/>
+					b) sul sito www.finpiemonte.it. 
+					Il sottoscritto dichiara altres&#236; di essere consapevole che i dati forniti con la presente richiesta saranno utilizzati per 
+					gestire la richiesta medesima, nonch&#233; per indagini statistiche, anche mediante l'ausilio di mezzi elettronici o automatizzati, 
+					nel rispetto della sicurezza e riservatezza necessarie.
+				</td>					
+			</tr>
+			<tr>
+				<td class="fontSerif12 centrato" style="width:25px"><br/><br/></td>
+				<td class="fontSerif12" style="width:675px"><br/><br/></td>
+			</tr>
+			<tr>
+				<td class="fontSerif12 centrato" style="width:25px; vertical-align:top">
+					<div class="checkMin"/>
+					[#if (_dichiarazioni.regoleCompilazione)! == "si"]
+						<div class="checkXMin">x</div>
+					[/#if]						
+				</td>	
+				<td class="fontSerif12" style="width:450px">
+					Il sottoscritto dichiara di aver preso visione delle regole di compilazione della domanda. 
+					<!-- Vedi pagina:<br/> <u>Regole di compilazione</u>  -->
+				</td>					
+			</tr>
+			<tr>
+				<td class="fontSerif12 centrato" style="width:25px"><br/><br/></td>
+				<td class="fontSerif12" style="width:675px"><br/><br/></td>
+			</tr>
+			<tr>
+				<td class="fontSerif12 centrato" style="width:25px; vertical-align:top">
+					<div class="checkMin"/>
+					[#if (_dichiarazioni.presaVisione)! == "si"]
+						<div class="checkXMin">x</div>
+					[/#if]						
+				</td>	
+				<td class="fontSerif12" style="width:450px">
+					Il sottoscritto dichiara di aver preso visione di tutti i punti indicati in questa pagina, nelle sezioni 
+					"Dichiarazioni" e "Impegni", ex artt. 1341 e 1342 del Codice Civile.
+				</td>					
+			</tr>					
+		</table>	
+		
+		<!-- end -->
+		<div class="page-break"/>
+	
+		[#if "DEFINITIVO" == (_domanda.statoStampa)!]
+			</body>
+		[#else] 
+			</body>
+		[/#if]
+	
+	</html>	

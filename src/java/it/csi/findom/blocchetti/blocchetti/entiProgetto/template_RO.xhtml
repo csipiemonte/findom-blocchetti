@@ -1,0 +1,394 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+	[#-- _entiProgetto --]
+
+	<#-- note di dipendenze da altre commonalities: nessuna -->
+	
+	<h4>
+		<span id="toggle_handle_entiProgetto" class="toggle_handle collapse">Dati riepilogativi dell'Ente/degli Enti		
+		</span>
+	</h4>
+								
+	<div class="toggle_target_entiProgetto" id="id_tabella_entiProgetto">
+	
+		<p style="font-style:italic; font-weight:normal;"></p>
+		[#if "UCO" == codiceTipologiaBeneficiario! || "RTE" == codiceTipologiaBeneficiario!]
+							
+		<table class="myovertable tablesorter" summary="...." id="id_lista_enti">
+			
+			<col width="15%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="3%" />		
+			<col width="24%" />
+			<col width="9%" />
+			<col width="24%" />					
+			<thead>
+				<tr>						
+				<th>Ente</th>
+				<th>Popolazione</th>
+				<th>Classificazione del Comune</th>
+				<th>Partecipazione progetto</th>				
+				<th>Certificazione ambientale (a)</th>
+				<th>Patto dei sindaci (b)</th>
+				<th>Richiesta agevolazioni (c)</th>			
+				</tr>
+			</thead>
+						
+			[#if (entiProgettoList)?has_content]
+			[#list entiProgettoList as item]
+							
+			<tr>
+				<td>
+				
+					<select name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte" 
+						id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+						style="width: 95%;" disabled="disabled">
+						
+						<option value=""></option>
+						[#list entiList as curInt]
+						[#if !(!curInt?has_content || !curInt?is_hash)]
+						[#if curInt.codice == (item.codiceEnte)!]
+							<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>									   
+						[#else]
+							<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>										  
+						[/#if]
+						[/#if]
+						[/#list]
+									
+					</select>
+					</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].popolazione" 
+						id="id_dettEnte_popolazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.popolazione!?html}" readonly="readonly" class="long" style="text-align: right"/>				
+				</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].classificazione" 
+						id="id_dettEnte_classificazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.classificazione!?html}" readonly="readonly" class="long"/>				
+				</td>
+				
+				<td>					
+				[#if item.partecipazioneProgetto == "checked"]																			
+					<input type="checkbox" class="noborder"
+						id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"
+						checked="checked"							
+						disabled="disabled"
+						/>
+					
+				[#else]										
+					<input type="checkbox" class="noborder"
+						id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"													
+						disabled="disabled"
+						/>
+				[/#if]				
+									
+				</td>
+				
+				
+				<td>
+					<table style=" margin-bottom: 1px;" id="certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.certificazioneAmbientale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.certificazioneAmbientale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO
+							    
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								<label for="id_dettEnte_certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+								
+								<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientaleText" 
+								       value="${FTL_PLACEHOLDER}(item.certificazioneAmbientaleText)!?html?upper_case}" 
+								       id="id_dettEnte_certificazioneAmbientaleText_${FTL_PLACEHOLDER}item_index}"
+								       class="long"
+								       readonly="readonly"/>
+											
+								</td>
+							</tr>
+					</table>
+				</td>
+				<td>
+					<table style=" margin-bottom: 1px;" id="pattoSindaci_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.pattoSindaci)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.pattoSindaci)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								</td>
+							</tr>
+					</table>
+				</td>
+				<td>
+					<table style=" margin-bottom: 1px;" id="richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.richiestaAgevolazioni)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.richiestaAgevolazioni)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								<label for="id_dettEnte_richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+								
+								<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioniText" 
+								       value="${FTL_PLACEHOLDER}(item.richiestaAgevolazioniText)!?html?upper_case}" 
+								       id="id_dettEnte_richiestaAgevolazioniText_${FTL_PLACEHOLDER}item_index}"
+								       class="long" 
+								       readonly="readonly"/>
+								
+								</td>
+							</tr>
+					</table>
+				</td>
+						
+			</tr>
+						
+			[/#list]
+			[/#if]
+						
+		</table>
+		
+	
+		
+		<div class="totalePopolazione" id="id_totalePopolazione">
+		<table class="formTable" summary="...." id="id_table_totalePopolazione">
+			<col width="30%" />
+			<col width="20%" />
+			<col width="50%" />
+			<tr>
+				<th> <label for="id_totalePopolazione">Totale popolazione comuni partecipanti</label></th> 
+							
+				<td>							
+				<input type="text" id="id_entiProgetto_totalePopolazione"
+					name="_entiProgetto.totalePopolazione"
+					value="${FTL_PLACEHOLDER}(totalePopolazione)!?html}" 
+					class="long" 
+					readonly="readonly"/>
+				
+				</td>				
+			</tr>
+		</table>		
+		</div>
+		
+		[#elseif "COM" == codiceTipologiaBeneficiario! || "PRV" == codiceTipologiaBeneficiario! || "CME" == codiceTipologiaBeneficiario!]
+		<table class="myovertable tablesorter" summary="...." id="id_lista_enti">
+			<col width="15%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="3%" />		
+			<col width="24%" />
+			<col width="9%" />
+			<col width="24%" />					
+			<thead>
+				<tr>			
+				<th>Ente</th>
+				<th>Popolazione</th>
+				<th>Classificazione del Comune</th>
+				<th>Partecipazione progetto</th>				
+				<th>Certificazione ambientale (a)</th>
+				<th>Patto dei sindaci (b)</th>
+				<th>Richiesta agevolazioni (c)</th>			
+				</tr>
+			</thead>
+						
+			[#if (entiProgettoList)?has_content]
+			[#list entiProgettoList as item]
+							
+			<tr>
+				<td>
+				
+				 			
+				<select name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].codiceEnte" 
+					id="id_dettEnte_codice_${FTL_PLACEHOLDER}item_index}" class="long" 
+					style="width: 95%;" disabled="disabled">
+						
+					<option value=""></option>
+					[#list entiList as curInt]
+					[#if !(!curInt?has_content || !curInt?is_hash)]
+					[#if curInt.codice == (item.codiceEnte)!]						
+						<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}" selected="selected">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>									   
+					[#else]
+						<option value="${FTL_PLACEHOLDER}(curInt.codice)!?html}">${FTL_PLACEHOLDER}(curInt.descrizione)!?html}</option>										  
+					[/#if]
+					[/#if]
+					[/#list]
+									
+				</select>
+	
+				</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].popolazione" 
+						id="id_dettEnte_popolazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.popolazione!?html}" readonly="readonly" class="long" style="text-align: right"/>				
+				</td>
+				
+				<td>				
+					<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].classificazione" 
+						id="id_dettEnte_classificazione_${FTL_PLACEHOLDER}item_index}"
+						value="${FTL_PLACEHOLDER}item.classificazione!?html}" readonly="readonly" class="long"/>				
+				</td>
+				
+				<td>					
+																					
+				<input type="checkbox" class="noborder"
+					id="id_dettEnte_partecipazioneProgetto_${FTL_PLACEHOLDER}item_index}"
+					checked="checked"	
+					disabled="disabled"					
+					/>			
+									
+				</td>
+				
+				
+				<td>
+					<table style=" margin-bottom: 1px;" id="certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.certificazioneAmbientale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI"  disabled="disabled"/>		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="SI"  disabled="disabled"/>
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.certificazioneAmbientale)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO"  disabled="disabled"/>
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientale" id="id_ente_certificazioneAmbientale_[${FTL_PLACEHOLDER}item_index}]" value="NO"  disabled="disabled"/>
+							    [/#if]		
+							    NO							    
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								<label for="id_dettEnte_certificazioneAmbientale_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+								
+								<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].certificazioneAmbientaleText" 
+								       value="${FTL_PLACEHOLDER}(item.certificazioneAmbientaleText)!?html?upper_case}" 
+								       id="id_dettEnte_certificazioneAmbientaleText_${FTL_PLACEHOLDER}item_index}"
+								       class="long"
+								       readonly="readonly"/>
+								
+								</td>
+							</tr>
+					</table>
+				</td>
+				<td>
+					<table style=" margin-bottom: 1px;" id="pattoSindaci_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.pattoSindaci)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.pattoSindaci)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].pattoSindaci" id="id_ente_pattoSindaci_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							   
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								</td>
+							</tr>
+					</table>
+				</td>
+				<td>
+					<table style=" margin-bottom: 1px;" id="richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">
+							<tr class="nested">
+							    <td style="border:none;">	
+							    [#if "SI" == (item.richiestaAgevolazioni)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />		
+							    [#else]				    							   
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="SI" disabled="disabled" />
+							    [/#if]	
+							    SI
+							    
+							    [#if "NO" == (item.richiestaAgevolazioni)!]
+							    <input class="noborder" type="radio" checked= "checked" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [#else]
+							    <input class="noborder" type="radio" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioni" id="id_ente_richiestaAgevolazioni_[${FTL_PLACEHOLDER}item_index}]" value="NO" disabled="disabled" />
+							    [/#if]		
+							    NO							    
+								</td>
+							</tr>
+							<tr class="nested">
+								<td style="border:none;">
+								<label for="id_dettEnte_richiestaAgevolazioni_${FTL_PLACEHOLDER}item_index}">Se si specificare quale:</label>
+								
+								<input type="text" name="_entiProgetto.entiProgettoList[${FTL_PLACEHOLDER}item_index}].richiestaAgevolazioniText" 
+								       value="${FTL_PLACEHOLDER}(item.richiestaAgevolazioniText)!?html?upper_case}" 
+								       id="id_dettEnte_richiestaAgevolazioniText_${FTL_PLACEHOLDER}item_index}"
+								       class="long" 
+								       readonly="readonly"/>
+													
+								</td>
+							</tr>
+					</table>					
+				</td>
+
+			</tr>
+						
+			[/#list]
+			[/#if]
+						
+		</table>
+		[/#if]
+		<p style="font-style:italic; font-weight:normal;">
+		(a) indicare l'eventuale certificazione ambientale. Sono accettate le certificazioni ISO14001, 50001 e EMAS . Se si è in possesso di più certificazioni è sufficiente indicarne una.<br/>
+		(b) indicare se il comune aderisce al Patto dei Sindaci oppure, se il progetto è proposto da Province o dalla Città Metropolitana di Torino, indicare se questi ha assunto il ruolo di coordinatore territoriale dell'iniziativa "Patto dei sindaci".<br/>
+		(c) indicare se è stata presentata una richiesta di agevolazioni a livello nazionale. 
+		</p>
+		
+		
+		</div>
+		
+	

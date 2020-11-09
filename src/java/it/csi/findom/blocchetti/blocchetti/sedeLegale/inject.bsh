@@ -1,0 +1,251 @@
+		////////////////////////////////////////////////////////////////////////////////////////////
+		//// _sedeLegale/inject.bsh
+		<#-- note di dipendenze da altre commonalities: nessuna -->
+		
+		//// dichiarazioni
+
+		List getStatoEsteroListSL() {
+			String query = "";
+			//
+			query += "SELECT ";
+			query +=     "cod_stato AS codice, ";
+			query +=     "descrizione_stato AS descrizione ";
+			query += "FROM ";
+			query +=     "ext_d_stati_esteri ";			
+			query += "ORDER BY ";
+			query +=     "descrizione";
+			List rlist = (List) tools.executeQuery(query);
+			return rlist;
+		}
+
+		List getProvinciaListSL() {
+		    List rlist = null;
+		    if(session.getAttribute("provinceSLList")!=null && !session.getAttribute("provinceSLList").isEmpty()) {		    
+		       rlist = (List)session.getAttribute("provinceSLList");
+		       		       
+		    }else{
+			   String query = "";
+			
+			   query += "SELECT ";
+			   query +=     "prov AS codice, ";
+			   query +=     "desprov AS descrizione, ";
+			   query +=     "sigprov AS sigla ";
+			   query += "FROM ";
+			   query +=     "ext_d_province ";
+			   query += "ORDER BY ";
+			   query +=     "descrizione";
+			
+			   rlist = (List) tools.executeQuery(query);
+               session.setAttribute("provinceSLList",rlist);
+            }
+			return rlist;
+		}
+
+		List getSiglaProvinciaListSL(String codiceProvincia) {
+			String query = "";
+			query += "SELECT ";
+			query +=     "sigprov AS sigla ";
+			query += "FROM ";
+			query +=     "ext_d_province ";
+			query += "WHERE ";
+			query +=     "prov='" + codiceProvincia + "' ";
+			//
+			List rlist = (List) tools.executeQuery(query);
+			return rlist;
+		}
+
+		List getComuneListSL(String codiceProvincia) {
+			String query = "";
+			//
+			query += "SELECT ";
+			query +=     "comune AS codice, ";
+			query +=     "descom AS descrizione ";
+			query += "FROM ";
+			query +=     "ext_d_comuni ";
+			query += "WHERE ";
+			query +=     "prov='" + codiceProvincia + "' ";
+			query += "ORDER BY ";
+			query +=     "descrizione";
+			List rlist = (List) tools.executeQuery(query);
+			return rlist;
+		}
+		
+		String codStatoEstero(String descrStato){
+			String query = "";
+			List  codList = (List) tools.executeQuery(query);
+			String cod ="";
+			if(codList!=null && !codList.isEmpty()){
+				cod = ((Map)codList.get(0)).get("cod_stato");
+			}
+			return cod;
+		}
+		
+		// Recupero da db nodo _sedeLegaleAAEP
+		List getNodoSedeLegale(String idDomanda) {
+			List rlist = null;
+		    if(idDomanda!=null) {	
+				String query = "";			
+			   	query += " SELECT aggr_t_model.model_id, " +
+           				" aggr_t_model.model_progr, " +
+           				" aggr_t_model.user_id, " +
+           				" aggr_t_model.template_code_fk, " +
+          				" unnest(xpath('/tree-map/_sedeLegale'::text, " +
+						" aggr_t_model.serialized_model))::text AS sedelegale " +
+               			" FROM  aggr_t_model " +
+           				" WHERE aggr_t_model.model_id= '" + idDomanda + "'";
+			   	rlist = (List) tools.executeQuery(query);			   
+			}           
+			return rlist;
+		}
+		
+		List statoEsteroSLList = new ArrayList();
+		List provinciaSLList = new ArrayList();
+		List comuneSLList = new ArrayList();
+		
+		String _sedeLegale_siglaProvincia = "";
+		Map sedeLegMap = new HashMap(); // dati da visulaizzare nel form
+		
+		//// valorizzazione
+		Impresa enteImpresa = (Impresa) session.getAttribute("enteImpresa");
+
+		String operazione = "INS";
+		String idDomanda = statusInfo.getNumProposta() + "";
+		List listaDomande = getNodoSedeLegale(idDomanda);
+		if (listaDomande!=null && listaDomande.size()!=0){
+					
+			Map domanda = (Map)listaDomande.get(0);
+						
+			if (domanda!=null){
+				if (domanda.get("sedelegale")!=null)
+					operazione = "MOD";					
+			}						
+		}
+		
+		it.csi.findom.findomwebnew.dto.aaep.Sede sedeLegaleAziCorrente = null;
+		
+		if ( !formState.equals("IN") && !formState.equals("CO")) {
+		
+			sedeLegaleAziCorrente = (it.csi.findom.findomwebnew.dto.aaep.Sede)session.getAttribute("sedeLegale");
+		
+		    //lista degli stati esteri e delle province
+            statoEsteroSLList = getStatoEsteroListSL();	
+			provinciaSLList = getProvinciaListSL();
+
+			Map _sedeLegaleMap = (Map) model.get("_sedeLegale");			   
+			
+			if(_sedeLegaleMap == null ) {
+			
+
+				if( enteImpresa != null){
+
+					if( sedeLegaleAziCorrente != null){
+						if(StringUtils.equals("Italia", sedeLegaleAziCorrente.getUbicazione().getNomeNazione())){
+							sedeLegMap.put("stato", "Italia"); // "Italia" o "Estero"
+							sedeLegMap.put("statoEstero","");
+							sedeLegMap.put("statoEsteroDescrizione", ""); 
+							sedeLegMap.put("cittaEstera", "");
+						}else{
+							sedeLegMap.put("stato", "Estero"); // "Italia" o "Estero"
+							String codSE = codStatoEstero(sedeLegaleAziCorrente.getUbicazione().getNomeNazione());
+							sedeLegMap.put("statoEstero", codSE); // Es: 506 
+							sedeLegMap.put("statoEsteroDescrizione", sedeLegaleAziCorrente.getUbicazione().getNomeNazione()); // non deve contemplare il caso Italia
+							sedeLegMap.put("cittaEstera", sedeLegaleAziCorrente.getUbicazione().getDescrComune());
+						}
+						
+						
+						// inizializzo
+						sedeLegMap.put("provincia", "");
+						sedeLegMap.put("provinciaDescrizione", "");
+						for(int i=0; i<provinciaSLList.size();i++){
+							// non faccio una query apposita ma ciclo sull'elenco delle province
+							Map provincMap = (Map)provinciaSLList.get(i);
+							if(provincMap != null && StringUtils.equals(provincMap.get("sigla"), sedeLegaleAziCorrente.getUbicazione().getSiglaProvincia())){
+								sedeLegMap.put("provincia", provincMap.get("codice"));
+								sedeLegMap.put("provinciaDescrizione", provincMap.get("descrizione")); 
+
+								// carico la lista dei comuni per la provincia data
+								comuneSLList = getComuneListSL(provincMap.get("codice"));
+								break;
+							}
+						}
+						sedeLegMap.put("provinciaSigla", sedeLegaleAziCorrente.getUbicazione().getSiglaProvincia());						
+						sedeLegMap.put("comune", sedeLegaleAziCorrente.getUbicazione().getCodISTATComune());
+						sedeLegMap.put("comuneDescrizione", sedeLegaleAziCorrente.getUbicazione().getDescrComune());
+						
+						String indirzz = "";
+						if(StringUtils.isBlank(sedeLegaleAziCorrente.getUbicazione().getToponimo())){
+							// In AAEP il toponimo non c'e' se la residenza e' in uno Stato estero.
+							indirzz = sedeLegaleAziCorrente.getUbicazione().getIndirizzo();
+						}else{
+							indirzz = sedeLegaleAziCorrente.getUbicazione().getToponimo() + " " +  sedeLegaleAziCorrente.getUbicazione().getIndirizzo();
+						}
+						sedeLegMap.put("indirizzo", indirzz);
+						sedeLegMap.put("numCivico", sedeLegaleAziCorrente.getUbicazione().getNumeroCivico());
+						sedeLegMap.put("cap", sedeLegaleAziCorrente.getUbicazione().getCap());
+
+						sedeLegMap.put("telefono", sedeLegaleAziCorrente.getContatti().getTelefono());
+						sedeLegMap.put("pec", enteImpresa.getPostaElettronicaCertificata()); 
+						
+						_sedeLegale_siglaProvincia = sedeLegMap.get("provinciaSigla");
+					}
+				}
+			} else {
+				// utilizzo i dati presenti su XML
+				
+				sedeLegMap.put("stato", _sedeLegaleMap.get("stato"));
+				sedeLegMap.put("statoEstero", _sedeLegaleMap.get("statoEstero"));
+				sedeLegMap.put("statoEsteroDescrizione", _sedeLegaleMap.get("statoEsteroDescrizione"));
+				sedeLegMap.put("cittaEstera", _sedeLegaleMap.get("cittaEstera"));
+				sedeLegMap.put("provincia", _sedeLegaleMap.get("provincia"));
+				sedeLegMap.put("provinciaDescrizione", _sedeLegaleMap.get("provinciaDescrizione"));
+				sedeLegMap.put("provinciaSigla", _sedeLegaleMap.get("provinciaSigla"));
+				sedeLegMap.put("comune", _sedeLegaleMap.get("comune"));
+				sedeLegMap.put("comuneDescrizione", _sedeLegaleMap.get("comuneDescrizione"));
+				sedeLegMap.put("indirizzo", _sedeLegaleMap.get("indirizzo"));
+				sedeLegMap.put("numCivico", _sedeLegaleMap.get("numCivico"));
+				sedeLegMap.put("cap", _sedeLegaleMap.get("cap"));
+				sedeLegMap.put("telefono", _sedeLegaleMap.get("telefono"));
+				sedeLegMap.put("pec", _sedeLegaleMap.get("pec"));
+				sedeLegMap.put("email", _sedeLegaleMap.get("email"));
+	<#if _ente_impresa_SL_altri_recapiti == "true" >			
+				sedeLegMap.put("personaRifSL", _sedeLegaleMap.get("personaRifSL"));
+				sedeLegMap.put("cellulare", _sedeLegaleMap.get("cellulare"));
+				//sedeLegMap.put("email", _sedeLegaleMap.get("email"));
+    </#if>
+				//la provincia della sede legale presente eventualmente in request ha la precedenza su quella presente nell'xml
+				//perche' sull'onchange delle combo provincia sede legale devo tener conto del valore appena scelto
+				String provinciaSL = ServletActionContext.getRequest().getParameter("_sedeLegale.provincia");
+				if (StringUtils.isBlank(provinciaSL)){
+					// se non ho una provincia in request, considero quella dell'xml					    	
+					provinciaSL = (String) _sedeLegaleMap.get("provincia");				       
+				}			    
+
+				if (StringUtils.isNotBlank(provinciaSL)) {			   
+				   comuneSLList = getComuneListSL(provinciaSL);
+
+				   // ottiene la sigla della provincia di residenza
+				   List siglaProvinciaSLList = getSiglaProvinciaListSL(provinciaSL);
+				   if (siglaProvinciaSLList != null && siglaProvinciaSLList.size() > 0) {
+					   _sedeLegale_siglaProvincia = (String) ((Map) siglaProvinciaSLList.get(0)).get("sigla");	
+				   }
+				} else {
+					// altrimenti risettiamo il valore dell'xml
+					_sedeLegale_siglaProvincia = sedeLegMap.get("provinciaSigla");
+				}
+			}
+		}
+
+		//// namespace
+
+		ns.put("statoEsteroSLList", statoEsteroSLList);
+		ns.put("provinciaSLList", provinciaSLList);
+		ns.put("comuneSLList", comuneSLList);
+		ns.put("_sedeLegale_siglaProvincia", _sedeLegale_siglaProvincia);
+
+		ns.put("sedeLeg", sedeLegMap);
+		ns.put("sedeLegaleAziCorrente", sedeLegaleAziCorrente);
+		ns.put("enteImpresa", enteImpresa);
+		
+
+		//// _sedeLegale/inject.bsh
+		////////////////////////////////////////////////////////////////////////////////////////////

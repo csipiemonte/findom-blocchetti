@@ -1,0 +1,42 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _estremiBancari RO --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+<h4>
+	<span id="toggle_handle_EsBnc" class="toggle_handle collapse">Estremi bancari</span>
+</h4>
+
+<#if _estremiBancari_nota_personalizzabile?has_content >			
+	  <p><i>${_estremiBancari_nota_personalizzabile}</i></p>
+</#if>
+
+<div class="toggle_target_EsBnc">
+	<table class="formTable" summary="....">
+		<col width="30%" />
+		<col width="23%" />
+		<col width="23%" />
+		<col width="24%" />
+		<tr>
+			
+			<th><label for="id_estremibancari_iban">IBAN </label></th>
+			<td>
+				<input type="text" name="_estremiBancari.iban" value="${FTL_PLACEHOLDER}(_estremiBancari.iban)!?html}" 
+				       id="id_estremibancari_iban" class="long" readonly="readonly"/>
+			</td>
+			<th><label for="id_estremibancari_bic">BIC </label></th>
+			<td>
+				<input type="text" name="_estremiBancari.bic" value="${FTL_PLACEHOLDER}(_estremiBancari.bic)!?html}" 
+				       id="id_estremibancari_bic" class="long" readonly="readonly" />								
+			</td>
+		</tr>
+		<tr>
+			<th><label for="id_estremibancari_intestatario">Intestatario c/c </label></th>
+			<td colspan="2">
+				<input type="text" name="_estremiBancari.intestatarioCC" value="${FTL_PLACEHOLDER}(_estremiBancari.intestatarioCC)!?html}" 
+				       id="id_estremibancari_intestatario" class="long" readonly="readonly" />
+			</td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,238 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _formaAgevolazione RO --]
+
+<#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+<h4>
+	<span id="toggle_handle_cciaa" class="toggle_handle collapse">${FTL_PLACEHOLDER}(caratteristicheProgettoLabel)!}
+	</span>
+</h4>
+	
+	<div class="toggle_target_cciaa">
+		
+		<table class="formTable" summary="....">
+		    <col width="5%" />
+			<col width="95%" />	
+			
+		    <tr>
+				<td></td>
+				<td>
+					<table summary="...." id="id_tipol_cat_intervento"
+						class="myovertable tablesorter target_toggle_checkbox_1">
+					  	<col width="5%"/>	
+					  	<col width="30%" />	
+						<col width="10%" />	
+						<col width="10%" />	
+						<col width="15%" />	
+						<col width="15%" />	
+						<col width="15%" />	
+													  
+						<thead>
+							<tr class="skip">
+								<th scope="col"></th>														
+								<th scope="col">Contributi</th>												
+								<th scope="col">Totale spese dichiarate</th>								
+								<th scope="col" style="text-align: center; font-weight:bold; ">% max erogabile<br/><em>(definito dal bando)</em></th>		
+								<th scope="col" style="text-align: center; font-weight:bold;">Imp. max. erogabile<br/><em>(definito da bando)</em></th>	
+								<th scope="col" style="text-align: center; font-weight:bold;">Spesa max dichiarabile<br/><em>(inserire valore come da perizia asseverata)</em></th>									
+								<th scope="col" style="text-align: center; font-weight:bold;">Importo richiesto *</th>										
+							</tr>
+						</thead>
+						
+						<tbody>	
+							[#list tipologiaInterventoList as item]									
+								[#if !(!item?has_content || !item?is_hash)]
+								    <tr>
+											  [#if item.checked == "true"]	  
+													<th scope="row">
+														<input type="checkbox" class="noborder" id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" checked="checked" disabled="disabled" />
+													</th>
+											  [#else]	
+													<th scope="row">
+														<input type="checkbox" class="noborder" id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" disabled="disabled" />
+													</th>
+											  [/#if]
+												<td>
+													${FTL_PLACEHOLDER}(item.descrTipoIntervento)!?html}
+												</td>	
+												<!-- Toale spesa dichiarata -->
+												[#if item.idTipoIntervento == "97"]	
+												 <!-- value="${FTL_PLACEHOLDER}(strTotCat97)!?html}" --> 
+														<td>
+															 <input type="text" style="text-align: right;" id="id_totale_voce_spesa_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(strTotCat97)!?html}" name="_formaAgevolazione.strTotCat97" class="long idleField" disabled="disabled"  />
+														</td>
+														
+														[#elseif item.idTipoIntervento == "98"]
+															<td>
+																<input type="text" style="text-align: right;" id="id_totale_voce_spesa_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(strTotCat98)!?html}" name="_formaAgevolazione.strTotCat98" class="long idleField" disabled="disabled"  />
+															</td>
+														
+														[#elseif item.idTipoIntervento == "99"]
+														<!--  value="${FTL_PLACEHOLDER}(totCat99)!?html}" --> 
+														<td>
+															<input type="text" style="text-align: right;" id="id_totale_voce_spesa_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(totCat99)!?html}" name="_formaAgevolazione.totCat99" class="long idleField" disabled="disabled"  />
+														</td> 
+												[/#if]
+												<!-- percentuale max erogabile -->
+												[#list valoriContributoList as item2]									
+													[#if !(!item2?has_content || !item2?is_hash)]
+														[#if item.idTipoIntervento == item2.idTipolIntervento]
+															<td>
+																<input type="text" style="text-align: right;" 	         
+													               id="id_perc_max_erogabile_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 
+													               value="${FTL_PLACEHOLDER}(item2.percMaxContributoErogabile)!?html}"	
+													               name=""		              
+													               class="long idleField"				               
+													               disabled="disabled"  />
+															</td>
+															<!-- importo max erogabile -->
+															[#if item.idTipoIntervento == "97"]	
+																<td>
+																	<input type="text" style="text-align: right;" 	             
+														               id="id_importo_max_erogabile"
+														               value="Non previsto"	
+														               name=""	              
+														               class="long idleField"		               
+														               disabled="disabled" />
+														         </td>
+														     [#elseif item.idTipoIntervento == "98"]
+														     	<td>
+																	<input type="text" style="text-align: right;" 	             
+														               id=""
+														               value="Non previsto"	
+														               name=""	             
+														               class="long idleField"		               
+														               disabled="disabled"  />
+														         </td>
+														     [#elseif item.idTipoIntervento == "99"] 
+														     	<td>
+																	<input type="text" style="text-align: right;" 	             
+														               id=""
+														               value="${FTL_PLACEHOLDER}(item2.importoMassimoErogabile)!?html}"	
+														               name=""	              
+														               class="long idleField"		               
+														               disabled="disabled" />
+																</td>
+															[/#if]
+														[/#if]
+													[/#if]
+												[/#list]
+												<!-- spesa max dichiarabile -->
+												
+												[#if item.checked == "true"]
+													
+													[#if item.idTipoIntervento == "97"]
+														[#if isGrandiStazioni == "true"]
+															<td>
+																<input type="text" style="text-align: right;" id="id_spesa_max_dichiarabile_catg97_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(str_spesaMaxDichiarabile_97)!?html}" name="_formaAgevolazione.str_spesaMaxDichiarabile_97" pattern="\d+(,\d{1,2})?" title="Solo valori numerici maggiore di 0 con al massimo 2 decimali (Es.: 12345,67)" disabled="disabled" class="long idleField" />
+															</td>
+														[#else]
+															<td>
+																<input type="text" style="text-align: right;" id="id_spesa_max_dichiarabile_catg97_${FTL_PLACEHOLDER}item_index}" value="Non previsto" name="_formaAgevolazione.str_spesaMaxDichiarabile_97" disabled="disabled" class="long idleField" />
+															</td>
+														[/#if]
+													[#elseif item.idTipoIntervento == "98"]	
+															<td>
+																<input type="text" style="text-align: right;" id="id_spesa_max_dichiarabile_catg98_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(str_spesaMaxDichiarabile_98)!?html}" name="_formaAgevolazione.str_spesaMaxDichiarabile_98" pattern="\d+(,\d{1,2})?" title="Solo valori numerici maggiore di 0 con al massimo 2 decimali (Es.: 12345,67)" disabled="disabled" class="long idleField" />
+															</td>
+													[#elseif item.idTipoIntervento == "99"]
+															<td>
+																<input type="text" style="text-align: right;" id="id_spesa_max_dichiarabile_catg99_${FTL_PLACEHOLDER}item_index}" value="Non previsto" name="_formaAgevolazione.spesa_max_dichiarabile_catg99" class="long idleField" disabled="disabled" />
+															</td>
+													[/#if]
+												[#else]
+													[#if item.idTipoIntervento == "97"]	
+														<td>
+															<input type="text" style="text-align: right;" id="97" value="Non previsto" name="_formaAgevolazione.str_spesaMaxDichiarabile_97" class="long idleField" disabled="disabled"  />
+														</td>
+													[#elseif item.idTipoIntervento == "98"]	
+														<td>
+															<input type="text" style="text-align: right;" id="98" value="Non previsto" name="_formaAgevolazione.str_spesaMaxDichiarabile_98" class="long idleField" disabled="disabled"  />
+														</td>
+													
+													[#elseif item.idTipoIntervento == "99"]	
+														<td>
+															<input type="text" style="text-align: right;" 			               
+												               id="99"
+												               value="Non previsto"	
+												               name="_formaAgevolazione.spesa_max_dichiarabile_catg99"              
+												               class="long idleField"			               
+												               disabled="disabled"  />
+														</td>
+													[/#if]
+												[/#if]
+												
+											    <!-- importo richiesto -->
+											    [#if item.idTipoIntervento == "97"]
+													<td>
+														<input type="text" style="text-align: right;" 			               
+											               id="id_importo_categoria97_${FTL_PLACEHOLDER}item_index}"
+											               value="${FTL_PLACEHOLDER}(strImportoCat97)!?html}" 
+											               name="_formaAgevolazione.importoRichiestoCat97"	              
+											               class="long idleField"				               
+											               disabled="disabled"  />
+													</td>
+												[#elseif item.idTipoIntervento == "98"]
+													<td>
+														<input type="text" style="text-align: right;" 			               
+											               id="id_importo_categoria98_${FTL_PLACEHOLDER}item_index}"
+											               value="${FTL_PLACEHOLDER}(strImportoCat98)!?html}" 
+											               name="_formaAgevolazione.importoRichiestoCat98"
+											               class="long idleField"			               
+											               disabled="disabled"  />
+											               
+													</td>
+												[#elseif item.idTipoIntervento == "99"]
+													<td>
+														<input type="text" style="text-align: right;" 			               
+											               id="id_importo_categoria99_${FTL_PLACEHOLDER}item_index}"
+											                value="${FTL_PLACEHOLDER}(strImportoCat99)!?html}" 
+											               name="_formaAgevolazione.importoRichiestoCat99"              
+											               class="long idleField"				               
+											               disabled="disabled"  />
+													</td>
+												[/#if]
+									
+									    	</tr>
+							    [/#if]
+							[/#list]
+							<tr class="skip">
+												<th scope="row"></th>
+												<td>
+													<strong>Totale</strong>
+												</td>
+												<td>
+													<input type="text" 			               
+											               id=""
+											               value="${FTL_PLACEHOLDER}(totaleSpeseContrCatg)!?html}" 
+											               name="_formaAgevolazione.totaleSpeseContributo"		              
+											               class="long"	style="text-align: right; font-weight: bold;"				               
+											               disabled="disabled"  />
+												</td>
+												<td>
+													
+												</td>
+												<td>
+													
+												</td>
+												<td>
+													
+												</td>
+												<td>
+													<input type="text" 			               
+											               id="id_totale_importo_contributo"
+											               value="${FTL_PLACEHOLDER}(strTotImportoRichiesto)!?html}"
+											               name="_formaAgevolazione.totaleImportoContributo"         											              
+											               class="long"	style="text-align: right; font-weight: bold;" 				               
+											               disabled="disabled"  />
+												</td>
+											</tr>
+						</tbody>
+					</table>
+				</td>
+				<td></td>
+			</tr>
+		</table>
+</div>	

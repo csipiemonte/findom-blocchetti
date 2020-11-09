@@ -1,0 +1,506 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _operatorePresentatoreSemplificato --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+<script type="text/javascript">
+	
+	$( document ).ready(function() {
+	    // console.log( "ready operatore presentatore: S1_P1" );
+	    setCampiHiddenFormaGiuridica();
+	});
+
+	function setCampiHiddenAttivitaEconomica(){
+		var valoreSelezionatoAE = $("#id_operatorePresentatore_attivitaEconomica").val();
+		var idAE = valoreSelezionatoAE.substr(0, valoreSelezionatoAE.indexOf('-'));
+		var codiceAE = valoreSelezionatoAE.substr(valoreSelezionatoAE.indexOf('-')+1);
+		$("#id_operatorePresentatore_idAttivitaEconomica").val(idAE);
+		$("#id_operatorePresentatore_codiceAttivitaEconomica").val(codiceAE);						
+		$("#id_operatorePresentatore_descrizioneAttivitaEconomica").val($("#id_operatorePresentatore_attivitaEconomica option:selected").text());
+	}
+
+	function setCampiHiddenFormaGiuridica()
+	{
+		<#if _operatorePresentatore_formaGiuridica_lavoratoreAutonomo == "true" >
+			    [#if codTipoBeneficiario == "LARI" ]
+			    
+			 // // console.log("codTipoBeneficiario risulta: LARI");
+					
+					var selText = "Lavoratore autonomo";
+					$("#id_operatorePresentatore_formaGiuridica").val('1.01.40');
+					var idFG = '4';
+					var codiceFG = '1.01.40';
+					$("#id_operatorePresentatore_idFormaGiuridica").val(idFG);
+					$("#id_operatorePresentatore_codiceFormaGiuridica").val(codiceFG);	
+					$("#id_operatorePresentatore_descrizioneFormaGiuridica").val(selText);
+					$("#id_operatorePresentatore_formaGiuridica option:selected").text(selText);
+					$('.classFrmGiuridica').attr("disabled", true);
+				[#else]
+					var valoreSelezionatoAE = $("#id_operatorePresentatore_formaGiuridica").val();
+					var idFG = valoreSelezionatoAE.substr(0, valoreSelezionatoAE.indexOf('-'));
+					var codiceFG = valoreSelezionatoAE.substr(valoreSelezionatoAE.indexOf('-')+1);
+					$("#id_operatorePresentatore_idFormaGiuridica").val(idFG);
+					$("#id_operatorePresentatore_codiceFormaGiuridica").val(codiceFG);						
+					$("#id_operatorePresentatore_descrizioneFormaGiuridica").val($("#id_operatorePresentatore_formaGiuridica option:selected").text());	
+			    [/#if]
+		<#else>
+		// // console.log("valoreSelezionatoAE: " + valoreSelezionatoAE);
+			
+			var valoreSelezionatoAE = $("#id_operatorePresentatore_formaGiuridica").val();
+			// // console.log("valoreSelezionatoAE: " + valoreSelezionatoAE);
+			
+			var idFG = valoreSelezionatoAE.substr(0, valoreSelezionatoAE.indexOf('-'));
+			// // console.log("idFG: " + idFG);
+			
+			var codiceFG = valoreSelezionatoAE.substr(valoreSelezionatoAE.indexOf('-')+1);
+			// // console.log("codiceFG: " + codiceFG);
+	
+			$("#id_operatorePresentatore_idFormaGiuridica").val(idFG);
+			$("#id_operatorePresentatore_codiceFormaGiuridica").val(codiceFG);						
+			$("#id_operatorePresentatore_descrizioneFormaGiuridica").val($("#id_operatorePresentatore_formaGiuridica option:selected").text());			    
+	    </#if>
+			    
+	}
+
+	function setCampiHiddenDipartimento(){
+
+		var valoreSelezionatoDip = $("#id_operatorePresentatore_dipartimento").val();
+		// console.log("valoreSelezionatoDip: "+valoreSelezionatoDip);
+
+		var idDip = valoreSelezionatoDip.substr(0, valoreSelezionatoDip.indexOf('-'));
+		// console.log("idDip: "+idDip);
+		
+		var codiceDip = valoreSelezionatoDip.substr(valoreSelezionatoDip.indexOf('-')+1);
+		// console.log("codiceDip: "+codiceDip);
+		
+		$("#id_operatorePresentatore_idDipartimento").val(idDip);
+		$("#id_operatorePresentatore_codiceDipartimento").val(codiceDip);						
+		$("#id_operatorePresentatore_descrizioneDipartimento").val($("#id_operatorePresentatore_dipartimento option:selected").text());
+	}
+
+	function setCampiHiddenDaStatoEstero(){
+		var valoreSelezionatoStatoEstero = $("#id_operatorePresentatore_statoEstero").val();
+		$("#id_operatorePresentatore_idStato").val(valoreSelezionatoStatoEstero);											
+		$("#id_operatorePresentatore_descrStato").val($("#id_operatorePresentatore_statoEstero option:selected").text());
+	}
+	
+</script>
+<style>
+
+	#id_operatorePresentatore_codiceRegionale:required {
+    	background:hsl(180, 50%, 90%);
+    	border:1px solid #999;
+	}
+	
+	#id_operatorePresentatore_codiceRegionale:valid, #id_operatorePresentatore_codiceRegionale:in-range {
+	    background:hsl(120, 50%, 90%);
+	    border-color:hsl(120, 50%, 50%);
+	}
+	
+	#id_operatorePresentatore_codiceRegionale:invalid,
+	#id_operatorePresentatore_codiceRegionale:out-of-range {
+	    border-color:hsl(0, 50%, 50%);
+	    background:hsl(0, 50%, 90%);
+	}
+	
+	/** data iscrizione registro aps */
+	input#id_operatorePresentatore_dataIscrizioneRegistroAPS {
+    	width: 20%;
+	}
+	
+	/** numero registro aps */
+	input#id_operatorePresentatore_numeroIscrizioneRegistroAPS {
+    	width: 20%;
+	}
+	
+</style>
+
+[#if visNotaPrecompilazioneAAEP == "true"]
+	<div class="stdMessagePanel feedback">
+		[#if visNotaPrecompilazioneUltimaDomanda == "true"]
+			<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sul Registro delle Imprese e/o sull'ultima domanda inviata. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+		[#else]
+			<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sul Registro delle Imprese. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+		[/#if]
+	</div>
+[#else]
+	[#if visNotaPrecompilazioneUltimaDomanda == "true"]
+		<div class="stdMessagePanel feedback">
+			<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sull'ultima domanda inviata. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+		</div>
+	[/#if]
+[/#if]
+
+<#if _operatorePresentatore_mex_alert == "true" >
+<!--  
+	<div class="stdMessagePanel feedback">
+			<div class='feedWarning'>
+				<h3></h3>
+			</div>
+	</div>
+-->
+</#if>
+
+<input type="submit" id="id_reload_S1_P1" name="_command" value="LabelCommand:C_reload_S1_P1;RenderCommand:1100" hidden="hidden" />
+<h4>
+	<span id="toggle_handle_OpPrs" class="toggle_handle collapse">Dati identificativi</span>
+</h4>
+<div class="toggle_target_OpPrs">
+	<table class="formTable" summary="....">
+		<col width="30%" />
+		<col width="70%" />
+
+		<tr>
+			<th>
+				<label for="id_operatorePresentatore_codiceFiscale">Codice fiscale </label> 
+			</th>
+			<td>
+				<input 
+					type="text" 
+					name="_operatorePresentatore.codiceFiscale" 
+					value="${FTL_PLACEHOLDER}(statusInfo.codFiscaleBeneficiario)!?html}" 
+					id="id_operatorePresentatore_codiceFiscale" 
+					readonly="readonly" />
+				<input type="hidden" name="_operatorePresentatoreAAEP.codiceFiscale" value="${FTL_PLACEHOLDER}(enteImpresa.codiceFiscale)!?html}" />
+				[#if !beneficiarioEstero!?has_content]
+					<input type="hidden" id="id_operatorePresentatore_idStato" name="_operatorePresentatore.idStato" value="${FTL_PLACEHOLDER}(operPresent.idStato)!?html}" />
+					<input type="hidden" id="id_operatorePresentatore_descrStato" name="_operatorePresentatore.descrStato" value="${FTL_PLACEHOLDER}(operPresent.descrStato)!?html}" />
+				[/#if]
+			</td>
+		</tr>
+		
+		[#if beneficiarioEstero!?has_content]
+			[#if statoEsteroRO! == "false"]						
+				<tr>							
+					<th>
+						<label for="id_operatorePresentatore_statoEstero">Stato estero</label>
+					</th>
+					<td>
+						<select id="id_operatorePresentatore_statoEstero" name="statoEstero" 
+								class="[@classLongError errorList=(messages._operatorePresentatore_statoEstero)![] /]"
+								onchange="setCampiHiddenDaStatoEstero();">
+							<option value=""></option>
+							[#list statoEsteroList as item]
+								[#if item.codice! == (operPresent.idStato)!]
+									<option value="${FTL_PLACEHOLDER}item.codice}" selected="selected">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+								[#else]
+									<option value="${FTL_PLACEHOLDER}item.codice}">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+								[/#if]										
+							[/#list]
+						</select>								
+						[@contextualErrors errorList=(messages._operatorePresentatore_statoEstero)![] /]
+						<input type="hidden" id="id_operatorePresentatore_idStato" name="_operatorePresentatore.idStato" value="${FTL_PLACEHOLDER}(operPresent.idStato)!?html}" />
+						<input type="hidden" id="id_operatorePresentatore_descrStato" name="_operatorePresentatore.descrStato" value="${FTL_PLACEHOLDER}(operPresent.descrStato)!?html}" />
+							
+					</td>
+				 </tr>
+			[#else]
+				<tr>							
+					<th>
+						<label for="id_operatorePresentatore_statoEstero">Stato estero</label>
+					</th>
+					<td>
+						<input type="text" name="_operatorePresentatore.descrStato" value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrStato)!?html}"  
+						id="id_operatorePresentatore_statoEstero" readonly="readonly" class="medium"/>
+					</td>
+				</tr>
+			[/#if]
+		[/#if]
+		<tr>
+			<th><label for="id_operatorePresentatore_denominazione">Denominazione o ragione sociale</label></th>
+			<td>
+				<input type="text" name="_operatorePresentatore.denominazione" value="${FTL_PLACEHOLDER}(operPresent.denominazione)!?html}" 
+						id="id_operatorePresentatore_denominazione" required="required"
+						class="[@classMediumError errorList=(messages._operatorePresentatore_denominazione)![] /]"/>
+						 [@contextualErrors errorList=(messages._operatorePresentatore_denominazione)![] /]
+				<input type="hidden" name="_operatorePresentatoreAAEP.denominazione" value="${FTL_PLACEHOLDER}(enteImpresa.ragioneSociale)!?html}" />
+			</td>
+		</tr>
+
+
+		<!-- MB2016_03_11 ini -->
+		[#if dipartimentiList?has_content]
+		   [#if unitaOrganizzativaRO! == "false"]	
+		      <tr>							
+		   	    <th>
+				    <label for="id_operatorePresentatore_dipartimento">Unit&#224; organizzativa</label>
+			    </th>
+			    <td>
+				 <select id="id_operatorePresentatore_dipartimento" name="dipartimento" 
+						class="[@classLongError errorList=(messages._operatorePresentatore_codiceDipartimento)![] /]"
+						onchange="setCampiHiddenDipartimento();">
+					<option value="">Seleziona...</option>
+					[#list dipartimentiList as item]
+						
+						[#if (item.codice)! == (operPresent.codiceDipartimento)!]
+							<option value="${FTL_PLACEHOLDER}item.id}-${FTL_PLACEHOLDER}item.codice}" selected="selected">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+						[#else]
+							<option value="${FTL_PLACEHOLDER}item.id}-${FTL_PLACEHOLDER}item.codice}">${FTL_PLACEHOLDER}item.descrizione?html}</option>																			
+						[/#if]	
+																
+					[/#list]
+				 </select>								
+				
+				 [@contextualErrors errorList=(messages._operatorePresentatore_codiceDipartimento)![] /]								
+				 <input type="hidden" id="id_operatorePresentatore_idDipartimento" name="_operatorePresentatore.idDipartimento" value="${FTL_PLACEHOLDER}(operPresent.idDipartimento)!?html}" />
+				 <input type="hidden" id="id_operatorePresentatore_codiceDipartimento" name="_operatorePresentatore.codiceDipartimento" value="${FTL_PLACEHOLDER}(operPresent.codiceDipartimento)!?html}" />
+				 <input type="hidden" id="id_operatorePresentatore_descrizioneDipartimento" name="_operatorePresentatore.descrizioneDipartimento" value="${FTL_PLACEHOLDER}(operPresent.descrizioneDipartimento)!?html}" />								
+			    </td>
+		      </tr>
+		   [#else]
+		      <tr>							
+			     <th>
+				   <label for="id_operatorePresentatore_uo">Unit&#224; organizzativa</label>
+			     </th>
+			     <td>
+				    <input type="text" name="_operatorePresentatore.descrizioneDipartimento" value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneDipartimento)!?html}"  
+				           id="id_operatorePresentatore_uo" readonly="readonly" class="medium"/>
+			     </td>
+		      </tr>
+		   [/#if]
+		
+		
+		[#else]
+		    <input type="hidden" id="id_operatorePresentatore_idDipartimento" name="_operatorePresentatore.idDipartimento" value="" />
+			<input type="hidden" id="id_operatorePresentatore_codiceDipartimento" name="_operatorePresentatore.codiceDipartimento" value="" />
+			<input type="hidden" id="id_operatorePresentatore_descrizioneDipartimento" name="_operatorePresentatore.descrizioneDipartimento" value="" />								
+		[/#if]	
+		<!-- MB2016_03_11 fine -->
+
+
+		<tr>
+			<th scope="row">
+				<label for="id_operatorePresentatore_formaGiuridica">Forma giuridica</label>
+			</th>
+			<td>
+			
+			
+			<!-- <select id="id_operatorePresentatore_formaGiuridica" name="operatorePresentatore.descrizioneFormaGiuridica"  --> 
+			<select id="id_operatorePresentatore_formaGiuridica" name="formaGiuridicaSelect" required="required"
+						class="[@classLongError errorList=(messages._operatorePresentatore_idFormaGiuridica)![] /] classFrmGiuridica"
+						onchange="setCampiHiddenFormaGiuridica();">
+				<option value=""></option>
+				[#list datiFormaGiuridicaList as item]
+					[#if item.id?string("0") == (operPresent.idFormaGiuridica)!]
+						<option value="${FTL_PLACEHOLDER}item.id}-${FTL_PLACEHOLDER}item.codice}" selected="selected">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+					[#else]
+						<option value="${FTL_PLACEHOLDER}item.id}-${FTL_PLACEHOLDER}item.codice}">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+					[/#if]
+				[/#list]
+			</select>
+			[@contextualErrors errorList=(messages._operatorePresentatore_idFormaGiuridica)![] /]
+			<input type="hidden" id="id_operatorePresentatore_idFormaGiuridica" name="_operatorePresentatore.idFormaGiuridica" 
+				value="${FTL_PLACEHOLDER}(operPresent.idFormaGiuridica)!?html}" />
+			<input type="hidden" id="id_operatorePresentatore_codiceFormaGiuridica" name="_operatorePresentatore.codiceFormaGiuridica" 
+				value="${FTL_PLACEHOLDER}(operPresent.codiceFormaGiuridica)!?html}" />
+			<input type="hidden" id="id_operatorePresentatore_descrizioneFormaGiuridica" name="_operatorePresentatore.descrizioneFormaGiuridica" />
+				
+
+			<input type="hidden" name="_operatorePresentatoreAAEP.idFormaGiuridica" value="${FTL_PLACEHOLDER}(enteImpresa.idNaturaGiuridica)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.codiceFormaGiuridica" value="${FTL_PLACEHOLDER}(enteImpresa.codNaturaGiuridica)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.descrizioneFormaGiuridica" value="${FTL_PLACEHOLDER}(enteImpresa.descrNaturaGiuridica)!?html}" />
+			
+			<!-- AA - Gestione dati albo artigiano - BEGIN -->						
+			<input type="hidden" name="_operatorePresentatoreAAEP.dataDeliberaIscrizione" value="${FTL_PLACEHOLDER}(enteImpresa.dettagliAlboArtigiano.dataDeliberaIscrizione)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.numeroIscrizione" value="${FTL_PLACEHOLDER}(enteImpresa.dettagliAlboArtigiano.numeroIscrizione)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.provinciaIscrizione" value="${FTL_PLACEHOLDER}(enteImpresa.dettagliAlboArtigiano.provinciaIscrizione)!?html}" />							
+			<!-- AA - Gestione dati albo artigiano - END -->
+
+			
+			<!-- AA - Gestione dati cessazione impresa - BEGIN -->								 					
+			<input type="hidden" name="_operatorePresentatoreAAEP.cessazione" value="${FTL_PLACEHOLDER}(enteImpresa.impresaCessata)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.indiceStatoAttivita" value="${FTL_PLACEHOLDER}(enteImpresa.indicStatoAttiv)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.codCausaleCessazione" value="${FTL_PLACEHOLDER}(enteImpresa.cessazione.codCausaleCessazione)!?html}" />							
+			<input type="hidden" name="_operatorePresentatoreAAEP.descrCausaleCessazione" value="${FTL_PLACEHOLDER}(enteImpresa.cessazione.descrCausaleCessazione)!?html}" />
+			<input type="hidden" name="_operatorePresentatoreAAEP.dataDenunciaCessazione" value="${FTL_PLACEHOLDER}(enteImpresa.cessazione.dataDenunciaCessazione)!?html}" />							 
+			<!-- AA - Gestione dati cessazione impresa - END -->
+				
+			<br/>
+
+			</td>
+		</tr>
+             [#if !beneficiarioEstero!?has_content]
+				<tr>
+					<th><label for="id_operatorePresentatore_partitaIva">Partita IVA </label> </th>
+					<td>
+						<input type="text" name="_operatorePresentatore.partitaIva" value="${FTL_PLACEHOLDER}(operPresent.partitaIva)!?html}" 
+						id="id_operatorePresentatore_partitaIva" required="required"
+						class="[@classMediumError errorList=(messages._operatorePresentatore_partitaIva)![] /]" maxlength="11"/>
+					   [@contextualErrors errorList=(messages._operatorePresentatore_partitaIva)![] /]
+					   <input type="hidden" name="_operatorePresentatoreAAEP.partitaIva" value="${FTL_PLACEHOLDER}(enteImpresa.partitaIva)!?html}" />
+					</td>
+				</tr>
+			[/#if]
+			
+		[#-- Jira  1838  - --]
+		<#if _operatorePresentatore_indirizzoPec == "false" >
+			<tr>
+				<th><label for="id_operatorePresentatore_indirizzoPec">Indirizzo PEC</label> </th>
+				<td>
+					<input type="text" name="_operatorePresentatore.indirizzoPec" 
+							value="${FTL_PLACEHOLDER}(operPresent.indirizzoPec)!?html}" 
+							id="id_operatorePresentatore_indirizzoPec" 
+							class="[@classMediumError errorList=(messages._operatorePresentatore_indirizzoPec)![] /]"/>
+				   			[@contextualErrors errorList=(messages._operatorePresentatore_indirizzoPec)![] /]
+				   <input type="hidden" name="_operatorePresentatoreAAEP.indirizzoPec" 
+				   		value="${FTL_PLACEHOLDER}(enteImpresa.postaElettronicaCertificata)!?html}" />
+				</td>
+			</tr>
+		</#if>
+		
+	<!-- opzionale: inizio -->
+	<#if _operatorePresentatore_ateco == "true" >
+		<tr>
+			<th>Settore prevalente (ATECO 2007)</th>
+			<td>
+				<label for="id_operatorePresentatore_codPrevalenteAteco2007">Codice </label>
+				<input type="text" name="_operatorePresentatore.codicePrevalenteAteco2007" 
+				       value="${FTL_PLACEHOLDER}(operPresent.codicePrevalenteAteco2007)!?html}" 
+					   id="id_operatorePresentatore_codPrevalenteAteco2007"
+					   readonly="readonly"
+					   class="[@classShortError errorList=(messages._operatorePresentatore_codicePrevalenteAteco2007)![] /]" />
+						[@contextualErrors errorList=(messages._operatorePresentatore_codicePrevalenteAteco2007)![] /]
+
+				<label for="id_operatorePresentatore_descrizioneAteco2007">Descrizione </label>
+
+				<input type="text" name="_operatorePresentatore.descrizioneAteco2007"								       
+				       value="${FTL_PLACEHOLDER}(operPresent.descrizioneAteco2007)!?html}" 
+				       id="id_operatorePresentatore_descrizioneAteco2007"
+				       readonly="readonly"
+				       class="[@classMediumError errorList=(messages._operatorePresentatore_descrizioneAteco2007)![] /]" />
+				       [@contextualErrors errorList=(messages._operatorePresentatore_descrizioneAteco2007)![] /]
+
+				<a href="#" onclick="$('#id_selezionaAteco').click();">
+					<img src="/ris/resources/application/finanziamenti/findomweb/css/im/ico_glossary.gif" title="ricerca ateco" style="margin: 0px 0px -4px 0px;"/>
+				</a>
+
+                            <input  type="hidden" name="_operatorePresentatore.idAteco2007" 
+				       value="${FTL_PLACEHOLDER}(operPresent.idAteco2007)!?html}" 
+					   id="id_operatorePresentatore_idAteco2007"/>
+
+				<!-- bottone per la ricerca e il salvataggio del codice ATECO, invisibile all'utente -->
+				<input type="submit" id="id_selezionaAteco" name="_command" value="LabelCommand:C_seleziona_ateco;RenderCommand:1140" hidden="hidden" />
+				
+				 <input type="hidden" name="_operatorePresentatoreAAEP.codicePrevalenteAteco2007" value="${FTL_PLACEHOLDER}(codPrevalenteAtecoAAEP)!}" />
+				 <input type="hidden" name="_operatorePresentatoreAAEP.descrizioneAteco2007" value="${FTL_PLACEHOLDER}(descrizioneAtecoAAEP?html)!}" />
+				 <input type="hidden" name="_operatorePresentatoreAAEP.idAteco2007" value="${FTL_PLACEHOLDER}(idAtecoAAEP)!?html}" />
+			</td>
+		</tr>
+		
+		<#if _operatorePresentatore_settore_attivita_economica == "true" >
+			<tr>							
+				<th>
+					<label for="id_operatorePresentatore_attivitaEconomica">Settore attività economica</label>
+				</th>
+				<td>
+					<select id="id_operatorePresentatore_attivitaEconomica" name="attivitaEconomica" 
+							class="[@classLongError errorList=(messages._operatorePresentatore_idAttivitaEconomica)![] /]"
+							onchange="setCampiHiddenAttivitaEconomica();">
+						<option value=""></option>
+						[#list settoreAttivitaEconomicaList as item]
+							[#if item.id?string("0") == (operPresent.idAttivitaEconomica)!]
+								<option value="${FTL_PLACEHOLDER}item.id}-${FTL_PLACEHOLDER}item.codice}" selected="selected">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+							[#else]
+								<option value="${FTL_PLACEHOLDER}item.id}-${FTL_PLACEHOLDER}item.codice}">${FTL_PLACEHOLDER}item.descrizione?html}</option>
+							[/#if]										
+						[/#list]
+					</select>								
+					[@contextualErrors errorList=(messages._operatorePresentatore_idAttivitaEconomica)![] /]
+					<input type="hidden" id="id_operatorePresentatore_idAttivitaEconomica" name="_operatorePresentatore.idAttivitaEconomica" value="${FTL_PLACEHOLDER}(operPresent.idAttivitaEconomica)!?html}" />
+					<input type="hidden" id="id_operatorePresentatore_codiceAttivitaEconomica" name="_operatorePresentatore.codiceAttivitaEconomica" value="${FTL_PLACEHOLDER}(operPresent.codiceAttivitaEconomica)!?html}" />
+					<input type="hidden" id="id_operatorePresentatore_descrizioneAttivitaEconomica" name="_operatorePresentatore.descrizioneAttivitaEconomica" value="${FTL_PLACEHOLDER}(operPresent.descrizioneAttivitaEconomica)!?html}" />
+					
+				</td>
+			</tr>
+		</#if>
+	</#if>
+	<!-- opzionale: fine -->
+								
+	[#if visIpa?has_content]
+		[#if "RO" == visIpa]
+			<tr>
+				<th><label for="id_operatorePresentatore_codiceIpa">Codice iPA </label> </th>
+				<td>
+					<input type="text" name="_operatorePresentatore.codiceIpa" value="${FTL_PLACEHOLDER}(operPresent.codiceIpa)!?html}" 
+					       id="id_operatorePresentatore_codiceIpa" 
+					       class="medium" readonly="readonly" />
+				</td>
+			</tr>
+			[#elseif "RW" == visIpa]
+			<tr>					
+			    <th><label for="id_operatorePresentatore_codiceIpa">Codice IPA </label> </th>
+				<td>
+					<input type="text" name="_operatorePresentatore.codiceIpa" value="${FTL_PLACEHOLDER}(operPresent.codiceIpa)!?html}" 
+					       id="id_operatorePresentatore_codiceIpa" 
+					       class="[@classMediumError errorList=(messages._operatorePresentatore_codiceIpa)![] /]" />
+				   [@contextualErrors errorList=(messages._operatorePresentatore_codiceIpa)![] /]							   
+				</td>
+			</tr>
+		[/#if]
+	[/#if]
+
+		[#-- campo cir codice identificativo regionale --]
+		<#if _operatorePresentatore_cir == "true" >
+				<tr>
+					<th>
+						<label for="lbl_operatorePresentatore_cir">
+							Codice identificativo Regionale
+						</label> 
+					</th>
+					<td>
+						<input type="tel" pattern="[0-9]{6}-[a-zA-Z]{3}-[0-9]{5}?$"  name="_operatorePresentatore.codiceRegionale" 
+								value="${FTL_PLACEHOLDER}(operPresent.codiceRegionale)!?html}" id="id_operatorePresentatore_codiceRegionale" placeholder="XXXXXX-XXX-XXXXX" 
+								required="required" maxlength="16"
+								title="16-caratteri alfanumerici nel formato di 000000-AAA-00000" class="[@classMediumError errorList=(messages._operatorePresentatore_codiceRegionale)![] /]" />
+								<span class="small">Esempio: 000000-AAA-00000 
+									<br/> 
+										<i>Per la compilazione verificare quanto indicato nelle 
+											<a href="${FTL_PLACEHOLDER}urlPagRegoleCompilazione}">
+												Regole di compilazione
+											</a>
+										</i> 
+								</span>
+								[@contextualErrors errorList=(messages._operatorePresentatore_codiceRegionale)![] /]
+					</td>
+				</tr>
+		</#if>
+		
+		[#-- campo numero iscrizione registro APS --]	
+		<#if _operatorePresentatore_codiceAps == "true" >
+		
+				[#-- numero iscrizione registro APS --]
+				<tr>
+					<th>
+						<label for="lbl_operatorePresentatore_aps">
+							Numero di Iscrizione al Registro APS
+						</label> 
+					</th>
+					<td>
+						<input type="text" id="id_operatorePresentatore_numeroIscrizioneRegistroAPS"  name="_operatorePresentatore.numeroIscrizioneRegistroAPS" 
+								value="${FTL_PLACEHOLDER}(operPresent.numeroIscrizioneRegistroAPS)!?html}" pattern="^\d+?$" required="required" 
+								title="Solo valori numerici interi" class="[@classMediumError errorList=(messages._operatorePresentatore_numero_iscrizione_registro_APS)![] /]" />
+								[@contextualErrors errorList=(messages._operatorePresentatore_numero_iscrizione_registro_APS)![] /]
+					</td>
+				</tr>
+				
+				[#-- data iscrizione registro APS --]
+				<tr>
+					<th>
+						<label for="lbl_operatorePresentatore_data_iscrizione_registro_APS">
+							Iscritto al Registro APS dal
+						</label>
+					</th>
+					
+					<td>
+						<input type="text" id="id_operatorePresentatore_dataIscrizioneRegistroAPS" name="_operatorePresentatore.dataIscrizioneRegistroAPS" required="required"
+								title="Attenzione, verificare data digitata" maxlength="10" pattern="\d{1,2}/\d{1,2}/\d{4}" value="${FTL_PLACEHOLDER}(operPresent.dataIscrizioneRegistroAPS)!?html}"  
+								class="medium calendarioCustom2 idleField"/>
+						<span id="id_dataIscrizioneRegistroAPS_calendario" class="txt_help hide_txt">Inserire il formato: gg/mm/aaaa</span>
+						[@contextualErrors errorList=(messages._operatorePresentatore_data_iscrizione_registro_APS)![] /]
+					</td>
+				</tr>
+		</#if>
+	
+	</table>
+</div>

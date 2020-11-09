@@ -1,0 +1,494 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _vociEntrata --] <#-- note di dipendenze da altre commonalities:
+nessuna -->
+<script type="text/javascript">
+
+	 $(window).on('load',function () {
+	   	$(".todeleteVoceEntrata").parents("tr").hide();
+	});
+					
+function eliminaVoceEntrata(indice){
+	
+	 var newtr = document.createElement('tr');  
+     newtr.style="display: none;"                  
+	                           
+     var newtd = document.createElement('td');
+	 var newinput = document.createElement('input');
+	 newinput.type = 'hidden';
+	 newinput.name = "_vociEntrata.vociEntrataScelteList["+indice+"]";
+	                     
+	 newinput.value = "DELETED";
+
+	 newtd.appendChild(newinput);
+	 newtr.appendChild(newtd);
+							
+	 $("#id_elimina_voce_entrata_"+indice).parents("tr").replaceWith(newtr);
+	 submitForm();//per forzare l'esecuzione dell'inject per aggiornare il riepilogo, che altrimenti resta come era prima della cancellazione	
+											
+}
+
+function setCampiHiddenVoceEntrata(indice){
+	var valoreSelezionato = $('#id_voce_entrata_cmb_'+indice).val();												
+	$('#id_voce_entrata_hidden_'+indice).val(valoreSelezionato);	
+	$('#id_descrizione_voce_entrata_hidden_'+indice).val($('#id_voce_entrata_cmb_'+indice + ' option:selected').text());
+	resetVoceEntrata(indice);
+}
+
+function resetVoceEntrata(indice){
+	$('#id_flag_edit_hidden_'+indice).attr('value', "");
+	$('#id_flag_duplicabile_hidden_'+indice).attr('value', "");	
+	$('#id_indicazioni_hidden_'+indice).attr('value', "");  					  
+	$('#id_dettaglio_voce_entrata_'+indice).attr('value', "");
+	$('#id_importo_voce_entrata_'+indice).attr('value', "");
+						 
+}
+
+function aggiungiVoceEntrata(){
+
+	// conto il numero di righe della tabella
+	var numRighe = $('#id_voci_entrata_tbl tr').length-1;
+
+    var riga = '<tr><td>';
+	riga += '<span class="cancel">';
+	riga += '<a href="#" class="dialog-elimina" id="id_eliminaVoceEntrata_' + numRighe + '" title="Elimina voce di entrata" onclick="eliminaVoceEntrata(' + numRighe + ');return false;" >';
+	riga += '	<span class="nascosto">elimina</span>';
+	riga += '</a></span>';						
+	riga += '</td><td>';
+					
+	riga += '<select name="vociEntrataCmb" id="id_voce_entrata_cmb_' + numRighe + '" class="long" onChange="setCampiHiddenVoceEntrata('+numRighe+'); submitForm();">';
+	riga += ' <option value="-1">Seleziona...</option> [#list vociEntrataList as item2]<option value="${FTL_PLACEHOLDER}item2.idVoceEntrata!?html}">${FTL_PLACEHOLDER}item2.descrizione?js_string}</option>[/#list]';
+	riga += '  </select> ';
+
+	riga += '<input type="hidden" id="id_voce_entrata_hidden_' + numRighe + '" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].idVoceEntrata"  value=""/>';
+	riga += '<input type="hidden" id="id_descrizione_voce_entrata_hidden_' + numRighe + '" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].descrizione"  value=""/>';
+
+	riga += '<input type="hidden" id="id_descr_breve_hidden_hidden_' + numRighe + '" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].descrBreve"  value=""/>';
+	riga += '<input type="hidden" id="id_indicazioni_hidden_' + numRighe + '" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].indicazioni"  value=""/>';
+	riga += '<input type="hidden" id="id_flag_edit_hidden_' + numRighe + '" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].flagEdit"  value=""/>';
+	riga += '<input type="hidden" id="id_flag_duplicabile_hidden_' + numRighe + '" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].flagDuplicabile"  value=""/>';
+
+    riga += '</td><td>';
+	riga += '</td><td>';
+	riga += '    <input type="text" id="id_importo_voce_entrata_' + numRighe + '}" name="_vociEntrata.vociEntrataScelteList[' + numRighe + '].importo" value="" class="long"/>';
+	riga += '</td></tr>';
+
+					    
+	// aggiungo la riga alla tabella
+	$('#id_voci_entrata_tbl tr:last').after(riga);
+}
+
+
+
+function validaImporti(segnalaErrori){		//  1- debug:true 				
+//<![CDATA[
+	var numRigheVociEntrata = $('#id_voci_entrata_tbl tr:not(".todeleteVoceEntrata")').length-1;
+	$('#id_voci_entrata_tbl tr:not(".todeleteVoceEntrata")').each(function(indice, row){					        
+	if(indice < numRigheVociEntrata){
+	
+	  var errore = "false";
+      var importo = $("#id_importo_voce_entrata_"+indice).val();						
+	  if(!validaDecimaleJs(importo, false, true, false)){  //il terzo parametro fa superare la validazione se ho stringa vuota (devo poter cancellare un campo)
+		if(segnalaErrori=='true'){
+				
+			//per evitare di avere piu' di una x rossa
+			$("#idErrImporto_"+indice).replaceWith(""); 
+			if($('#id_td_importo_'+indice).find('.txtError').length!=0){
+				$('#id_td_importo_'+indice).find('.txtError').replaceWith("");
+			}
+				
+			$("#id_importo_voce_entrata_"+indice).addClass("error");				
+		    var newimg = document.createElement('img');	
+		    newimg.id="idErrImporto_"+indice;	                       
+		    newimg.src = "/ris/resources/global/images/error.gif";
+		    newimg.title="- il valore deve essere numerico, maggiore di zero e senza decimali";
+		    newimg.class="importoError";
+				 
+			$("#id_importo_voce_entrata_"+indice).parents("#id_td_importo_"+indice).append(newimg);  
+
+		  }
+		  errore = "true";
+	  }
+
+	  if(errore=="false"){
+		 $("#id_errore_"+indice).remove();
+		 $("#id_importo_voce_entrata_"+indice).removeClass("error");
+	  	
+	  	 $("#id_importo_voce_entrata_"+indice).val(formattaDecimalePerVisualizzazione(importo));
+		 
+		 if($('#id_td_importo_'+indice).find('.txtError').length!=0){
+		    $('#id_td_importo_'+indice).find('.txtError').replaceWith("");
+		 }
+		 $("#idErrImporto_"+indice).replaceWith("");			
+	  }
+    }
+
+    });//chiude ciclo su tabella
+//]]>
+}
+
+function setHiddenAndSubmit(){
+	 $('#id_aggiornaRiepilogo').attr('value', "S"); 
+	 submitForm();
+}
+
+	function submitForm(){
+	   $('#id_reload_S4_P7').click();
+	}
+  
+
+
+					   
+</script>
+[#if viewWarningEntrateAgevolazioni == "true"]	
+<div class="stdMessagePanel feedback">
+	<div class='feedWarning'>
+		Attenzione! Verificare la sezione Agevolazione richiesta, potrebbero esserci dei dati incongruenti<br/>
+	</div>
+</div>
+[/#if]
+
+<h4>
+	<span id="toggle_handle_riepilogoVoci" class="toggle_handle collapse">Elenco Entrate</span>
+</h4>
+<p style="font-style:italic; font-weight:normal;">Elencare le Entrate previste nella sezione Dettaglio Entrate. Al termine premere il pulsante [Aggiorna elenco] e salvare.</p>
+
+[@contextualErrors errorList=(messages._vociEntrata_aggiornamentoRichiesto)![] /]				
+<div class="toggle_target_riepilogoVoci">
+	<table class="myovertable tablesorter" summary="...." id= "id_riepilogo_voci_entrata" >
+		<col width="70%" />
+		<col width="30%" />
+		<thead>
+		<tr>
+			<th>Voci di entrata </th>
+			<th>Importo</th>
+		</tr>
+		</thead>
+		[#if vociEntrataRiepilogoList?has_content]
+		[#list vociEntrataRiepilogoList as item]
+		[#if !(!item?has_content || !item?is_hash)]
+		<tr>
+						
+						[#if item.tipoRecord == "radice"]
+						<td><strong>${FTL_PLACEHOLDER}item.descrizione!}</strong>
+							<input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.idVoceEntrata)!?html}"
+								   id= "id_id_vociEntrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].idVoceEntrata" />
+							<input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.descrizione)!?html}"
+								   id= "id_descrizione_vociEntrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].descrizione" />								   
+						    <input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.tipoRecord)!?html}"
+								   id= "id_tipo_record_vociEntrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].tipoRecord" />								   
+							<input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.dettaglio)!?html}"
+								   id= "id_dettaglio_voci_entrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].dettaglio" />
+								   	   
+								   
+						</td>			
+						
+						[#elseif item.tipoRecord == "dettaglio"]						
+						 <td>  &#160;&#160;&#160;&#160;&#160; >> ${FTL_PLACEHOLDER}item.dettaglio} 
+						 <input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.idVoceEntrata)!?html}"
+								   id= "id_id_vociEntrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].idVoceEntrata" />
+							<input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.descrizione)!?html}"
+								   id= "id_descrizione_vociEntrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].descrizione" />						   
+						    <input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.tipoRecord)!?html}"
+								   id= "id_tipo_record_vociEntrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].tipoRecord" />							
+							<input type="hidden"
+								   value="${FTL_PLACEHOLDER}(item.dettaglio)!?html}"
+								   id= "id_dettaglio_voci_entrata_${FTL_PLACEHOLDER}item_index}"
+								   name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].dettaglio" />
+								   	   
+						 </td>
+						[#elseif item.tipoRecord == "del"]
+							 <td>
+                                <input type="hidden" class= "todeleteVoceEntrata" 
+								    value="DELETED"
+								    name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}]" />                             
+						    </td>						
+						 [/#if]	
+						 <td>
+						   [#if item.tipoRecord == "radice"]
+						   <input type="text"								
+								       id="id_totale_voce_entrata${FTL_PLACEHOLDER}item_index}"
+								       value="${FTL_PLACEHOLDER}(item.importo)!?html}" 
+								       name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].importo"								              
+								       class="medium" readonly="readonly"	style="text-align: right; width: 40%; font-weight: bold;"							 
+						   />
+						   [#elseif item.tipoRecord == "dettaglio"]
+						 <input type="text"								
+								       id="id_totale_voce_entrata${FTL_PLACEHOLDER}item_index}"
+								       value="${FTL_PLACEHOLDER}(item.importo)!?html}" 
+								       name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].importo"								              
+								       class="medium" readonly="readonly"	style="text-align: right; width: 40%"						 
+						   />
+						  [/#if]
+						 </td>			
+		</tr>
+						
+						
+		[/#if]
+		[/#list]	
+		[/#if]					
+		<tr>
+							<td><strong>Totale</strong></td>
+							<td><input type="text"								
+								       id="id_totale_generale"
+								       value="${FTL_PLACEHOLDER}(totaleGenerale)!?html}"								     
+								       name="_vociEntrata.totale"									      						              
+								       class="medium" readonly="readonly" style="text-align: right; width: 40%; font-weight: bold;"
+							    />
+							</td>
+		</tr>
+	</table>
+
+
+<div class="commandPanel">
+
+	<div class="button right">
+		<span class="highlighted">
+			<input type="button" onclick="setHiddenAndSubmit()" value="Aggiorna elenco"/>	
+		</span>
+		<input type="hidden" id="id_aggiornaRiepilogo" name="aggiornaRiepilogo"  value=""/>
+	</div>	
+</div>
+				
+<h5>Dettaglio Entrate</h5>
+<p style="font-style:italic; font-weight:normal;">Indicare gli importi in euro</p>
+[@contextualErrors errorList=(messages._vociEntrata_generale)![] /]
+				
+<div >
+<input type="hidden" id="id_anchor" name="anchor"  value=""/>					
+<table class="myovertable tablesorter" summary="...." id="id_voci_entrata_tbl">
+						<col width="5%" />
+						<col width="35%" />
+						<col width="40%" />
+						<col width="20%" />
+						<thead>
+						<tr>
+							<th>Azioni</th>
+							<th>Voce di entrata</th>
+							<th>Dettaglio</th>
+							<th>Importo</th>							
+						</tr>
+						</thead>
+						[#if (vociEntrataScelteList)?has_content]
+						[#list vociEntrataScelteList as item]
+						[#if !(!item?has_content || !item?is_hash)]
+						<tr>
+						    [#if item.daCancellare == "false"]						
+							<td>
+							   [#if ((messages._vociEntrata_testo)?has_content)]							  
+			                   [#if messages._vociEntrata_voce_id?seq_contains(item_index+"U")]
+							
+								<span class="cancel">
+									<a href="#" class="dialog-elimina"  id="id_elimina_voce_entrata_${FTL_PLACEHOLDER}item_index}" title="Elimina voce di entrata" 
+									   onclick="eliminaVoceEntrata(${FTL_PLACEHOLDER}item_index}); return false;" >
+									<span class="nascosto">elimina</span></a>
+								</span>
+								
+								<span class="txtError">
+									  <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+									  <span>
+										  errore:<br />${FTL_PLACEHOLDER}messages._vociEntrata_voce_duplicata_testo?first}
+									  </span>
+								</span>						    
+						       [#else]
+								<span class="cancel">
+									<a href="#" class="dialog-elimina"  id="id_elimina_voce_entrata_${FTL_PLACEHOLDER}item_index}" title="Elimina voce di entrata" 
+									   onclick="eliminaVoceEntrata(${FTL_PLACEHOLDER}item_index}); return false;" >
+									<span class="nascosto">elimina</span></a>
+								</span>
+							   [/#if]
+							   [#else]
+							    <span class="cancel">
+									<a href="#" class="dialog-elimina"  id="id_elimina_voce_entrata_${FTL_PLACEHOLDER}item_index}" title="Elimina voce di entrata" 
+									   onclick="eliminaVoceEntrata(${FTL_PLACEHOLDER}item_index}); return false;" >
+									<span class="nascosto">elimina</span></a>
+								</span>
+							   [/#if]			
+								
+							</td>
+							
+							<td>
+							
+							[#assign erroriVociEntrata = false] 
+							[#if ((messages._vociEntrata_testo)?has_content)]
+							[#if messages._vociEntrata_voce_id?seq_contains(item_index+"V")]						
+																	
+				            <select name="vociEntrataCmb" 
+							    id="id_voce_entrata_cmb_${FTL_PLACEHOLDER}item_index}" class="long" 
+								onChange="setCampiHiddenVoceEntrata(${FTL_PLACEHOLDER}item_index}); submitForm(); ">
+								<option value="-1">Seleziona...</option>
+								   [#if (vociEntrataList)?has_content]
+								   [#list vociEntrataList as item2]
+								      [#if _vociEntrata.vociEntrataScelteList[item_index].idVoceEntrata == item2.idVoceEntrata+""]
+								          <option value="${FTL_PLACEHOLDER}item2.idVoceEntrata!?html}" selected="selected">${FTL_PLACEHOLDER}item2.descrizione}</option>
+								      [#else]
+								          <option value="${FTL_PLACEHOLDER}item2.idVoceEntrata!?html}">${FTL_PLACEHOLDER}item2.descrizione}</option>
+								      [/#if]
+								   [/#list]
+								   [/#if]
+							</select>
+							<span class="txtError">
+							   <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							      errore:<br />${FTL_PLACEHOLDER}messages._vociEntrata_id_testo?first}
+						        </span>
+							</span>[#assign erroriVociEntrata = true] 
+							[/#if]
+							[/#if]
+							
+							[#if erroriVociEntrata==false]
+							<select name="vociEntrataCmb" 
+							    id="id_voce_entrata_cmb_${FTL_PLACEHOLDER}item_index}" class="long" 
+								onChange="setCampiHiddenVoceEntrata(${FTL_PLACEHOLDER}item_index}); submitForm(); ">
+								<option value="-1">Seleziona...</option>
+								   [#if (vociEntrataList)?has_content]
+								   [#list vociEntrataList as item2]
+								      [#if _vociEntrata.vociEntrataScelteList[item_index].idVoceEntrata == item2.idVoceEntrata+""]
+								          <option value="${FTL_PLACEHOLDER}item2.idVoceEntrata!?html}" selected="selected">${FTL_PLACEHOLDER}item2.descrizione}</option>
+								      [#else]
+								          <option value="${FTL_PLACEHOLDER}item2.idVoceEntrata!?html}">${FTL_PLACEHOLDER}item2.descrizione}</option>
+								      [/#if]
+								   [/#list]
+								   [/#if]
+							</select>
+							[/#if]
+							
+							
+							<input type="hidden" id="id_voce_entrata_hidden_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].idVoceEntrata"
+ 						           value="${FTL_PLACEHOLDER}item.idVoceEntrata!?html}"/>
+ 						    <input type="hidden" id="id_descrizione_voce_entrata_hidden_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].descrizione"
+ 						           value="${FTL_PLACEHOLDER}item.descrizione!?html}"/>	
+ 						    <input type="hidden" id="id_descr_breve_hidden_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].descrBreve"
+ 						           value="${FTL_PLACEHOLDER}item.descrBreve!?html}"/>
+ 						    <input type="hidden" id="id_indicazioni_hidden_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].indicazioni"
+ 						           value="${FTL_PLACEHOLDER}item.indicazioni!?html}"/> 						           
+ 						    <input type="hidden" id="id_flag_edit_hidden_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].flagEdit"
+ 						           value="${FTL_PLACEHOLDER}item.flagEdit!?html}"/>
+ 						    <input type="hidden" id="id_flag_duplicabile_hidden_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].flagDuplicabile"
+ 						           value="${FTL_PLACEHOLDER}item.flagDuplicabile!?html}"/>						
+							</td>							
+									  
+							[#if (!(item.flagEdit)?has_content) || (item.flagEdit != "S")]
+							<td>${FTL_PLACEHOLDER}item.dettaglio!?html}							  					  
+							  <input type="hidden" id="id_dettaglio_voce_entrata_${FTL_PLACEHOLDER}item_index}" 							       
+							       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].dettaglio"
+ 						           value="${FTL_PLACEHOLDER}item.dettaglio!?html}"/>
+						    </td>
+						    [#elseif (item.flagEdit == "S")]	
+						    				    
+						    <td>
+							   <label><i>${FTL_PLACEHOLDER}item.indicazioni!?html}</i> </label><br />
+							   
+							   [#assign erroriVociEntrata = false] 
+							   [#if ((messages._vociEntrata_testo)?has_content)]
+							   [#if messages._vociEntrata_voce_id?seq_contains(item_index+"D")]
+							   <input type="text" id="id_dettaglio_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+									  name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].dettaglio" 
+									  value="${FTL_PLACEHOLDER}item.dettaglio!?html}" 
+									  class="long"
+									  />							  
+						       <span class="txtError">
+							   <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+							    <span>
+							      errore:<br />${FTL_PLACEHOLDER}messages._vociEntrata_dettaglio_testo?first}
+						        </span>
+							   </span>[#assign erroriVociEntrata = true] 
+							   [/#if]
+							   [/#if]
+							
+							   [#if erroriVociEntrata==false]
+						       <input type="text" id="id_dettaglio_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+									  name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].dettaglio" 
+									  value="${FTL_PLACEHOLDER}item.dettaglio!?html}" 
+									  class="long" 
+									  />
+						       [/#if]
+						    
+						    </td>						    
+							[/#if]
+							
+							
+							<td id="id_td_importo_${FTL_PLACEHOLDER}item_index}">							   				
+	 		                   [#if ((messages._vociEntrata_testo)?has_content)]
+			                     [#if messages._vociEntrata_voce_id?seq_contains(item_index+"I")]
+							
+							       <input type="text" id="id_importo_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+									      name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].importo" 
+									      value="${FTL_PLACEHOLDER}item.importo!?html}" 
+									      class="long error" style="text-align: right;"
+									      onChange="validaImporti('true');" />
+						          
+								   <span class="txtError">
+									  <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+									  <span>
+										  errore:<br />${FTL_PLACEHOLDER}messages._vociEntrata_importo_testo?first}
+									  </span>
+								   </span>
+						    
+						         [#else]
+								    <input type="text" id="id_importo_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+									       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].importo" 
+									       value="${FTL_PLACEHOLDER}item.importo!?html}" 
+									       class="long" style="text-align: right;"
+									       onChange="validaImporti('true');" />
+			                     [/#if]
+			                   [#else]
+			 					    <input type="text" id="id_importo_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+									       name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].importo" 
+									       value="${FTL_PLACEHOLDER}item.importo!?html}" 
+									       class="long" style="text-align: right;"
+									       onChange="validaImporti('true');" />
+			                   [/#if]
+						    
+						    
+						    </td>
+			
+			            [#elseif item.daCancellare == "true"]
+							 <td>
+                                <input type="hidden"  
+								    value="DELETED" class="todeleteVoceEntrata"
+								    name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}]" />                             
+						     </td>					
+						[/#if]
+			
+						</tr>
+						[/#if]
+						[/#list][#-- chiude list di vociEntrataScelteList --]
+						[/#if][#-- chiude test se vociEntrataScelteList ha contenuto --]					
+												
+</table>
+
+	<div class="commandPanel">
+		<div class="button right">
+			<span class="addrows highlighted">
+				<input type="button" value="Aggiungi" onclick="aggiungiVoceEntrata()" />
+			</span>
+		</div>
+	</div>
+	
+	<input type="submit" id="id_reload_S4_P7" name="_command" value="LabelCommand:C_reload_S4_P7;RenderCommand:3410" hidden="hidden" />
+						
+</div>
+</div>

@@ -1,0 +1,141 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _ruoloProgettiComuni --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+	<h4>
+		<span id="toggle_handle_ruoloProgettiComuni" class="toggle_handle collapse">Ruolo del presentatore nel progetto
+			[@contextualErrors errorList=(messages._ruoloProgettiComuni)![] /]
+		</span>
+	</h4>
+	<div class="toggle_target_ruoloProgettiComuni">
+					
+		<table class="formTable" summary="....">
+			<col width="30%" />
+			<col width="6%" />
+			<col width="2%" />
+			<col width="20%" />
+			<col width="2%" />
+			<col width="20%" />
+			<col width="2%" />
+			<col width="20%" />
+			<tr>
+			    <th style="text-align: right;"> <label for="id_ruoloPresentatore">Ruolo del presentatore nel progetto</label> 							
+				<p style="font-style:italic; font-weight:normal;">Dopo il primo salvataggio non sarà più possibile <br/>modificare il Ruolo del presentatore nel progetto</p>
+                </th>
+                <td></td>
+				<td>
+					[#if "CP" == (_ruoloProgettiComuni.ruolo)!]
+						<input class="noborder" type="radio" name="_ruoloProgettiComuni.ruolo" 
+								id="id_check_ruoloCP" value="capofila" checked="checked" tabindex="1" disabled="disabled" />						
+					[#else]
+						<input class="noborder" type="radio" name="_ruoloProgettiComuni.ruolo"  
+								id="id_check_ruoloCP" value="capofila" tabindex="1" disabled="disabled" />
+					[/#if]
+				</td>
+				<td><label for="id_check_ruoloCP">Capofila di progetto</label></td>
+				
+				<td>
+					[#if "PP" == (_ruoloProgettiComuni.ruolo)!]
+						<input class="noborder" type="radio" name="_ruoloProgettiComuni.ruolo" 
+								id="id_check_ruoloPP" value="partner" checked="checked" tabindex="2" disabled="disabled"/>						
+					[#else]
+						<input class="noborder" type="radio" name="_ruoloProgettiComuni.ruolo"  
+								id="id_check_ruoloPP" value="partner" tabindex="2" disabled="disabled" />
+					[/#if]
+				</td>
+				<td><label for="id_check_ruoloPP">Partner di progetto</label></td>
+				
+				<td>
+					[#if "PU" == (_ruoloProgettiComuni.ruolo)!]
+						<input class="noborder" type="radio" name="_ruoloProgettiComuni.ruolo" 
+								id="id_check_ruoloPU" value="proponenteUnico" checked="checked" tabindex="3" disabled="disabled"/>						
+					[#else]
+						<input class="noborder" type="radio" name="_ruoloProgettiComuni.ruolo"  
+								id="id_check_ruoloPU" value="proponenteUnico" tabindex="3" disabled="disabled" />
+					[/#if]
+				</td>
+				<td><label for="id_check_ruoloPU">Proponente unico</label></td>
+			</tr>	
+		</table>
+		<br/>
+	</div>
+	[#if "true" == (visNotaEliminazioneP)!]
+	<div >
+	<table class="formTable" summary="....">
+		<col width="30%" />
+		<col width="70%" />			
+	    <tr>
+			<th>
+				<label for="id_abstractProgetto_acronimo">Domanda invalidata per eliminazione Partner dal Progetto, con la motivazione seguente:</label>				
+			</th>
+			
+			<td>
+				<input type="text" id="id_motivElimPartner"
+		 				name="motivElimPartner"
+			    		value="${FTL_PLACEHOLDER}(notaEliminazioneP)!?html}"			    		
+			    		class="long" readonly="readonly"/>
+			</td>
+			
+		</tr>
+	</table>
+    </div>
+    [/#if]
+    [#if "true" == (visNotaEliminazioneC)!]
+	<h4>
+	<span id="toggle_handle_partnerEliminati" class="toggle_handle collapse">Partner eliminati</span>
+    </h4>
+	<div class="toggle_target_partnerEliminati">
+	    <table class="formTable" summary="....">
+	  <col width="5%" />
+	  <col width="90%" />
+	  <col width="5%" />
+	  <tr>
+		<td></td>
+		<td>
+ 	       <table id="id_elenco_partner" class="myovertable tablesorter" summary=" ">
+
+		   <colgroup>
+			  
+			  <col width="10%" />
+			  <col width="10%" />
+			  <col width="25%" />
+			  <col width="20%" />
+			  <col width="10%" />
+			  <col width="25%" />
+		   </colgroup>
+		   <thead>
+			 <tr>
+				<th scope="col">Stato</th>
+				<th scope="col">Codice fiscale</th>
+				<th scope="col">Denominazione</th> 
+				<th scope="col">Unit&#224; organizzativa</th>
+				<th scope="col">Domanda</th>
+				<th scope="col">Nota eliminazione</th>		
+			 </tr>
+		   </thead>
+
+			 [#list peVOList!?sort_by("denominazione") as item]
+				[#if item?has_content]
+			    <tr>				   
+				   <td>${FTL_PLACEHOLDER}(item.descrStato)!?html}</td>
+				   <td>${FTL_PLACEHOLDER}(item.codiceFiscale)!?html}</td>
+				   <td>${FTL_PLACEHOLDER}(item.denominazione)!?html}</td>
+				   <td>${FTL_PLACEHOLDER}(item.descrDipartimento)!?html}</td>
+				   <td>${FTL_PLACEHOLDER}(item.idDomandaPartner)!?html}</td>
+				   <td>${FTL_PLACEHOLDER}(item.note)!?html}</td>
+			    </tr>
+			   [/#if] 
+			 [/#list]
+		  
+	       </table>
+
+	    </td>
+		<td></td>
+	  </tr>  	  
+    </table>
+	</div>
+	[/#if]

@@ -1,0 +1,576 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _costituzioneImpresa --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<script type="text/javascript">
+
+	$(window).on('load',function () {
+<#if _costituzioneImpresa_costituzione_in_corso == "true" >
+[#--
+      //Se costituzioneInCorso e' checked nell'xml, entrando nella pagina la disabilitazione del calendar la faccio qua, e non mettendo disabled nell'html, 
+      //perche' in tal caso (con disabled= "disabled" nel blocco html relativo al calendar che freemarker scrive)
+      //non si riusciva piu' ad abilitare il calendar stesso a fronte di un decheck di costituzioneInCorso 
+--]
+      // console.log("dbg1: onload");
+
+      [#if costituzioneInCorso == "true"]
+        $('#id_costImpr_dataCostituzioneImpresa').attr("value","");
+		$('#id_costImpr_dataCostituzioneImpresa').prop("disabled", true);
+		$('#id_costImpr_dataCostituzioneImpresa').attr("readonly", true);
+		$('#id_costImpr_dataCostituzioneImpresa').removeClass("calendarioCustom2 hasDatepicker");						
+		$('table#id_table_costituzioneimpresa span.ui-datepicker-trigger').hide();
+
+		$('#id_costImpr_dataIscrizioneRegistroImprese').attr("value","");
+		$('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", true);
+		$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", true);
+		$('#id_costImpr_dataIscrizioneRegistroImprese').removeClass("calendarioCustom2 hasDatepicker");
+		$('#cb_isori span.ui-datepicker-trigger').hide();
+	  
+	  [/#if] 
+</#if>	
+
+<#if _costituzioneImpresa_data_iscrizione_registro_imprese == "true" >
+
+ 	<#if _costituzioneImpresa_costituzione_in_corso == "true" >
+
+  		[#if !( ((costImpr.costituzioneInCorso)?has_content) || ((costImpr.iscrizioneInCorso)?has_content) )]
+  			[#-- //entrambi i checkbox non sono selezionati/definiti OSSIA sono NULL tutti i campi sono abilitati --]
+  			// console.log("0");
+  			
+  		[#else]	
+  			// console.log("1");
+	    	[#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+		        [#if (!((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso == "true")]
+		       		// console.log("a");
+			    	$('#id_costImpr_dataIscrizioneRegistroImprese').attr("value","");
+					$('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", true);
+					$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", true);
+					$('#id_costImpr_dataIscrizioneRegistroImprese').removeClass("calendarioCustom2 hasDatepicker");
+					$('#cb_isori span.ui-datepicker-trigger').hide();
+       			[#else]
+       				// console.log("b");
+	       			$('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", false);
+					$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", false);
+					$('#cb_isori span.ui-datepicker-trigger').show();
+			  	[/#if]
+		  	[/#if]
+	  	[/#if]
+	</#if>
+</#if>
+    });	
+					
+					
+	function setCampiHiddenProvinciaCostImpresa(){	
+		// console.log("dbg0: fx-setCampiHiddenProvinciaCostImpresa...");
+		
+		var siglaProv = $("#id_costImpr_provincia").val();
+		// console.log("siglaProv: " + siglaProv); // TO
+		
+		var descrProv = $("#id_costImpr_provincia option:selected").text();
+		// console.log("descrProv: " + descrProv); // REGGIO EMILIA
+		
+		$("#id_costImpr_id_provincia").val($("#id_costImpr_provincia").val()); // TO
+		// $("#id_costImpr_provinciaDescrizione").val($("#id_costImpr_provincia option:selected").text()); // TO
+		$("#id_costImpr_provinciaDescrizione").val(descrProv); // TO
+		
+		
+	}
+
+	<#if _costituzioneImpresa_iscrizione_in_corso == "true" >
+		// console.log("dbg3: cfg-_costituzioneImpresa_iscrizione_in_corso-true-");
+		
+		function impostaProvinciaRegImprese()
+		{
+			
+			if($('#id_costImpresa_iscrizioneInCorso').attr('checked')=='checked')
+			{
+				// azzero i valori nei campi hidden	
+				// console.log("dbg4: azzero i valori nei campi hidden	...");				
+				$('#id_costImpr_id_provincia').attr("value","");
+				$('#id_costImpr_provinciaDescrizione').attr("value","");	
+	
+				// disabilito la combo "Provincia d'iscrizione registro imprese"
+				// console.log("dbg5: disabilito la combo Provincia d'iscrizione registro imprese	...");
+				$('#id_costImpr_provincia').prop("disabled", true);
+				$('#id_costImpr_provincia').attr("readonly", true);
+				
+				// deseleziono l'eventuale elemento scleto, altrimenti dopo i campi hidden rimangono vuoti
+				// console.log("dbg6: deseleziono l'eventuale elemento scelto, altrimenti dopo i campi hidden rimangono vuoti	...");
+				$('#id_costImpr_provincia option:selected').removeAttr("selected");
+
+				// disabilito campo data: Iscritto alla sezione ordinaria del Registro Imprese dal
+				// console.log("dbg6a:  disabilito campo-data: Iscritto alla sezione ordinaria del Registro Imprese dal...");
+				$('#id_costImpr_dataIscrizioneRegistroImprese').attr("value","");
+				// $('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", true);
+				$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", true);
+				$('#id_costImpr_dataIscrizioneRegistroImprese').removeClass("calendarioCustom2 hasDatepicker");
+				$('#cb_isori span.ui-datepicker-trigger').hide();
+				$('id_costImpresa_iscrizioneInCorso').prop("checked", true);
+
+				// cancello data in campo value
+
+			} else {
+
+				$('#id_costImpresa_iscrizioneInCorso').attr("value","");
+				
+				// abilito la combo "Provincia d'iscrizione registro imprese"
+				// console.log("dbg7: abilito la combo Provincia d'iscrizione registro imprese	...");
+				$('#id_costImpr_provincia').prop("disabled", false);
+				$('#id_costImpr_provincia').attr("readonly", false);
+
+				// abilito campo data: Iscritto alla sezione ordinaria del Registro Imprese dal
+				// console.log("dbg7a:  abilito campo data: Iscritto alla sezione ordinaria del Registro Imprese dal...");
+				$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", false);
+				$('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", false);			
+				$('#id_costImpr_dataIscrizioneRegistroImprese').addClass("calendarioCustom2 hasDatepicker");
+				$('#cb_isori').attr("readonly", false);
+				$('#cb_isori span.ui-datepicker-trigger').show();
+				$('id_costImpresa_iscrizioneInCorso').prop("checked", false);
+			}
+		}
+	</#if>
+
+	<#if _costituzioneImpresa_costituzione_in_corso == "true" >	
+
+		// console.log("dbg8: _costituzioneImpresa_costituzione_in_corso==true	...");
+
+		var cbCostImpresa = $('#id_costImpresa_dichiarazioneCostituzioneInCorso').is( ':checked' );
+		
+		function impostaCostituzioneImpresa(){
+			// console.log("dbg9: impostaCostituzioneImpresa...");
+			if($('#id_costImpresa_dichiarazioneCostituzioneInCorso').attr('checked')=='checked'){					
+				// console.log("dbg010: ckb-id_costImpresa_dichiarazioneCostituzioneInCorso selezionata...");
+
+				cbCostImpresa = $('#id_costImpresa_dichiarazioneCostituzioneInCorso').is( ':checked' );
+				// console.log("dbg010a: cb-costImpresa risulta selezionato ? " + cbCostImpresa);
+				
+				// disabilito il campo "Data costituzione impresa"
+				// console.log("dbg011: disabilito il campo Data costituzione impresa...");
+				$('#id_costImpr_dataCostituzioneImpresa').attr("value","");
+				$('#id_costImpr_dataCostituzioneImpresa').prop("disabled", true);
+				$('#id_costImpr_dataCostituzioneImpresa').attr("readonly", true);
+				$('#id_costImpr_dataCostituzioneImpresa').removeClass("calendarioCustom2 hasDatepicker");
+				
+				// nascondo lo span che mostra l'icona del calendario
+				// console.log("dbg012: nascondo lo span che mostra l'icona del calendario...");
+				$('table#id_table_costituzioneimpresa span.ui-datepicker-trigger').hide();
+			
+				// disabilito la combo "Provincia d'iscrizione registro imprese"
+				// console.log("dbg013: disabilito la combo Provincia d'iscrizione registro imprese...");
+				$('#id_costImpr_provincia').prop("disabled", true);
+				$('#id_costImpr_provincia').attr("readonly", true);
+				
+				// azzero i valori della combo "Provincia d'iscrizione registro imprese"
+				// console.log("dbg014: azzero i valori della combo Provincia d'iscrizione registro imprese...");
+				$('#id_costImpr_provincia option:selected').removeAttr("selected");
+				
+				// azzero i valori nei campi hidden
+				// console.log("dbg015: azzero i valori nei campi hidden...");
+				$('#id_costImpr_id_provincia').attr("value","");
+				$('#id_costImpr_provinciaDescrizione').attr("value","");
+				
+				// disabilito il check box "Iscrizione in corso"
+				// console.log("dbg016:  disabilito il check box Iscrizione in corso...");
+				$('#id_costImpresa_iscrizioneInCorso').prop("disabled", true);
+				$('#id_costImpresa_iscrizioneInCorso').removeAttr("checked");
+
+				// disabilito campo data: Iscritto alla sezione ordinaria del Registro Imprese dal
+				// console.log("dbg017:  disabilito campo-data: Iscritto alla sezione ordinaria del Registro Imprese dal...");
+				$('#id_costImpr_dataIscrizioneRegistroImprese').attr("value","");
+				$('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", true);
+				$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", true);
+				$('#id_costImpr_dataIscrizioneRegistroImprese').removeClass("calendarioCustom2 hasDatepicker");
+				
+			}else{
+
+				cbCostImpresa = $('#id_costImpresa_dichiarazioneCostituzioneInCorso').is( ':checked' );
+				// console.log("dbg010b: cb-costImpresa risulta selezionato ? " + cbCostImpresa);
+				
+				// abilito il campo "Data costituzione impresa"
+				// console.log("dbg017:  abilito il campo Data costituzione impresa...");
+				$('#id_costImpr_dataCostituzioneImpresa').attr("readonly", false);
+				$('#id_costImpr_dataCostituzioneImpresa').prop("disabled", false);			
+				$('#id_costImpr_dataCostituzioneImpresa').addClass("calendarioCustom2 hasDatepicker");
+				
+				// visualizzo lo span che mostra l'icona del calendario
+				// console.log("dbg018:  visualizzo lo span che mostra l'icona del calendario...");
+				$('table#id_table_costituzioneimpresa span.ui-datepicker-trigger').show();
+				//$('table#id_table_costituzioneimpresa span.ui-datepicker-trigger-disabled').hide();
+				
+				// abilito la combo "Provincia d'iscrizione registro imprese"
+				// console.log("dbg019:  abilito la combo Provincia d'iscrizione registro imprese...");
+				$('#id_costImpr_provincia').prop("disabled", false);
+				$('#id_costImpr_provincia').attr("readonly", false);
+				
+				// abilito il check box "Iscrizione in corso"
+				// console.log("dbg020:  abilito il check box Iscrizione in corso...");
+				$('#id_costImpresa_iscrizioneInCorso').prop("disabled", false);
+
+				// abilito campo-data: Iscritto alla sezione ordinaria del Registro Imprese dal 
+				// console.log("dbg021:  Iscritto alla sezione ordinaria del Registro Imprese dal...");
+				$('#id_costImpr_dataIscrizioneRegistroImprese').attr("readonly", false);
+				$('#id_costImpr_dataIscrizioneRegistroImprese').prop("disabled", false);			
+				$('#id_costImpr_dataIscrizioneRegistroImprese').addClass("calendarioCustom2 hasDatepicker");
+			}
+		}
+	</#if>
+</script>
+				
+<h5>Costituzione Impresa</h5>
+<div class="formTable" summary="....">
+	<table class="formTable" summary="...." id="id_table_costituzioneimpresa">
+		<col width="30%" />
+		<col width="23%" />
+		<col width="23%" />
+		<col width="24%" />
+		<tr>
+			<th> 
+				<label for="id_costImpr_dataCostituzioneImpresa">
+					Data costituzione impresa
+				</label> 
+			
+				<#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+					<p style="font-style:italic; font-weight:normal;">
+						Dopo il primo salvataggio non sarà più possibile <br/>modificare la data di costituzione impresa 
+                    </p>
+                </#if>
+            </th>
+                        
+			<td>
+				<#if _costituzioneImpresa_costituzione_in_corso == "true" >
+				   [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+			   		  <#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+						  [#if "00/00/0000" != dataCostituzioneImpresaXML]
+							<input type="text" id="id_costImpr_dataCostituzioneImpresa"
+								 name="_costituzioneImpresa.dataCostituzioneImpresa"
+								 value="${FTL_PLACEHOLDER}(costImpr.dataCostituzioneImpresa)!?html}" 
+								 class="medium calendarioCustom2" readonly="readonly" disabled="disabled" />
+								 <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+						  [#else]
+						  
+					  </#if>
+							   <input type="text" name="_costituzioneImpresa.dataCostituzioneImpresa" 
+								      value="${FTL_PLACEHOLDER}(costImpr.dataCostituzioneImpresa)!?html}" 
+								      id="id_costImpr_dataCostituzioneImpresa" maxlength="10" 
+								      class="[@classMediumError errorList=(messages._costituzioneImpresa_dataCostituzioneImpresa)![] /] calendarioCustom2"/>
+							          [@contextualErrors errorList=(messages._costituzioneImpresa_dataCostituzioneImpresa)![] /]
+							   <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+						  <#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+						  [/#if]
+					  </#if>
+			   	  [#else]
+				      <input type="text" name="_costituzioneImpresa.dataCostituzioneImpresa"
+				             value="${FTL_PLACEHOLDER}(costImpr.dataCostituzioneImpresa)!?html}"
+				             id="id_costImpr_dataCostituzioneImpresa"  maxlength="10"
+						     class="medium calendarioCustom2" />
+					  <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+			      [/#if]
+			    <#else>
+			    	<#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+			          [#if "00/00/0000" != dataCostituzioneImpresaXML]
+						   <input type="text" id="id_costImpr_dataCostituzioneImpresa"
+							      name="_costituzioneImpresa.dataCostituzioneImpresa"
+							      value="${FTL_PLACEHOLDER}(costImpr.dataCostituzioneImpresa)!?html}" 
+							      class="medium calendarioCustom2" readonly="readonly" disabled="disabled" />
+						   <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					  [#else]
+					  </#if>
+						   <input type="text" name="_costituzioneImpresa.dataCostituzioneImpresa" 
+							      value="${FTL_PLACEHOLDER}(costImpr.dataCostituzioneImpresa)!?html}" 
+							      id="id_costImpr_dataCostituzioneImpresa" maxlength="10" 
+							      class="[@classMediumError errorList=(messages._costituzioneImpresa_dataCostituzioneImpresa)![] /] calendarioCustom2"/>
+						          [@contextualErrors errorList=(messages._costituzioneImpresa_dataCostituzioneImpresa)![] /]
+						   <span id="id_dataCostituzioneImpresa_calendario" class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					  <#if _costituzioneImpresa_data_solo_primo_salvataggio == "true" >
+					  [/#if]
+					  </#if>
+			    
+			    </#if>   
+		    
+			</td>
+
+			<#if _costituzioneImpresa_costituzione_in_corso == "true" >
+				  <th>
+				  	<label for="id_costImpresa_dichiarazioneCostituzioneInCorso">Impresa in fase di costituzione</label>
+				  </th>
+				  
+				  <td>
+				  
+					<span class="check">
+						[#if "00/00/0000" != dataCostituzioneImpresaXML]
+							[#-- se la dataCostituzioneImpresa e' presente nel XML allora questo check e' disabilitato --]
+						    <input type="checkbox" name="_costituzioneImpresa.costituzioneInCorso" id="id_costImpresa_dichiarazioneCostituzioneInCorso" value="true" disabled="disabled" />
+						[#else]
+						    [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+								[#-- non checked --]
+							    <input type="checkbox" name="_costituzioneImpresa.costituzioneInCorso" id="id_costImpresa_dichiarazioneCostituzioneInCorso" value="true" onclick="impostaCostituzioneImpresa();" />
+						    [#else]
+								[#-- checked --]
+							    <input type="checkbox" name="_costituzioneImpresa.costituzioneInCorso" id="id_costImpresa_dichiarazioneCostituzioneInCorso" value="true" checked="checked" onclick="impostaCostituzioneImpresa();"/>
+						    [/#if]	
+						[/#if]
+						<input type="hidden" id="id_costituzioneInCorso_hidden" name="_costituzioneImpresa.costituzioneInCorso" value="" />
+					</span>
+				  </td>
+			<#else>
+				  <th></th>
+				  <td></td>
+			</#if>
+		</tr>
+
+
+		<#--in base alla configurazione del bando entrambi i check costituzione in corso e iscrizione in corso possono esserci o no, indipendentemente uno dall'altro -->
+		<tr>
+			<#if _costituzioneImpresa_costituzione_in_corso == "true" >	 <!-- costituzione in corso=esiste -->
+			<#if _costituzioneImpresa_iscrizione_in_corso == "true" >	 <!-- costituzione in corso=esiste e iscrizione in corso=esiste --> 
+		
+			<th>
+				<label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese </label>
+			</th>
+			
+			<td>
+		        [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+				       [#if (!((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true")]
+				     
+					         <select name="costImpresa_provincia" 
+						         id="id_costImpr_provincia" 
+						         class="[@classLongError errorList=(messages._costituzioneImpresa_provincia)![] /]" 
+						         onchange="setCampiHiddenProvinciaCostImpresa();">
+						         <option value="-"></option>
+						         [#list provinceRegImpresaList as item]
+							    	[#if item.sigla == (costImpr.provincia)!]
+										<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								    [#else]
+										<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								    [/#if]
+						         [/#list]
+						     </select>
+						     [@contextualErrors errorList=(messages._costituzioneImpresa_provincia)![] /]
+				       [#else]
+							<select name="costImpresa_provincia" id="id_costImpr_provincia" class="long" 
+									onchange="setCampiHiddenProvinciaCostImpresa();"
+									readonly="readonly" disabled="disabled" >
+						         <option value="-"></option>
+								 [#list provinceRegImpresaList as item]
+							    	[#if item.sigla == (costImpr.provincia)!]
+									<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								    [#else]
+									<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								    [/#if]
+						         [/#list]
+						     </select>
+					   [/#if]
+				 [#else]
+					<select name="costImpresa_provincia" id="id_costImpr_provincia" class="long" 
+							onchange="setCampiHiddenProvinciaCostImpresa();"
+							readonly="readonly" disabled="disabled">
+				         <option value="-"></option>
+						 [#list provinceRegImpresaList as item]
+					    	[#if item.sigla == (costImpr.provincia)!]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [#else]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [/#if]
+				         [/#list]
+				     </select>
+				 [/#if]
+				 <input type="hidden" id="id_costImpr_id_provincia" name="_costituzioneImpresa.provincia" value="${FTL_PLACEHOLDER}(costImpr.provincia)!}" />
+				 <input type="hidden" id="id_costImpr_provinciaDescrizione" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(costImpr.provinciaDescrizione)!?html}" />
+			</td>
+			
+			<th>
+				<label for="id_costImpresa_iscrizioneInCorso">Iscrizione in corso</label>
+			</th>
+			<td>
+				<span class="check">
+					 [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]
+						    [#if !((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true"]
+							   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" value="true" onclick="impostaProvinciaRegImprese();" class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+						    [#else]
+							   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" value="true" checked="checked" onclick="impostaProvinciaRegImprese();" class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+						    [/#if]
+							 [@contextualErrors errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] /]
+					[#else]								    
+					    <input type="checkbox" id="id_costImpresa_iscrizioneInCorso" name="_costituzioneImpresa.iscrizioneInCorso" value="true" onclick="impostaProvinciaRegImprese();" disabled="disabled" />
+					[/#if]
+					<input type="hidden" id="id_iscrizioneInCorso_hidden" name="_costituzioneImpresa.iscrizioneInCorso" value="" />
+				</span>
+			</td>
+
+		<#else>
+                         <!-- costituzione in corso=esiste e iscrizione in corso=non esiste -->                             
+                         
+                         <th><label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese </label></th>
+			 <td>
+		        [#if !((costImpr.costituzioneInCorso)?has_content) || costImpr.costituzioneInCorso != "true"]							       
+			         <select name="costImpresa_provincia" 
+				         id="id_costImpr_provincia" 
+				         class="[@classLongError errorList=(messages._costituzioneImpresa_provincia)![] /]" 
+				         onchange="setCampiHiddenProvinciaCostImpresa();">
+				         <option value="-"></option>
+				         [#list provinceRegImpresaList as item]
+					    	[#if item.sigla == (costImpr.provincia)!]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [#else]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [/#if]
+				         [/#list]
+				     </select>
+				     [@contextualErrors errorList=(messages._costituzioneImpresa_provincia)![] /]
+			       
+				 [#else]
+					<select name="costImpresa_provincia" id="id_costImpr_provincia" class="long" 
+							onchange="setCampiHiddenProvinciaCostImpresa();"
+							readonly="readonly" disabled="disabled">
+				         <option value="-"></option>
+						 [#list provinceRegImpresaList as item]
+					    	[#if item.sigla == (costImpr.provincia)!]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [#else]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [/#if]
+				         [/#list]
+				     </select>
+				 [/#if]
+				 <input type="hidden" id="id_costImpr_id_provincia" name="_costituzioneImpresa.provincia" value="${FTL_PLACEHOLDER}(costImpr.provincia)!?html}" />
+				 <input type="hidden" id="id_costImpr_provinciaDescrizione" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(costImpr.provinciaDescrizione)!?html}" />
+			</td>
+			<th></th>
+			<td></td>
+		
+		</#if><!-- fine blocco costituzione in corso=esiste e iscrizione in corso=non esiste -->
+		<#else>
+		   <!-- costituzione in corso=non esiste -->
+		   <#if _costituzioneImpresa_iscrizione_in_corso == "true" >
+		      <!-- costituzione in corso=non esiste e iscrizione in corso=esiste -->
+		        
+		    <th>
+		    	<label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese </label>
+		    </th>
+			<td>
+		        [#if (!((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true")]
+			     
+			         <select name="costImpresa_provincia" 
+				         id="id_costImpr_provincia" 
+				         class="[@classLongError errorList=(messages._costituzioneImpresa_provincia)![] /]" 
+				         onchange="setCampiHiddenProvinciaCostImpresa();">
+				         <option value="-"></option>
+				         [#list provinceRegImpresaList as item]
+					    	[#if item.sigla == (costImpr.provincia)!]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [#else]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [/#if]
+				         [/#list]
+				     </select>
+				     [@contextualErrors errorList=(messages._costituzioneImpresa_provincia)![] /]
+			    [#else]
+					<select name="costImpresa_provincia" id="id_costImpr_provincia" class="long" 
+							onchange="setCampiHiddenProvinciaCostImpresa();"
+							readonly="readonly" disabled="disabled" >
+				         <option value="-"></option>
+						 [#list provinceRegImpresaList as item]
+					    	[#if item.sigla == (costImpr.provincia)!]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [#else]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [/#if]
+				         [/#list]
+				     </select>
+				[/#if]
+				<input type="hidden" id="id_costImpr_id_provincia" name="_costituzioneImpresa.provincia" value="${FTL_PLACEHOLDER}(costImpr.provincia)!?html}" />
+				<input type="hidden" id="id_costImpr_provinciaDescrizione" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(costImpr.provinciaDescrizione)!?html}" />
+			</td>
+			
+			<th><label for="id_costImpresa_iscrizioneInCorso">Iscrizione in corso</label></th>
+			<td>
+				<span class="check">
+				    [#if !((costImpr.iscrizioneInCorso)?has_content) || costImpr.iscrizioneInCorso != "true"]
+					   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" 
+					     value="true"
+					     onclick="impostaProvinciaRegImprese();" 
+						 class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+				    [#else]
+					   <input type="checkbox" name="_costituzioneImpresa.iscrizioneInCorso" id="id_costImpresa_iscrizioneInCorso" 
+					     value="true" checked="checked" 
+					     onclick="impostaProvinciaRegImprese();"
+						 class="[@classGeneralError errorList=(messages._costituzioneImpresa_iscrizioneInCorso)![] classNormal='noborder' classError='noborder error' /]" />									
+				    [/#if]
+				<input type="hidden" id="id_iscrizioneInCorso_hidden" name="_costituzioneImpresa.iscrizioneInCorso" value="" />
+				</span>
+			</td>
+		   <#else>
+		      <!-- costituzione in corso=non esiste e iscrizione in corso=non esiste -->
+		      
+		      <th><label for="id_costImpr_provincia">Provincia d'iscrizione registro imprese</label></th>
+			  <td>
+			     <select name="costImpresa_provincia" 
+				         id="id_costImpr_provincia" 
+				         class="[@classLongError errorList=(messages._costituzioneImpresa_provincia)![] /]" 
+				         onchange="setCampiHiddenProvinciaCostImpresa();">
+				         <option value="-"></option>
+				         [#list provinceRegImpresaList as item]
+					    	[#if item.sigla == (costImpr.provincia)!]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [#else]
+							<option value="${FTL_PLACEHOLDER}item.sigla!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+						    [/#if]
+				         [/#list]
+				 </select>
+				 [@contextualErrors errorList=(messages._costituzioneImpresa_provincia)![] /]
+				 
+				 <input type="hidden" id="id_costImpr_id_provincia" name="_costituzioneImpresa.provincia" value="${FTL_PLACEHOLDER}(costImpr.provincia)!?html}" />
+				 <input type="hidden" id="id_costImpr_provinciaDescrizione" name="_costituzioneImpresa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(costImpr.provinciaDescrizione)!?html}" />
+			</td>							
+			<th></th>
+			<td></td>
+		   </#if><!-- fine blocco costituzione in corso=non esiste e iscrizione in corso=non esiste -->
+		</#if><!-- fine blocco costituzione in corso=non esiste -->						
+		</tr>
+		
+		<!--  :: inizio Jira 1590 e 1699 nuovo campo data -->
+		<#if _costituzioneImpresa_data_iscrizione_registro_imprese == "true" >
+			<tr>
+				<#if _dettaglio_sedi_stati_esteri_label?has_content >
+					 <th>
+						<label for="lbl_costImpr_dataIscrizioneRegistroImprese">
+							${_dettaglio_sedi_stati_esteri_label}
+						</label>
+					</th>
+				<#else>
+					  <th>
+						<label for="lbl_costImpr_dataIscrizioneRegistroImprese">
+							Iscritto alla sezione ordinaria del Registro Imprese dal
+						</label>
+					</th>
+				</#if>
+				<td id="cb_isori">
+					<input type="text" id="id_costImpr_dataIscrizioneRegistroImprese" 
+							name="_costituzioneImpresa.dataIscrizioneRegistroImprese" 
+							title="Attenzione, verificare data digitata" maxlength="10" pattern="\d{1,2}/\d{1,2}/\d{4}" 
+							value="${FTL_PLACEHOLDER}(costImpr.dataIscrizioneRegistroImprese)!?html}"  
+							class="medium calendarioCustom2 idleField"/>
+					<span id="id_dataIscrizioneRegistroImprese_calendario" class="txt_help hide_txt">Inserire il formato: gg/mm/aaaa</span>
+					[@contextualErrors errorList=(messages._costituzioneImpresa_dataIscrizioneRegistroImprese)![] /]
+				</td>
+			</tr>
+		</#if>
+
+	</table>
+	
+	<input type="hidden" name="_costituzioneImpresaAAEP.costituzioneInCorso" value="" />
+	<input type="hidden" name="_costituzioneImpresaAAEP.iscrizioneInCorso" value="" />
+	<input type="hidden" name="_costituzioneImpresaAAEP.dataCostituzioneImpresa" value="${FTL_PLACEHOLDER}(dataCostituzioneImpresaAAEP)!?html}" />
+	
+	<!--  :: Jira 1699  -->
+	<input type="hidden" name="_costituzioneImpresaAAEP.dataIscrizioneRegistroImprese" value="${FTL_PLACEHOLDER}(dataIscrizioneRegistroImpreseAAEP)!?html}" />
+	
+	<input type="hidden" name="_costituzioneImpresaAAEP.provincia" value="${FTL_PLACEHOLDER}(siglaProvinciaIscrizioneREA)!?html}" />
+	<input type="hidden" name="_costituzioneImpresaAAEP.provinciaDescrizione" value="" />
+				 
+	<input type="submit" id="id_reload_S1_P1_costImpresa" name="_command" value="LabelCommand:C_reload_S1_P1_costImpresa;RenderCommand:1100" hidden="hidden" />
+</div>

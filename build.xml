@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ##################################################### -->
+<!-- # Copyright Regione Piemonte - 2020                 # -->
+<!-- # SPDX-License-Identifier: EUPL-1.2-or-later        # -->
+<!-- #                                                   # -->
+<!-- # build.xml file per compilazione e generazione     # -->
+<!-- # del pacchetto per il rilascio dell'applicazione.  # -->
+<!-- #                                                   # -->
+<!-- # Per una lista completa dei tasks eseguibili usare # -->
+<!-- # l'argomento di ant -projecthelp quando si         # -->
+<!-- # richiama questo build.xml.                        # -->
+<!-- ##################################################### -->
+
+<project basedir="."
+         default="default"
+         name="findom-blocchetti"
+         xmlns:ivy="antlib:fr.jayasoft.ivy.ant" >
+
+  <description>Build file per il progetto: [findom]</description>
+  <!-- -->
+  <property file="buildfiles/build.properties" />
+  <property file="buildfiles/${target}.properties" />
+  <!-- -->
+  <path id="library.ref">
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+      <include name="**/*.zip" />
+    </fileset>
+  </path>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # Target: init                                              # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="init" description="Inizializza lo script Ant.">
+    <tstamp />
+    <condition property="target" value="dev">
+      <equals arg1="${target}" arg2="$${target}" />
+    </condition>
+    <mkdir dir="${build}/classes" />
+    <mkdir dir="${temp}/${target}/${earLib}" />
+    <mkdir dir="${temp}/static-resources" />
+    <mkdir dir="${build}/archives/${target}" />
+    <mkdir dir="${dist}/${target}" />
+    <mkdir dir="${build}/javadoc" />
+    <mkdir dir="${build}/jsp" />
+    <mkdir dir="${build}/cache" />
+  </target>
+
+  <target name="show-vars" depends="init"
+          description="Visualizza tutte le variabili impostate nei file di properties e/o da linea di comando">
+          <echo message="*****************************************"/>
+          <echo message="********  ${componente} environment  *******" />
+          <echo message="*****************************************"/>
+          <echo message="Runtime :"/>
+          <echo message="JAVA_HOME = ${JAVA_HOME}"/>
+          <echo message=""/>
+          <echo message="Target:"/>
+          <echo message="TARGET = ${target}"/>
+          <echo message=""/>
+          <echo message="Application :"/>
+          <echo message="VERSION = ${version}"/>
+          <echo message=""/>
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # Target: default                                           # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="default"
+          description="Eseguire il build per l'environment
+                       specificato a linea di comando con
+                       -Dtarget=${target} o per tutti gli
+                       environment (se non specificato).">
+
+    <condition property="first-call" value="distribution">
+      <not>
+        <equals arg1="${target}" arg2="$${target}" />
+      </not>
+    </condition>
+
+    <condition property="first-call" value="all-targets">
+      <equals arg1="${target}" arg2="$${target}" />
+    </condition>
+
+    <echo message="target: ${server}" />
+    <echo message="target: ${target}" />
+    <echo message="first-call: ${first-call}" />
+
+    <antcall target="clean-all" />
+    <antcall target="${first-call}" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # Target: compile-all                                       # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="compile-all" depends="init,load-dependencies"
+          description="Compila tutti i sorgenti.">
+
+    <echo message="===> Target: ${target}" />
+  	<echo message="===> srcdir: ${src}/java" />
+  	
+    <javac srcdir="${src}/java" destdir="${build}/classes" source="1.8" target="1.8"
+           optimize="on" deprecation="on" compiler="modern"
+    	   debug="on" debuglevel="lines,vars,source">
+      <classpath refid="library.ref" />
+    </javac>
+
+    <copy todir="${build}/classes">
+      <fileset dir="${src}/java" excludes="**/*.java*,**/*.jbx*" />
+    </copy>
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # Target: about                                             # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="about" description="Visualizza l'elenco dei target
+                                    pubblici dello script.">
+
+    <loadproperties srcfile="buildfiles/build.properties" />
+    <loadfile property="about" srcfile="buildfiles/about.txt" />
+    <echo message="${about}" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # Target: about-custom                                      # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="about-custom"
+          description="Visualizza l'elenco di tutti i target,
+                       pubblici e privati
+                       (equivalente a 'ant -projecthelp')" >
+
+    <loadproperties srcfile="buildfiles/build.properties" />
+    <loadfile property="about-custom" srcfile="buildfiles/about-custom.txt" />
+    <echo message="${about-custom}" />
+    <java classname="org.apache.tools.ant.Main">
+      <arg value="-projecthelp" />
+    </java>
+  </target>
+
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [DISTRIB]: distribution                                   # -->
+  <!-- ############################################################# -->
+
+  <target name="distribution" depends="compile-all"
+          description="Costruisce il tar per la distribuzione." >
+  	
+    <echo message="====== Creating distribution for ${target} ..."/>
+    <echo message="====== Basedir: ${build}/archives/${target} ..."/>
+	<jar destfile="${dist}/${target}/${dist-file-name}.jar"
+		basedir="${build}/classes"
+		excludes="it/csi/findom/blocchetti/business/**"
+		includes="it/csi/findom/blocchetti/**">
+	</jar>
+
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [IVY]: resolve-dependencies                               # -->
+  <!-- ############################################################# -->
+<!-- -->
+  <target name="resolve-dependencies"
+          description="carica le librerie dal repository remoto">
+<!--
+    <ivy:configure file="${basedir}/buildfiles/ivyconf.xml" />
+    <ivy:resolve file="${basedir}/buildfiles/ivy.xml" />
+-->
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [IVY]: internal target: load-dependencies                 # -->
+  <!-- ############################################################# -->
+<!-- -->
+  <target name="load-dependencies"
+          depends="resolve-dependencies"
+          description="Risolve le dipendenze esterne.">
+<!--
+	<ivy:retrieve pattern="${basedir}/lib/[artifact].[type]" />
+  -->
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # Target: environment-config                                # -->
+  <!-- #         Gestire qui i  replace delle variabile d'ambiente # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="environment-config"
+          description="Predispone le configurazioni dipendenti dall'ambiente." >
+    <echo message="====== gestire qui i  replace delle variabile d'ambiente" />
+
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-all                                        # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-all" description="Rimuove tutte le cartelle temporanee."
+          depends="clean-archives,clean-cache,clean-classes,
+                  clean-javadoc,clean-jsp,clean-temp"/>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-cache                                      # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-cache"
+          description="Rimuove la cartella di cache di Ivy e la lib.">
+		<delete dir="${build}/cache" failonerror="no" />
+  		<delete dir="${lib}" failonerror="no" excludes="${exclude-clean-libs}"/>
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-temp                                       # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-temp"
+          description="Rimuove la cartella dei files temporanei di build.">
+    <delete dir="${temp}" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-archives                                  # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-archives"
+          description="Rimuove la cartella degli archivi (war, ear, ...).">
+    <delete dir="${build}/archives" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-dist                                       # -->
+  <!-- ############################################################# -->
+  <target name="clean-dist"
+          description="Rimuove la cartella delle distribuzioni.">
+    <delete dir="${dist}" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-classes                                    # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-classes"
+          description="Rimuove la cartella dei sorgenti compilati.">
+    <delete dir="${build}/classes" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-javadoc                                    # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-javadoc"
+          description="Rimuove la cartella temporanea dei javadoc.">
+    <delete dir="${build}/javadoc" />
+  </target>
+
+  <!-- -->
+  <!-- ############################################################# -->
+  <!-- # [CLEAN]: clean-jsp                                        # -->
+  <!-- ############################################################# -->
+  <!-- -->
+  <target name="clean-jsp"
+          description="Rimuove la cartella temporanea delle jsp compilate.">
+    <delete dir="${build}/jsp" />
+  </target>
+
+
+  <!-- ant contrib -->
+	
+  <!-- sposto file blocchetti.jar in findomwebnew/lib -->
+	<target name="distribution-ftp" 
+			description="creo il jar di blocchetti e lo sposto dentro findomwebnew/lib" 
+			depends="distribution">
+
+  		<copy todir="${personal_path_to_findomwebnew}">
+			<fileset file="${dist}/${target}/${dist-file-name}.jar" />
+		</copy>
+		<echo message="${dist-file-name}.jar copiato row:391 build.xml !!!" />
+	 </target>
+	
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
+</project>

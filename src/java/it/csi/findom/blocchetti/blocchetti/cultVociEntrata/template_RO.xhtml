@@ -1,0 +1,115 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+	[#-- _vociEntrata RO --]
+
+	<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<h4>
+	<span id="toggle_handle_riepilogoVoci" class="toggle_handle collapse">Elenco Entrate</span>
+</h4>
+<p style="font-style:italic; font-weight:normal;">Elencare le Entrate previste nella sezione Dettaglio Entrate. Al termine premere il pulsante [Aggiorna elenco] e salvare.</p>				
+<div class="toggle_target_riepilogoVoci">
+	<table class="myovertable tablesorter" summary="...." id= "id_riepilogo_voci_entrata" >
+		<col width="70%" />
+		<col width="30%" />
+		<thead>
+		<tr>
+			<th>Voci di entrata </th>
+			<th>Importo</th>
+		</tr>
+		</thead>
+		[#if _vociEntrata.vociEntrataRiepilogoList?has_content]
+		[#list _vociEntrata.vociEntrataRiepilogoList as item]
+		[#if !(!item?has_content || !item?is_hash)]
+		<tr>
+		   [#if item.tipoRecord == "radice"]
+		   <td><strong>${FTL_PLACEHOLDER}item.descrizione!}</strong>
+		   </td>			
+		   [#elseif item.tipoRecord == "dettaglio"]						
+		   <td>  &#160;&#160;&#160;&#160;&#160; >> ${FTL_PLACEHOLDER}item.dettaglio!?html} 
+		   </td>						
+		   [/#if]	
+		   <td>
+		   [#if item.tipoRecord == "radice"]
+			  <input type="text"								
+				      id="id_totale_voce_entrata${FTL_PLACEHOLDER}item_index}"
+				      value="${FTL_PLACEHOLDER}(item.importo)!?html}" 
+				      name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].importo"								              
+				      class="medium" readonly="readonly"	style="text-align: right; width: 40%; font-weight: bold;"/>
+		   [#elseif item.tipoRecord == "dettaglio"]
+			  <input type="text"								
+				      id="id_totale_voce_entrata${FTL_PLACEHOLDER}item_index}"
+				      value="${FTL_PLACEHOLDER}(item.importo)!?html}" 
+				      name="_vociEntrata.vociEntrataRiepilogoList[${FTL_PLACEHOLDER}item_index}].importo"								              
+				      class="medium" readonly="readonly"	style="text-align: right; width: 40%"/>
+		   [/#if]
+		   </td>			
+		</tr>
+											
+		[/#if]
+		[/#list]	
+		[/#if]					
+		<tr>
+		<td><strong>Totale</strong></td>
+		<td><input type="text"								
+			       id="id_totale_generale"
+			       value="${FTL_PLACEHOLDER}(_vociEntrata.totale)!?html}"								     
+			       name="_vociEntrata.totale"									      						              
+			       class="medium" readonly="readonly" style="text-align: right; width: 40%; font-weight: bold;"/>
+		</td>
+		</tr>
+		</table>
+				
+				
+<h5>Dettaglio Entrate</h5>
+<p style="font-style:italic; font-weight:normal;">Indicare gli importi in euro</p>
+				
+<div >					
+<table class="myovertable tablesorter" summary="...." id="id_voci_entrata_tbl">
+	<col width="35%" />
+	<col width="40%" />
+	<col width="20%" />
+	<thead>
+	   <tr>
+				
+	      <th>Voce di entrata</th>
+	      <th>Dettaglio</th>
+	      <th>Importo</th>							
+       </tr>
+	</thead>
+	[#if (_vociEntrata.vociEntrataScelteList)?has_content]
+	[#list _vociEntrata.vociEntrataScelteList as item]
+	[#if !(!item?has_content || !item?is_hash)]
+	   <tr>
+	   <td>
+	   <input type="text"
+	          name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].descrizione"
+	          id="id_descrizione_${FTL_PLACEHOLDER}item_index}"
+	          value="${FTL_PLACEHOLDER}item.descrizione!?html}"
+		      class="long" style="width: 95%;" readonly="readonly"/> 
+       </td>
+       
+       <td>
+       <input type="text" id="id_dettaglio_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+		      name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].dettaglio" 
+		      value="${FTL_PLACEHOLDER}item.dettaglio!?html}" 
+		      class="long" style="width:95%;" readonly="readonly"/>
+	   </td>
+	   <td>					
+		 <input type="text" id="id_importo_voce_entrata_${FTL_PLACEHOLDER}item_index}" 
+				name="_vociEntrata.vociEntrataScelteList[${FTL_PLACEHOLDER}item_index}].importo" 
+				value="${FTL_PLACEHOLDER}item.importo!?html}" 
+				class="long" style="text-align: right;" readonly="readonly"/>
+	   </td>
+	   </tr>
+	[/#if]
+	[/#list][#-- chiude list di vociEntrataScelteList --]
+	[/#if][#-- chiude test se vociEntrataScelteList ha contenuto --]					
+												
+</table>
+
+	
+</div>
+</div>

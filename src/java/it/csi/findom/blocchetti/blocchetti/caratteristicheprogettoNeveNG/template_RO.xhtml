@@ -1,0 +1,122 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _caratteristicheProgetto RO --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<h4>
+	<span id="toggle_handle_carattProg" class="toggle_handle collapse">${FTL_PLACEHOLDER}(caratteristicheProgettoLabel)!}</span>
+</h4>
+			
+   <div class="toggle_target_carattProg">
+<table class="formTable" summary="....">
+    <col width="5%" />
+	<col width="90%" />	
+	<col width="5%" />	
+	
+	<!-- inizio - CR-1 -->
+	<#if _caratteristicheProgettoTipoBeneficiario == "true" >
+		
+			<tr class="tipoBeneficiario">
+				<th>
+					<label for="id_caratteristicheProgetto_tipoBeneficiario">Tipo Beneficiario</label>
+				</th>
+				<td>
+					[#if tipoBeneficiario == "Impresa"]
+						<input id="tipoBeneficiario" type="text" name="_caratteristicheProgetto.tipoBeneficiario" value="IMPRESA" readonly="readonly"/>
+					[#else]
+						<input id="tipoBeneficiario" type="text" name="_caratteristicheProgetto.tipoBeneficiario" value="${FTL_PLACEHOLDER}(_caratteristicheProgetto.tipoBeneficiario)!?html}" readonly="readonly"/>
+					[/#if]
+				</td>
+				<td></td>
+			</tr>
+	</#if>
+	<!-- fine - CR-1 -->
+				
+    <tr>
+		<td></td>
+		<td>
+			<table summary="...." id="id_tipol_cat_intervento"
+				class="myovertable tablesorter target_toggle_checkbox_1">
+				[#if esistonoDettagli == "true"]
+				   <col width="5%"/>
+				   <col width="45%"/>								
+				   <col width="45%"/>	
+				[#else]
+				  <col width="5%"/>
+				  <col width="95%"/>								  
+				[/#if]							
+				<thead>
+					<tr>
+						<th scope="col"></th>
+						<th scope="col">Tipologie di intervento</th>	
+						[#if esistonoDettagli == "true"]																			
+						<th scope="col">Dettaglio intervento</th>
+						[/#if]
+					</tr>
+				</thead>
+				<tbody>	
+										   
+					[#list tipologiaInterventoList as item]									
+						[#if !item?has_content || item?is_hash]
+					    <tr>
+					    [#if item.checked == "true"]											  
+						<th scope="row"><input type="checkbox" class="noborder"
+							id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 											
+							checked="checked" disabled="disabled"	
+							 />
+						</th>
+						[#else]										
+						<th scope="row"><input type="checkbox" class="noborder"  disabled="disabled"
+							id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" />
+						</th>
+						[/#if]
+						<td>${FTL_PLACEHOLDER}(item.descrTipoIntervento)!?html!}
+						</td>
+						
+						[#if esistonoDettagli == "true"]
+						<td colspan="2"  style ="padding:0px">
+							<table style="margin-bottom:0px"
+							   id="id_tab_dett_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" >
+								 <colgroup>
+									<col width="10%" />
+									<col width="90%" />
+			
+								</colgroup>
+								[#if item.dettaglioInterventoList?has_content]	
+								[#list item.dettaglioInterventoList as item2]
+									<tr>
+									    [#if item2.checked == "true"]
+										<th scope="row"><input type="checkbox" class="noborder" 
+										    id="id_dett_intervento_${FTL_PLACEHOLDER}item2.idDettIntervento}"
+											checked="checked" disabled="disabled"
+											/>
+										</th> 
+										[#else]
+										<th scope="row"><input type="checkbox"  disabled="disabled"
+											class="noborder" id="id_dett_intervento_${FTL_PLACEHOLDER}item2.idDettIntervento}"									
+										 />
+										</th>
+									    [/#if]
+									     <td>${FTL_PLACEHOLDER}(item2.descrDettIntervento)!?html}
+									     </td>
+									</tr>
+								[/#list]
+								[/#if]	
+								</table>                                           
+							</td>										
+							[/#if]									
+							
+						    </tr>
+						    [/#if]
+						[/#list]
+
+					</tbody>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+</div>	
+	

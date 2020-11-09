@@ -1,0 +1,114 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _SchedaProgetto --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+[#if listaCriteri?has_content]
+	[#list listaCriteri as item]
+		[#if item?has_content]
+
+	<h4>
+		<span id="toggle_handle_criterio${FTL_PLACEHOLDER}(item.idCriterio)!?html}" class="toggle_handle collapse">
+			${FTL_PLACEHOLDER}(item.descrBreveCriterio)!?html}
+		</span>
+	</h4>
+	<div class="toggle_target_criterio${FTL_PLACEHOLDER}(item.idCriterio)!?html}">
+		
+		<h5 class="titTab_hide">
+		 ${FTL_PLACEHOLDER}(item.descrizioneCriterio)!?html}
+		</h5>
+	
+		[#assign ordSpec = 0]
+		[#list item.listaSpecifiche as item2]
+
+		<span>
+			<STRONG>
+			${FTL_PLACEHOLDER}(item2.descrizioneSpecifica)!?html} 
+			</STRONG>
+		</span>
+				
+		<table class="formTable" summary="....">
+			<col width="3%" />
+			<col width="97%" />
+
+		[#list item2.listaParametri?sort_by("ordineParametro") as item3]
+
+[#if item2.tipoCampo=="checkbox"]
+
+			<tr>
+				<td>
+	[#if "checked" == (item3.checked)!]
+	<input class="noborder" type="checkbox" disabled="disabled"
+		id="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" checked="checked" 
+		name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+		value="checked"/>
+	[#else]
+	<input class="noborder" type="checkbox" disabled="disabled"
+		id="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+		name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+		value="checked"/>
+	[/#if]
+	
+				</td>
+				<td>
+				<label for="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}"> 
+					${FTL_PLACEHOLDER}(item3.descrizioneParametro)!?html} 
+				</label>
+				</td>
+		</tr>
+
+[#else]  [#--  tipoCampo=="checkbox"  --]
+
+			<tr>
+				<td>
+
+				[#if "checked" == (item3.checked)!]
+				<input class="noborder" type="radio" disabled="disabled"
+					name="criterio${FTL_PLACEHOLDER}item.idCriterio}_specifica[${FTL_PLACEHOLDER}ordSpec}]_parametro"
+					id="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+					value="checked" 
+					checked="checked" />
+				[#else]
+				<input class="noborder" type="radio" disabled="disabled"
+					name="criterio${FTL_PLACEHOLDER}item.idCriterio}_specifica[${FTL_PLACEHOLDER}ordSpec}]_parametro"
+					id="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+					value=""  />
+				[/#if]
+	
+			</td>
+			<td>
+			<label for="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}"> 
+				${FTL_PLACEHOLDER}(item3.descrizioneParametro)!?html} 
+			</label>
+			
+			[#if "checked" == (item3.checked)!]
+			<input class="noborder" type="hidden" disabled="disabled" 
+				id="id_radiodHidden${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+				value="checked"/>
+			[#else]
+			<input class="noborder" type="hidden" disabled="disabled" 
+				id="id_radiodHidden${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+				value="notChecked"/>
+			</td>
+			[/#if]
+		</tr>
+
+[/#if]
+				[/#list]
+		</table>
+
+  		[#assign ordSpec = ordSpec +1]
+		[/#list]
+	</div>
+	<br/>
+		[/#if] 
+	[/#list]
+
+[#else]
+	Nessun criterio disponibile
+[/#if] 

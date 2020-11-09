@@ -1,0 +1,264 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+				[#-- _caratteristicheProgetto --]
+
+				<#-- note di dipendenze da altre commonalities: nessuna -->
+
+
+[#if viewWarningSpese == "true"]	
+<div class="stdMessagePanel feedback">
+	<div class='feedWarning'>
+		Attenzione! Verificare la sezione Spese, ci sono dei dati incongruenti<br/>
+	</div>
+</div>
+[/#if]
+
+<style>
+
+/* nascondo label */
+#lbl_tipo_beneficiario {
+ display: none;
+}
+</style>
+<script type="text/javascript">					
+
+				function impostaCheckDettaglio(id) {
+					
+					[#list tipologiaInterventoList as item]
+						[#if item?has_content]
+					        if(${FTL_PLACEHOLDER}(item.idTipoIntervento)!} == id){
+                   
+					        	[#if item.numDettagli != "0"]							     
+							        [#if item.numDettagli == "1"]							       
+							           if (document.getElementById("id_tipologia_intervento_"+ id).checked) {
+						                  //cecco il dettaglio unico							          							         
+							              $('#id_tab_dett_intervento_'+id+' tbody tr th input:checkbox').attr('checked', true);							             
+							              $('#id_tab_dett_intervento_'+id+' .checkDettaglio').attr('value', true);
+							               	
+							           }else{
+							    	      //dececco il dettaglio unico
+							    	       $('#id_tab_dett_intervento_'+id+' tbody tr th input:checkbox').attr('checked', false);							    	      
+							        	   $('#id_tab_dett_intervento_'+id+' .checkDettaglio').attr('value', false);						    	     
+								       }
+                                    [#else]                                   
+                                    if (!document.getElementById("id_tipologia_intervento_"+ id).checked) {
+                               	      	//piu' di un dettaglio: dececcato la tipologia---> dececco tutti dettagli
+                               	      	$('#id_tab_dett_intervento_'+id+' tbody tr th input:checkbox').attr('checked', false);
+                               	     	$('#id_tab_dett_intervento_'+id+' .checkDettaglio').attr('value', false);
+        							
+        			           		  }
+                                    [/#if]
+                                [/#if]							  
+						  }
+					     [/#if]
+					 [/#list]
+											
+				}
+
+				function impostaHiddenCheckedTipologiaIntervento(idTipologia){
+					 if (document.getElementById("id_tipologia_intervento_"+ idTipologia).checked) {
+						 $('#id_checked_tipologia_intervento_'+idTipologia).attr('value', "true");
+					 }else{
+						 $('#id_checked_tipologia_intervento_'+idTipologia).attr('value', "false");
+					 }
+				}
+
+
+				function impostaHiddenCheckedDettaglioIntervento(idDettIntervento){
+					 if (document.getElementById("id_dett_intervento_"+ idDettIntervento).checked) {
+						 $('#id_checked_dettaglio_intervento_'+idDettIntervento).attr('value', "true");
+					 }else{
+						 $('#id_checked_dettaglio_intervento_'+idDettIntervento).attr('value', "false");
+					 }
+				}
+					
+                function impostaCheckTipologiaIntervento(idTipologia, idDettaglio){					
+                	if (document.getElementById("id_dett_intervento_"+ idDettaglio).checked) {
+		                 $('#id_tipologia_intervento_'+idTipologia).attr('checked', true);
+		                 $('#id_checked_tipologia_intervento_'+idTipologia).attr('value', "true");
+					}											
+				}
+
+			    function aggiornaHiddenProgettiRS(idTipologia){
+				    if(idTipologia == '87'){
+			    	   if(document.getElementById("id_tipologia_intervento_"+ idTipologia).checked) {
+			    		   $('#id_eliminaProgettiRS').attr('name', "");
+				    	   $('#id_eliminaProgettiRS').attr('value', "");
+					   }else{
+						   $('#id_eliminaProgettiRS').attr('name', "_progettiRS");
+					       $('#id_eliminaProgettiRS').attr('value', "DELETED");
+					   }
+				    }
+                }
+
+
+				
+</script>  
+				
+<h4>
+	<span id="toggle_handle_cciaa" class="toggle_handle collapse">${FTL_PLACEHOLDER}(caratteristicheProgettoLabel)!}
+	 [@contextualErrors errorList=(messages._caratteristicheProgetto)![] /]
+	</span>
+</h4>
+
+
+<p style="font-style:italic; font-weight:normal;">La selezione della tipologia 'Piccoli progetti di ricerca e sviluppo' abilita la pagina 'Progetti di R&amp;S' ; <br/>
+la deselezione della tipologia 'Piccoli progetti di ricerca e sviluppo' disabilita la pagina 'Progetti di R&amp;S' e comporta la cancellazione dei relativi dati eventualmente gi&#224; inseriti</p>
+
+
+<br></br>
+	
+	<div class="toggle_target_cciaa">
+		
+		<table class="formTable" summary="....">
+		    <col width="5%" />
+			<col width="90%" />	
+			<col width="5%" />
+			
+			
+		    <tr>
+				<td></td>
+				<td>
+					<table summary="...." id="id_tipol_cat_intervento"
+						class="myovertable tablesorter target_toggle_checkbox_1">
+						[#if esistonoDettagli == "true"]
+						   <col width="5%"/>
+						   <col width="45%"/>								
+						   <col width="45%"/>	
+						[#else]
+						  <col width="5%"/>
+						  <col width="95%"/>								  
+						[/#if]							
+						<thead>
+							<tr>
+								<th scope="col"></th>
+								<th scope="col">Tipologie di intervento</th>	
+								[#if esistonoDettagli == "true"]																			
+								<th scope="col">Dettaglio intervento</th>
+								[/#if]
+							</tr>
+						</thead>
+						<tbody>	
+												   
+							[#list tipologiaInterventoList as item]									
+								[#if !(!item?has_content || !item?is_hash)]
+							    <tr>
+							    [#if item.checked == "true"]											  
+								<th scope="row"><input type="checkbox" class="noborder"
+									id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 											
+									checked="checked"			
+									onclick="impostaCheckDettaglio(${FTL_PLACEHOLDER}(item.idTipoIntervento)!});
+										     impostaHiddenCheckedTipologiaIntervento(${FTL_PLACEHOLDER}(item.idTipoIntervento)!});
+										     aggiornaHiddenProgettiRS(${FTL_PLACEHOLDER}(item.idTipoIntervento)!});"
+									 />
+								</th>
+								[#else]										
+								<th scope="row"><input type="checkbox" class="noborder"
+									id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 																														
+									onclick="impostaCheckDettaglio(${FTL_PLACEHOLDER}(item.idTipoIntervento)!});
+										     impostaHiddenCheckedTipologiaIntervento(${FTL_PLACEHOLDER}(item.idTipoIntervento)!});
+										     aggiornaHiddenProgettiRS(${FTL_PLACEHOLDER}(item.idTipoIntervento)!});"
+								    />
+								</th>
+								[/#if]
+								<td>${FTL_PLACEHOLDER}(item.descrTipoIntervento)!?html}
+								    <input type="hidden"  
+								           id="id_checked_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 	
+								           value="${FTL_PLACEHOLDER}(item.checked)!?html}"																				
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].checked"/>
+								    <input type="hidden" 
+									       value="${FTL_PLACEHOLDER}(item.idTipoIntervento)!?html}"																					
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].idTipoIntervento"/>
+									 <input type="hidden" 
+									       value="${FTL_PLACEHOLDER}(item.codTipoIntervento)!?html}"																					
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].codTipoIntervento"/>
+								    <input type="hidden" 
+									       value="${FTL_PLACEHOLDER}(item.descrTipoIntervento)!?html}"																					
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].descrTipoIntervento"/>											
+									<input type="hidden" 
+									       value="${FTL_PLACEHOLDER}(item.codCampoTipoIntervento)!?html}"																					
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].codCampoTipoIntervento"/>
+									<input type="hidden" 
+									       value="${FTL_PLACEHOLDER}(item.descrCampoTipoIntervento)!?html}"																					
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].descrCampoTipoIntervento"/>	
+									<input type="hidden" 
+									       value="${FTL_PLACEHOLDER}(item.flagObbligatorio)!?html}"																					
+									       name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].flagObbligatorio"/>
+										      
+								</td>
+								
+								[#if esistonoDettagli == "true"]
+								<td colspan="2"  style ="padding:0px">
+									<table style="margin-bottom:0px"
+									   id="id_tab_dett_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" >
+									 <colgroup>
+										<col width="10%" />
+										<col width="90%" />
+				
+									</colgroup>
+									[#if item.dettaglioInterventoList?has_content]	
+									[#list item.dettaglioInterventoList as item2]
+										<tr>
+										    [#if item2.checked == "true"]
+											<th scope="row"><input type="checkbox" class="noborder" 
+											    id="id_dett_intervento_${FTL_PLACEHOLDER}(item2.idDettIntervento)!}"
+												checked="checked" 
+												onclick="impostaCheckTipologiaIntervento(${FTL_PLACEHOLDER}(item2.idInterventoDettaglio)!}, ${FTL_PLACEHOLDER}(item2.idDettIntervento)!});
+													     impostaHiddenCheckedDettaglioIntervento(${FTL_PLACEHOLDER}(item2.idDettIntervento)!});"/>
+											</th> 
+											[#else]
+											<th scope="row"><input type="checkbox"
+												class="noborder" id="id_dett_intervento_${FTL_PLACEHOLDER}(item2.idDettIntervento)!}"									
+												onclick="impostaCheckTipologiaIntervento(${FTL_PLACEHOLDER}(item2.idInterventoDettaglio)!}, ${FTL_PLACEHOLDER}(item2.idDettIntervento)!});
+													     impostaHiddenCheckedDettaglioIntervento(${FTL_PLACEHOLDER}(item2.idDettIntervento)!});" />
+											</th>
+										    [/#if]
+										     <td>${FTL_PLACEHOLDER}(item2.descrDettIntervento)!}												     
+										        <input type="hidden" 
+										               class="checkDettaglio" 
+								                       id="id_checked_dettaglio_intervento_${FTL_PLACEHOLDER}(item2.idDettIntervento)!}" 	
+								                       value="${FTL_PLACEHOLDER}(item2.checked)!?html}"																				
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].checked"/>
+										        <input type="hidden" 
+									                   value="${FTL_PLACEHOLDER}(item2.idDettIntervento)!?html}"																					
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].idDettIntervento"/>
+										        <input type="hidden" 
+									                   value="${FTL_PLACEHOLDER}(item2.idInterventoDettaglio)!?html}"																					
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].idInterventoDettaglio"/>
+										        <input type="hidden" 
+									                   value="${FTL_PLACEHOLDER}(item2.codDettIntervento)!?html}"																					
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].codDettIntervento"/>
+										        <input type="hidden" 
+									                   value="${FTL_PLACEHOLDER}(item2.descrDettIntervento)!?html}"																					
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].descrDettIntervento"/>
+										        <input type="hidden" 
+									                   value="${FTL_PLACEHOLDER}(item2.codCampoDettIntervento)!?html}"																					
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].codCampoDettIntervento"/>
+										        <input type="hidden" 
+									                   value="${FTL_PLACEHOLDER}(item2.descrCampoDettIntervento)!?html}"																					
+									                   name="_caratteristicheProgetto.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].dettaglioInterventoList[${FTL_PLACEHOLDER}item2_index}].descrCampoDettIntervento"/>
+										       
+										     </td>
+										</tr>
+									[/#list]
+									[/#if]	
+									</table>                                           
+								</td>
+								[/#if]
+							    </tr>
+							    [/#if]
+							[/#list]
+						</tbody>
+					</table>
+				</td>
+				<td></td>
+			</tr>
+			
+			
+		</table>
+		<span>
+		<input id="id_eliminaProgettiRS" type="hidden" name="" value = ""  />
+		</span>
+</div>	

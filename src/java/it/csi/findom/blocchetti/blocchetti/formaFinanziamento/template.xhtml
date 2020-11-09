@@ -1,0 +1,587 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+ [#-- _formeFinanziamento --] <#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+
+<script type="text/javascript">
+
+
+	$(window).on('load',function () {
+	  // console.log('Finestra caricata completamente, compresa la grafica v3');
+	  
+	  <!-- inizio cessione credito -->
+	  <#if _forma_finanziamento_cessione_credito == "true" >
+	  	
+	  	// se variabile di configurazione a true, entro qui...
+	  	// console.log("Variabile di configurazione cessione credito = true ");
+	  	
+	  	    // definisco variabile per campo importo tipo text
+	  		var txt_importoCessioneCredito;
+	  	    
+			  [#if cessioneCreditoChecked =='si']
+			  	// console.log("dbg1 cb selezionata ");
+			  	$("#id_cessioneCredito").prop('checked', true);
+			  	
+			  	$("#id_descrizione_cessione_credito").show();
+				
+				// se il campo risulta vuoto errore
+				txt_importoCessioneCredito = $('#id_cessione_credito_importo').val();
+			 	// console.log("dbg2: txt_importoCessioneCredito risulta: " + txt_importoCessioneCredito);
+				 
+			  [#else]
+			  	// console.log("dbg3 NON selezionata ");
+			    // nascondi campo importo
+			    $("#id_descrizione_cessione_credito").hide();
+			    // console.log("dbg4 nascondo il campo imprto cessione del credito... ");
+			    txt_importoCessioneCredito = $('#id_cessione_credito_importo').val();
+			    // console.log("dbg5 importo cessione del credito vale: " + txt_importoCessioneCredito);
+			  [/#if]
+	  	
+			  // console.log("dbg6: verifico i cambi di stato della checkbox ");
+				 $("#id_cessioneCredito").change(function() 
+				 {
+				    if(this.checked) {
+				    	
+				    	// console.log("dbg7 la checkbox risulta selezionata...");
+				    	
+				    	var setValue = $( "#id_descrizione_cessione_credito" ).val();
+				    	$( "#id_descrizione_cessione_credito" ).val(setValue);
+				    	// console.log("dbg8 setValue vale: " + setValue);
+				    	
+				    	$("#id_descrizione_cessione_credito").show();
+				    	$("#id_cessioneCredito").prop('checked', true);
+				    	
+				    	if($('#id_cessioneCredito').is(":checked")){
+				    		// console.log("dbg9 Checkbox is checked." );
+				    		var cb_cessioneCredito = "si";
+				    		$('#id_cessioneCredito_hidden').val(cb_cessioneCredito);
+				    	}
+				    	else if($('#id_cessioneCredito').is(":not(:checked)")){
+				    		// console.log("dbg10 Checkbox is unchecked." );
+				    	}
+				    	
+				    	
+				    }else{
+				    	// console.log("dbg11 la checkbox NON risulta selezionata...");
+				    	
+				    	// console.log("dbg12 nascondo campo importo cessione credito...");
+				    	$('#id_descrizione_cessione_credito').hide();
+				    	
+				    	$("#id_descrizione_cessione_credito").val("");
+				    	// console.log("dbg13 resetto il campo importo a empty... : ");
+				    	
+						$("#id_cessioneCredito").prop('checked', false);
+				    	// console.log("dbg14 deseleziono la checkbox. ");
+				    	
+				    	$('#id_cessione_credito_importo').val("");
+						$('#id_cessione_credito_checked').val("");
+						$('#id_cessioneCredito_hidden').val("no");
+				    }
+				 });
+	  </#if>
+			  
+	  <!-- fine cessione credito   -->
+	  
+	  <#if _forma_finanziamento_is_checkbox_nascoste == "true" >
+			[#if (hd)?has_content]
+				[#list hd as item]
+			
+					idDaNascondere = "${FTL_PLACEHOLDER}item.str_idCheckbox}";
+					// console.log("aaa letN is: " + idDaNascondere);		
+
+					[#list formaFinanziamentoList as item]
+						[#if !(!item?has_content || !item?is_hash)]
+
+							idFormaFin = "${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}";
+							indexTable = "${FTL_PLACEHOLDER}item_index}";
+							
+							// console.log("*********************************");
+							// console.log("bbb idFormaFin is: " +  idFormaFin);	
+							// console.log("bbb indexTable is: " +  indexTable);
+							// console.log("*********************************");
+
+							if(idDaNascondere == idFormaFin){
+								// console.log("Sono uguali: " +idDaNascondere+ " - "+idFormaFin);
+								$('#id_importo_forma_agevolazione_'+indexTable).css('visibility', "hidden");
+								$('#id_importo_forma_agevolazione_'+indexTable).val("0,00");
+							}else{
+								// console.log("Non sono uguali: " +idDaNascondere+ " - "+idFormaFin);
+								$('#id_importo_forma_agevolazione_'+indexTable).css('visibility', "true");
+							}
+							
+						[/#if]
+					[/#list]
+					
+				[/#list]
+			[/#if]
+	  </#if>
+	});
+	
+  <#if _progetto_agevolrichiesta_importo_unico == "true" >
+	  function impostaHiddenCheckedFormaFinanziamento(idFormaFinanziamento, indiceTabella){
+		  //usata in caso di importo forma di agevolazione unico
+		  
+		  if (document.getElementById("id_forma_finanziamento_"+ idFormaFinanziamento).checked) {
+			  $('#id_checked_forma_finanziamento_'+indiceTabella).attr('value', "true");
+		  }else{
+			  $('#id_checked_forma_finanziamento_'+indiceTabella).attr('value', "false");
+		  }
+	  }
+	  
+  <#else>
+  
+	  function impostaHiddenCheckedFormaFinanziamento(idFormaFinanziamento, indiceTabella){
+		  //usata nel caso di importi forme di agevolazione in tabella
+		  // // console.log("dbg 4 : fx-impostaHiddenCheckedFormaFinanziamento: idFormaFinanziamento " + idFormaFinanziamento+", indiceTabella: "+indiceTabella);
+		  
+		  if (document.getElementById("id_forma_finanziamento_"+ idFormaFinanziamento).checked) {
+			  $('#id_checked_forma_finanziamento_'+indiceTabella).attr('value', "true");
+		  }else{
+			  $('#id_checked_forma_finanziamento_'+indiceTabella).attr('value', "false");
+			  $('#id_importo_forma_agevolazione_'+indiceTabella).attr('value', "");
+			  aggiornaTotale(indiceTabella);		 
+		  }
+	  }
+	  
+  </#if>
+  
+<#if _progetto_agevolrichiesta_importo_unico == "false" >
+
+	// // console.log("dbg 6: cfg bando: _progetto_agevolrichiesta_importo_unico == false");
+  //se il valore dell'importo forma di agevolazione e' significativo il checkbox della riga viene selezionato, altrimenti viene deselezionato
+  function selezionaRecord(idFormaAgevolazione, indiceTabella){
+	 var valoreCorrente = $('#id_importo_forma_agevolazione_'+indiceTabella).attr('value');
+	 
+	 if($.trim(valoreCorrente).length === 0){
+		 $('#id_forma_finanziamento_'+idFormaAgevolazione).removeAttr("checked");
+		 $('#id_checked_forma_finanziamento_'+indiceTabella).attr('value', "false");
+	 }else{
+		 $('#id_forma_finanziamento_'+idFormaAgevolazione).attr('checked', "checked");
+		 $('#id_checked_forma_finanziamento_'+indiceTabella).attr('value', "true");	
+	 }
+  }
+  
+  function aggiornaTotale(indice){ 
+	 //<![CDATA[      	 
+       var zero = 0;
+       var totale= 0; 
+		
+	   if(!verificaFormatoNumerico($("#id_importo_forma_agevolazione_"+indice).val()) ){
+		  $("#id_importo_forma_agevolazione_"+indice).addClass("error");					
+	   }else{
+		  //se il formato è corretto aggiorno il totale
+   		  $("#id_importo_forma_agevolazione_"+indice).removeClass("error");
+	   }
+   	   //ciclo sulla tabella per calcolare il totale degli importi
+   	   var numRecord = document.getElementById("id_forme_finanziamentoTbl").rows.length-2; //escludo riga intestazione e riga totale
+   		 
+ 	   $('#id_forme_finanziamentoTbl tr:not(".skip")').each(function(curIndice, row){			  
+	     if(curIndice < numRecord){		   
+	        if(verificaFormatoNumerico($("#id_importo_forma_agevolazione_"+curIndice).val()) ){
+			   totale = totale + Number(formattaDecimalePerCalc($("#id_importo_forma_agevolazione_"+curIndice).val()));
+			}	            
+		 }			
+	   });
+ 	      
+	   $("#id_formaFinanziamento_importoRichiesto").val(formattaDecimalePerVis(totale));
+   
+	 //]]>
+	  
+   }
+  
+</#if>
+
+function aggiornaContrFinanzRichiesti(){
+	//<![CDATA[
+	//se le forme di agevolazioni selezionate sono tutte dello stesso tipoFormaFinanziamento, il cmapo nascosto corrispondente viene 
+	//valorizzato con il valore dell'importo richiesto
+	  
+    <#if _progetto_agevolrichiesta_importo_unico == "true" >
+    
+         var numRecord = document.getElementById("id_forme_finanziamentoTbl").rows.length-1; //escludo riga intestazione
+         var tipoFormaFinRiferimento = "";
+         var tipoFormaFinOmogenee = true;
+	     $('#id_forme_finanziamentoTbl tr:not(".skip")').each(function(curIndice, row){			  
+		     if(curIndice < numRecord){	
+		    	
+		    	if( $('#id_checked_forma_finanziamento_'+curIndice).val() == 'true'){		    		
+		    		var curTipoFormaFin = $("#id_tipo_forma_finanziamento_"+curIndice).val();
+		            if(tipoFormaFinRiferimento === ""){
+		            	tipoFormaFinRiferimento = curTipoFormaFin;
+				    }else if(!(tipoFormaFinRiferimento===curTipoFormaFin)){
+				    	tipoFormaFinOmogenee = false;
+					}
+		    	}					            
+			 }			
+		 });
+
+		 if(tipoFormaFinOmogenee){
+			if(tipoFormaFinRiferimento === 'F'){
+				$('#id_totFinanziamentoRichiesto').attr('value',formattaDecimalePerVis($('#id_formaFinanziamento_importoRichiesto').val()));
+		    } else if(tipoFormaFinRiferimento === 'C'){		    	
+		    	$('#id_totContributoRichiesto').attr('value', formattaDecimalePerVis($('#id_formaFinanziamento_importoRichiesto').val()));
+		    }else{
+		    	$('#id_totContributoRichiesto').attr('value','');
+		    	$('#id_totFinanziamentoRichiesto').attr('value','');
+		    }
+
+	     }else{
+	    	 $('#id_totContributoRichiesto').attr('value','');
+	    	 $('#id_totFinanziamentoRichiesto').attr('value','');
+		 }
+	  
+	<#else>
+         //valorizzo i due campi id_totFinanziamentoRichiesto e id_totContributoRichiesto con la somma degli importi  
+         //indicati nelle righe selezionate, secondo i rispettivi tipo forma finanziamento 
+         var numRecord = document.getElementById("id_forme_finanziamentoTbl").rows.length-2; //escludo riga intestazione e riga totale         
+         var totFinRich = 0.0;
+         var totContrRich = 0.0;
+         $('#id_forme_finanziamentoTbl tr:not(".skip")').each(function(curIndice, row){			  
+            if(curIndice < numRecord){   	
+   	           if( $('#id_checked_forma_finanziamento_'+curIndice).val() == 'true'){  //considero solo le righe selezionate		    		
+   		          var curTipoFormaFin = $("#id_tipo_forma_finanziamento_"+curIndice).val();
+                  if(curTipoFormaFin === 'F'){
+                	  totFinRich = totFinRich + Number(formattaDecimalePerCalc($("#id_importo_forma_agevolazione_"+curIndice).val()));
+		          }else if(curTipoFormaFin === 'C'){
+		        	  totContrRich = totContrRich + Number(formattaDecimalePerCalc($("#id_importo_forma_agevolazione_"+curIndice).val()));
+			      }
+   	           }					            
+	        }			
+         });
+
+         $('#id_totFinanziamentoRichiesto').attr('value',formattaDecimalePerVis(totFinRich));
+         $('#id_totContributoRichiesto').attr('value',formattaDecimalePerVis(totContrRich)); 
+		  
+	</#if>
+	//]]>
+}
+
+
+  
+</script>
+
+[#if msgWarning?has_content || msgWarningCostiSuppl?has_content]	
+	<div class="stdMessagePanel feedback">
+	  <div class='feedWarning'>
+	  	${FTL_PLACEHOLDER}(msgWarning)!}
+	  	<br /> 
+	    ${FTL_PLACEHOLDER}(msgWarningCostiSuppl)!}
+	  	<br/>
+	  </div>
+	</div>
+[/#if]
+
+<h4>
+	<span id="toggle_handle_formaFinanziamento" class="toggle_handle collapse">
+		Forme di agevolazione
+		[@contextualErrors errorList=(messages._formaFinanziamento)![] /] 
+    </span>
+</h4>
+
+<div>
+	<table class="formTable" summary="....">		
+		<col width="25%" />
+		<col width="75%" />
+		<tr>			
+			<th>
+				<label for="id_importo_totale_spese">
+					Totale delle spese 
+				</label>
+			</th>
+			
+			<td style="vertical-align: bottom" >
+				<input type="text" name="importoPropostoSpese" value="${FTL_PLACEHOLDER}(importoProposto)!?html}" id="id_formaFinanziamento_importoProposto" readonly="readonly"  style="text-align: right"/>
+			</td>
+			
+			<td>
+				<input type="hidden" id="id_totContributoRichiesto" value="${FTL_PLACEHOLDER}(_formaFinanziamento.totContributoRichiesto)!?html}" name="_formaFinanziamento.totContributoRichiesto"/>
+				<input type="hidden" id="id_totFinanziamentoRichiesto" value="${FTL_PLACEHOLDER}(_formaFinanziamento.totFinanziamentoRichiesto)!?html}" name="_formaFinanziamento.totFinanziamentoRichiesto"/>			
+			</td>
+		</tr>
+		
+		<#if _progetto_agevolrichiesta_importo_unico == "true" >
+			<tr>			
+				<th>
+					<label for="id_importo_agevol_pubblica">
+						Importo dell'agevolazione pubblica richiesta 
+					</label>
+	    			<p style="font-style: italic; font-weight: normal;">
+	    				Nel caso in cui il bando preveda delle premialit&#224;, 
+	    				calcolare l'importo tenendo conto delle eventuali premialit&#224; richieste
+	    			</p>
+				</th>
+				
+				<td style="vertical-align: bottom" >
+					<input type="text" name="_formaFinanziamento.importoRichiesto" value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}" id="id_formaFinanziamento_importoRichiesto" style="text-align: right" onchange="aggiornaContrFinanzRichiesti();"/>
+					[@contextualErrors errorList=(messages._formaFinanziamento_importoRichiesto)![] /]
+				</td>
+				<td></td>
+			</tr>
+		</#if>
+	</table>
+</div>
+
+<div class="toggle_target_formaFinanziamento">
+    
+    <p style="font-style: italic; font-weight: normal;">
+    	Indicare le forme di agevolazione richieste:
+    </p>
+    
+    <#if _progetto_agevolrichiesta_importo_unico == "true" > 
+	  <table class="formTable" summary="....">
+		 <col width="5%" />
+		 <col width="90%" />
+		 <col width="5%" />
+		 <tr>
+			<td></td>
+			<td>
+				<table summary="...." id="id_forme_finanziamentoTbl" class="myovertable tablesorter target_toggle_checkbox_1">
+					<col width="5%" />
+					<col width="90%" />
+					
+					<thead>
+						<tr>
+							<th scope="col"></th>
+							<th scope="col">Forma di agevolazione</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						[#list formaFinanziamentoList as item]
+							[#if !(!item?has_content || !item?is_hash)]
+								<tr>
+								    [#if item.checked == "true"]
+									 	<th scope="row">
+									     	<input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" checked="checked" onclick="impostaHiddenCheckedFormaFinanziamento(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); aggiornaContrFinanzRichiesti();" />
+									  	</th>
+									[#else]										
+									  <th scope="row">
+									     <input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" onclick="impostaHiddenCheckedFormaFinanziamento(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); aggiornaContrFinanzRichiesti();" />
+									  </th>
+									[/#if]					
+									
+									<td>
+										${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!}
+									    
+									    <input type="hidden"  
+											   id="id_checked_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.checked)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].checked"/>
+									    
+									    <input type="hidden"  
+											   id="id_id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].idFormaFinanziamento"/>
+										
+										<input type="hidden"  
+											   id="id_cod_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.codFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].codFormaFinanziamento"/>
+											   
+										<input type="hidden"  
+											   id="id_descr_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].descrFormaFinanziamento"/>									   
+										
+										<input type="hidden"  
+											   id="id_tipo_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.tipoFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].tipoFormaFinanziamento"/>									   
+										<input type="hidden"  
+											   id="id_flagObbligatorio_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.flagObbligatorio)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].flagObbligatorio"/>		   
+										<input type="hidden"  
+											   id="id_percPrevista_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.percPrevista)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].percPrevista"/>		   
+									</td>
+									
+								</tr>
+							[/#if]
+						[/#list]
+					</tbody>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	  </table>
+	<#else>
+	  <table class="formTable" summary="....">
+		 <col width="5%" />
+		 <col width="90%" />
+		 <col width="5%" />
+		 
+		 <tr>
+			<td></td>
+			<td>
+				<!-- gestione cessione di credito inizio -->
+				<#if _forma_finanziamento_cessione_credito == "true">
+		  
+					<p style="font-style: italic; font-weight: normal;">
+						Eventuale cessione del credito / sconto in fattura:
+					</p>
+		
+					<table class="formTable" summary="....">
+							<col width="5%" />
+							<col width="70%" />
+							<col width="25%" />
+						
+							<thead>
+								<tr class="skip">
+									<th scope="col"></th>
+									<th scope="col">Eventuale cessione del credito / sconto in fattura:</th>
+									<th scope="col">Importo</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								  <tr>
+									<td>
+										
+										[#if "si" == (_formaFinanziamento.cessioneCreditoChecked)!] 
+											<input class="noborder" type="checkbox" name="_formaFinanziamento.cessioneCreditoChecked" id="id_cessioneCredito" value="si" checked="checked"  />
+										[#else]
+											<input class="noborder" type="checkbox" name="_formaFinanziamento.cessioneCreditoChecked" id="id_cessioneCredito" value="si" />
+										[/#if]
+										<input type="hidden" name="_formaFinanziamento.cessioneCreditoChecked" id="id_cessioneCredito_hidden" value="no" />
+									</td>
+									
+									<td>
+										<label for="lbl_cessioneCredito">
+											Eventuale cessione del credito / sconto in fattura:
+										</label>
+									</td>
+									
+									<td>
+										<input type="text" name="_formaFinanziamento.cessioneCreditoImporto" value="${FTL_PLACEHOLDER}(_formaFinanziamento.cessioneCreditoImporto)!?html}" id="id_descrizione_cessione_credito"  class="long"/>
+										<input type="hidden" name="_formaFinanziamento.cessioneCreditoImporto" value="${FTL_PLACEHOLDER}(_formaFinanziamento.cessioneCreditoImporto)!?html}" id="id_cessione_credito_importo"/>
+										<input type="hidden" name="_formaFinanziamento.cessioneCreditoChecked" value="${FTL_PLACEHOLDER}(_formaFinanziamento.cessioneCreditoChecked)!?html}" id="id_cessione_credito_checked"/>
+										[@contextualErrors errorList=(messages._formaFinanziamento_cessioneCredito)![] /]
+									</td>
+								</tr>
+							</tbody>
+					</table>
+				
+				</#if>
+				<!-- posizionmento cessione del credito fine   -->
+				
+				<table summary="...." id="id_forme_finanziamentoTbl"
+					class="myovertable tablesorter target_toggle_checkbox_1">
+					<col width="5%" />
+					<col width="70%" />
+					<col width="25%" />
+					
+					<thead>
+						<tr class="skip">
+							<th scope="col"></th>
+							<th scope="col">Forma di agevolazione</th>
+							<th scope="col">Importo</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						[#list formaFinanziamentoList as item]
+							[#if !(!item?has_content || !item?is_hash)]
+								<tr>
+									<th scope="row">
+								    [#if item.checked == "true"]							 
+									     <input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" checked="checked" onclick="impostaHiddenCheckedFormaFinanziamento(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); aggiornaContrFinanzRichiesti();" />							  
+									[#else]																	  
+									     <input type="checkbox" class="noborder" id="id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" onclick="impostaHiddenCheckedFormaFinanziamento(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); aggiornaContrFinanzRichiesti();" />							  
+									[/#if]	
+													
+									[#assign erroriFormeAgev = false] [#-- se ci sono errori diventa true e quindi non verra' visualizzata la versione priva di segnalazione di errore; se non ci sono errori resta false e quindi verra' visualizzata la versione priva di segnalazione di errore --]
+										[#if ((messages._formaFinanziamento_valore_testo_checkFormaFinanziamento)?has_content)]							
+											[#if messages._formaFinanziamento_valore_checkFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]													
+												 <span class="txtError">
+												    <img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+													<span>
+													    errore:<br />${FTL_PLACEHOLDER}messages._formaFinanziamento_valore_testo_checkFormaFinanziamento?first}
+											        </span>
+												 </span>
+												</th>
+												[#assign erroriFormeAgev = true] [#-- settaggio che viene fatto in caso di errore e che evita di visualizzare la versione senza segnalazioni di errore--]
+										    [/#if]
+									    [/#if] 
+									      
+									<td>
+										${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!}
+									    <input type="hidden"  
+											   id="id_checked_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.checked)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].checked"/>
+									    
+									    <input type="hidden"  
+											   id="id_id_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].idFormaFinanziamento"/>
+										
+										<input type="hidden"  
+											   id="id_cod_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.codFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].codFormaFinanziamento"/>
+											   
+										<input type="hidden"  
+											   id="id_descr_forma_finanziamento_${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!}" 	
+									           value="${FTL_PLACEHOLDER}(item.descrFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].descrFormaFinanziamento"/>
+											   
+										<input type="hidden"  
+											   id="id_tipo_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.tipoFormaFinanziamento)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].tipoFormaFinanziamento"/>
+										<input type="hidden"  
+											   id="id_flagObbligatorio_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.flagObbligatorio)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].flagObbligatorio"/>	
+										<input type="hidden"  
+											   id="id_percPrevista_forma_finanziamento_${FTL_PLACEHOLDER}(item_index)}" 	
+									           value="${FTL_PLACEHOLDER}(item.percPrevista)!?html}"																				
+											   name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].percPrevista"/>										   
+									</td>
+																
+									<td> 							    
+									    [#assign erroriFormeAgev = false] [#-- se ci sono errori diventa true e quindi non verra' visualizzata la versione priva di segnalazione di errore; se non ci sono errori resta false e quindi verra' visualizzata la versione priva di segnalazione di errore --]
+									    	[#if ((messages._formaFinanziamento_valore_testo)?has_content)]
+									    		[#if messages._formaFinanziamento_valore_idFormaFinanziamento?seq_contains(item.idFormaFinanziamento)]
+									    							    
+									    			<input type="text" id="id_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(item.importoFormaAgevolazione)!?html}" name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoFormaAgevolazione" class="long" style="border: 1px solid red; text-align:right;" onchange="selezionaRecord(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); aggiornaTotale(${FTL_PLACEHOLDER}item_index}); aggiornaContrFinanzRichiesti();" />							
+												    <span class="txtError">
+												    	<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+														<span>
+														    errore:<br />${FTL_PLACEHOLDER}messages._formaFinanziamento_valore_testo?first}
+												        </span>
+												    </span>
+									
+									    			[#assign erroriFormeAgev = true] [#-- settaggio che viene fatto in caso di errore e che evita di visualizzare la versione senza segnalazioni di errore--]
+									    		[/#if]
+									    	[/#if]
+									    [#if erroriFormeAgev==false] [#-- non ci sono errori, quindi si visualizza questa versione senza segnalazioni di errore (ovvero senza senza x rossa e senza bordo rosso) --]
+									      <input type="text" id="id_importo_forma_agevolazione_${FTL_PLACEHOLDER}item_index}" value="${FTL_PLACEHOLDER}(item.importoFormaAgevolazione)!?html}" name="_formaFinanziamento.formaFinanziamentoList[${FTL_PLACEHOLDER}item_index}].importoFormaAgevolazione" class="long" style="text-align: right" onchange="selezionaRecord(${FTL_PLACEHOLDER}(item.idFormaFinanziamento)!},${FTL_PLACEHOLDER}item_index}); aggiornaTotale(${FTL_PLACEHOLDER}item_index}); aggiornaContrFinanzRichiesti();" />
+									    [/#if]							
+									</td>							
+								</tr>
+							[/#if]
+						[/#list]
+                        <tr class="skip">
+							<th scope="row"></th>
+							<td>
+								<strong>Totale: </strong>
+							</td>
+							<td>
+								<input type="text" id="id_formaFinanziamento_importoRichiesto" value="${FTL_PLACEHOLDER}(importoRichiesto)!?html}" name="_formaFinanziamento.importoRichiesto" class="long"	style="text-align: right" readonly="readonly"  />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+						
+			</td>
+			<td></td>
+		</tr>
+	  </table>
+	</#if>	
+</div>

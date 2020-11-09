@@ -1,0 +1,99 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _indicatori RO --]
+
+<#-- note di dipendenze da altre commonalities: la pagina in cui compare questa sezione e' abilitata se _caratteristicheProgetto sono state salvate -->
+
+<h4>
+	<span id="toggle_handle_indicatori" class="toggle_handle collapse">Indicatori</span>
+</h4>
+<div class="toggle_target_indicatori">
+
+ <p style="font-style: italic; font-weight: normal;">
+	<#if _indicatori_tipo_ante_post == "false" >
+	 		Nel caso in cui vengano compilati indicatori di tipo 'Ante' è obbligatorio compilare i corrispondenti indicatori di tipo 'Post'
+	</#if>
+ </p>
+	<table class="formTable" summary="....">
+		<col width="10%" />
+		<col width="80%" />
+		<col width="10%" />
+		<tr>
+			<td></td>
+			<td>
+				<table class="myovertable tablesorter" summary="....">
+					<col width="25%" />
+					<col width="75%" />
+
+					<thead>
+						<tr>
+							<th>Tipo indicatore</th>
+
+							<th style="padding: 0px;">
+								<table style="margin-bottom: 0px;">
+									<colgroup>										
+										<col width="50%" />
+										<col width="10%" />
+										<col width="15%" />
+									</colgroup>
+									<thead>										
+										<th scope="col">Descrizione</th>
+										<th scope="col">Unità di misura</th>
+										<th scope="col">Valore</th>
+									</thead>
+								</table>
+
+							</th>
+						</tr>
+					</thead>
+
+					[#list tipoIndicatoreList as item]
+					<tr>
+						<td>${FTL_PLACEHOLDER}(item.descrTipoIndicatore)!?html}	
+						   
+						</td>
+						<td colspan="3" style="padding: 0px;">
+							<table style="margin-bottom: 0px;">
+								<colgroup>									
+									<col width="50%" />
+									<col width="10%" />
+									<col width="15%" />
+								</colgroup>
+								<tbody>
+									[#list item.indicatoriList as item2]
+									<tr>
+									[#if item2.linkIndicatore?has_content]										
+										<td>${FTL_PLACEHOLDER}(item2.descrIndicatore)!}	
+										<a href="${FTL_PLACEHOLDER}(item2.linkIndicatore)!?html}" target="_blank">
+				                           <img style="vertical-align: bottom" 
+				                                src="/ris/resources/application/finanziamenti/findomweb/css/im/ico_help_s.png" border="0"
+				                                title="${FTL_PLACEHOLDER}(item2.linkIndicatore)!?html}" height="20px" width="20px"/></a> 									   
+										</td>
+								    [#else]
+								        <td>${FTL_PLACEHOLDER}(item2.descrIndicatore)!}										   
+										</td>
+								    [/#if]
+										<td>${FTL_PLACEHOLDER}(item2.unitaMisuraIndicatore)!}</td>
+										<td>
+									    <input type="text"								
+								               id="id_valore_indicatore_${FTL_PLACEHOLDER}(item.idTipoIndicatore)!}_${FTL_PLACEHOLDER}(item2.idIndicatore)!}"
+								               value="${FTL_PLACEHOLDER}(item2.valoreIndicatore)!?html}" 
+								               name="_indicatori.tipoIndicatoreList[${FTL_PLACEHOLDER}item_index}].indicatoriList[${FTL_PLACEHOLDER}item2_index}].valoreIndicatore"								              
+								               class="medium" disabled="disabled" style="text-align:right; width: 80%"
+							            />									
+									   </td>
+									</tr>
+									[/#list]
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					[/#list]
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+</div>

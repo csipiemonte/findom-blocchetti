@@ -1,0 +1,493 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _abstractProgetto RO --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<h4>
+	<span id="toggle_handle_02" class="toggle_handle collapse">${FTL_PLACEHOLDER}(abstractProgettoLabel)!}</span>
+</h4>
+<div class="toggle_target_02">
+	<table class="formTable" summary="....">
+		<col width="29%" />
+		<col width="65%" />
+		
+[#-- elaborazione in corso per Jira 1335  inizio --]
+	<#if _abstract_corealizzazione == "true" >
+    <tr>
+		<th>
+			<label for="id_abstractProgetto_corealizzazione">
+				Progetto in forma associata (Corealizzazione)
+			</label>
+		</th>
+		<td>
+		
+		   <table summary="....">
+				<col width="2%" />
+				<col width="5%" />
+				<col width="5%" />
+				<col width="2%" />
+				<col width="5%" />
+				<col width="81%" />
+				<tr>
+					[#-- Gestione corealizzazione in caso di Si --]	
+					<td style="border:none;">
+					    [#if "S" == (_abstractProgetto.corealizzazione)!]
+						    <input class="noborder" type="radio" name="_abstractProgetto.corealizzazione" id="id_abstractProgetto_corealizzazione" value="S" disabled="disabled" checked="checked" tabindex="1"/>
+						[#else]
+							<input class="noborder" type="radio" name="_abstractProgetto.corealizzazione" id="id_abstractProgetto_corealizzazione" value="S" disabled="disabled" tabindex="1" />
+						[/#if]
+					</td>
+										
+					<td style="border:none;">
+						<label for="id_abstractProgetto_corealizzazione">
+							Si
+						</label>
+					</td>	
+				
+					<td style="border:none;"></td>
+					[#-- Gestione corealizzazione in caso di No --]	
+					<td style="border:none;">
+					    [#if "N" == (_abstractProgetto.corealizzazione)!]
+						    <input class="noborder" type="radio" name="_abstractProgetto.corealizzazione" id="id_abstractProgetto_corealizzazione" value="N" disabled="disabled" checked="checked" tabindex="2"/>
+						[#else]
+							<input class="noborder" type="radio" name="_abstractProgetto.corealizzazione" id="id_abstractProgetto_corealizzazione" value="N" disabled="disabled" tabindex="2" />
+						[/#if]
+					</td>
+								
+					<td style="border:none;">
+						<label for="id_abstractProgetto_corealizzazione">
+							No
+						</label>				
+					</td>
+					
+					<td style="border:none;"></td>
+				</tr>
+		   </table>		
+		</td>
+	</tr>
+</#if>
+[#-- elaborazione in corso per Jira 1335  fine --]
+
+		<#if _abstract_acronimo == "true" >        
+				<tr>
+					<th><label for="id_abstractProgetto_acronimo">Acronimo progetto</label>
+					<p style="font-style: italic; font-weight: normal;">In caso di progetto congiunto, per l'accettazione della domanda &#232; fondamentale che l'acronimo sia identico per tutti i soggetti aderenti</p></th>
+					 <td>
+					 	<input type="text" name="_abstractProgetto.acronimo" value="${FTL_PLACEHOLDER}(_abstractProgetto.acronimo)!?html}" id="id_abstractProgetto_acronimo" class="medium" readonly="readonly" />
+					</td>
+				</tr>		
+		</#if>
+
+		[#-- inizio - CR-1 Voucher --]
+		<#if _abstract_titoloProgetto == "true" >
+		
+		<tr>
+			<th>
+				<label for="id_abstractProgetto_titolo">${FTL_PLACEHOLDER}(titoloProgettoLabel)!}</label>
+				<p style="font-style: italic; font-weight: normal;">
+						Il testo deve essere parlante (no acronimi), 
+						in lingua italiana, senza contenere caratteri speciali 
+						(comprese le lettere accentate), numeri e punteggiatura, massimo di 255 caratteri. 
+						Non si possono utilizzare titoli gi&#224; precedentemente utilizzati.
+				</p>
+			</th>		
+			<#if _abstract_titolo_nascosto == "true" >
+				<td>
+					<input 
+						type="hidden" name="_abstractProgetto.titolo"
+						value="Partecipazione a fiere estere"
+						id="id_abstractProgetto_titolo" maxlength="255"
+						class="[@classMediumError errorList=(messages._abstractProgetto_titolo)![] /]"
+						readonly="readonly" />
+				</td>
+			<#else>
+				<td>
+					<input 
+						type="text" name="_abstractProgetto.titolo"
+						value="${FTL_PLACEHOLDER}(_abstractProgetto.titolo)!?html}"
+						id="id_abstractProgetto_titolo" maxlength="255"
+						class="[@classMediumError errorList=(messages._abstractProgetto_titolo)![] /]"
+					 readonly="readonly"/>
+				</td>
+			</#if>
+		</tr>
+		</#if>
+		[#-- fine - CR-1 Voucher --]
+		
+		<tr>
+			<th><label for="id_abstractProgetto_sintesi">${FTL_PLACEHOLDER}(sintesiProgettoLabel)!}</label>
+				<p style="font-style: italic; font-weight: normal;">Breve descrizione dell'intervento.<br/>Max.: 1.300 caratteri.</p></th>
+			<td><textarea id="id_abstractProgetto_sintesi"
+					      name="_abstractProgetto.sintesi"					
+					      rows="5" cols="150" readonly="readonly" >${FTL_PLACEHOLDER}(_abstractProgetto.sintesi)!?html}
+				</textarea> 				
+			</td>
+		</tr>
+		
+		
+		[#-- Jira: 1883 Amianto --]
+		<#if _abstract_campoNumericoOpzionale == "true" >
+				<tr>
+					<th>
+						<label for="lbl_abstractProgetto_metriQuadrati">
+							Indicare metri quadri stimati di coperture
+						</label>
+					</th>
+					<td>
+						<input 
+							type="text" 
+							name="_abstractProgetto.mqCoperture" 
+							value="${FTL_PLACEHOLDER}(_abstractProgetto.mqCoperture)!?html}" readonly="readonly"
+							id="id_abstractProgetto_mqCoperture" />
+					</td>
+				</tr>
+		</#if>
+		
+		
+		<#if _relazioni_assunzioni_progetto == "true" >
+		        <tr>
+					<th><label for="id_abstractProgetto_rel_assunz_prog">Descrivere la "relazione" tra le nuove assunzioni e il progetto presentato / finanziato con la linea a) Empowerment internazionale- Strumento finanziario</label></th>
+					<td><textarea id="id_abstractProgetto_rel_assunz_prog" 
+					              name="_abstractProgetto.relAssunzioniProgetto" 
+					              rows="5" cols="150" readonly="readonly">${FTL_PLACEHOLDER}(_abstractProgetto.relAssunzioniProgetto)!?html}
+					    </textarea>
+					</td>
+				</tr>
+		</#if>		
+
+
+
+		<#if _abstract_durata_prevista != "999">
+			<tr>
+				<th><label for="id_abstractProgetto_durataPrevista">Durata prevista (in mesi)</label>
+				</th>
+				<td><input type="text" id="id_abstractProgetto_durataPrevista"
+						name="_abstractProgetto.durataPrevista" maxlength="3"
+						value="${FTL_PLACEHOLDER}(_abstractProgetto.durataPrevista)!?html}"
+						class="[@classShortError errorList=(messages._abstractProgetto_durataPrevista)![] /]"
+						readonly="readonly" />
+				</td>
+			</tr>
+		</#if>	
+	
+	
+	
+		[#--  :: inizio Jira: 1561 --]
+		<#if _abstract_rb_collaborazione == "true" >
+			<tr>
+				<th>
+					<label for="lbl_abstractProgetto_collaborazione">Collaborazione</label>
+				</th>
+			
+				<td>
+					   <table summary="....">
+							<col width="2%" />
+							<col width="25%" />
+							<col width="5%" />
+							<col width="2%" />
+							<col width="25%" />
+							<col width="41%" />
+							
+							<tr>
+								<td style="border:none;">
+	
+									[#if "PSC" == (_abstractProgetto.collaborazione)!]
+										<input 
+											class="noborder" 
+											type="radio" 
+											name="_abstractProgetto.collaborazione" 
+											id="id_abstractProgetto_collaborazione" 
+											value="PSC" 
+											checked="checked" disabled="disabled"
+											tabindex="1"/>
+									[#else]
+										<input 
+											class="noborder" 
+											type="radio" 
+											name="_abstractProgetto.collaborazione" 
+											id="id_abstractProgetto_collaborazione" 
+											value="PSC" 
+											disabled="disabled"
+											tabindex="1" />
+									[/#if]
+									
+								</td>
+													
+								<td style="border:none;">
+									<label for="lbl_abstractProgetto_collaborazione">
+										Progetti / Studi in collaborazione
+									</label>
+								</td>	
+							
+								<td style="border:none;"></td>
+										
+								<td style="border:none;">
+								
+									[#if "NC" == (_abstractProgetto.collaborazione)!]
+										<input 
+											class="noborder" 
+											type="radio" 
+											name="_abstractProgetto.collaborazione" 
+											id="id_abstractProgetto_collaborazione" 
+											value="P" 
+											checked="checked" disabled="disabled"
+											tabindex="2"/>
+									[#else]
+										<input 
+											class="noborder" 
+											type="radio" 
+											name="_abstractProgetto.collaborazione" 
+											id="id_abstractProgetto_collaborazione" 
+											value="NC" 
+											disabled="disabled"
+											tabindex="2" />
+									[/#if]
+									
+								</td>
+											
+								<td style="border:none;">
+									<label for="lbl_abstractProgetto_collaborazione">
+										Nessuna collaborazione
+									</label>				
+								</td>
+								
+								<td style="border:none;">
+								</td>
+							</tr>
+					   </table>		
+					</td>
+				</tr>
+		</#if>
+		[#--  :: fine elaborazione Jira: 1561 --]
+	
+	
+		
+		<#if _abstract_ruolo == "true" >
+			    <tr>
+				<th><label for="id_abstractProgetto_ruolo">Ruolo del presentatore nel progetto</label></th>
+				<td>
+				
+				   <table summary="....">
+						<col width="2%" />
+						<col width="5%" />
+						<col width="5%" />
+						<col width="2%" />
+						<col width="5%" />
+						<col width="81%" />
+						<tr>
+						<td style="border:none;">
+						    [#if "C" == (_abstractProgetto.ruolo)!]
+							    <input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="C" checked="checked" tabindex="1" disabled="disabled"/>
+							[#else]
+								<input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="C" tabindex="1" disabled="disabled"/>
+							[/#if]
+						</td>				
+						<td style="border:none;">
+						<label for="id_abstractProgetto_ruolo">Capofila</label>
+						</td>	
+						
+						<td style="border:none;"></td>
+									
+						<td style="border:none;">
+						    [#if "P" == (_abstractProgetto.ruolo)!]
+							    <input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="P" checked="checked" tabindex="2" disabled="disabled"/>
+							[#else]
+								<input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="P" tabindex="2" disabled="disabled"/>
+							[/#if]
+						</td>				
+						<td style="border:none;">
+						<label for="id_abstractProgetto_ruolo">Partner</label>				
+						</td>
+						<td style="border:none;"></td>
+						</tr>
+				   </table>		
+				   
+				</td>
+				</tr>
+		</#if>
+
+
+
+		[#if ruoloProgettoIR2?has_content]
+			    <tr>
+				<th><label for="id_abstractProgetto_ruolo">Ruolo del presentatore nel progetto</label></th>
+				<td>
+				
+				   <table summary="....">
+						<col width="2%" />
+						<col width="5%" />
+						<col width="5%" />
+						<col width="2%" />
+						<col width="5%" />
+						<col width="5%" />
+						<col width="2%" />
+						<col width="5%" />
+						<col width="5%" />
+						<col width="64%" />
+						<tr>
+						<td style="border:none;">
+						    [#if "I" == (_abstractProgetto.ruolo)!]
+							    <input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="I" checked="checked" tabindex="1" disabled="disabled"/>
+							[#else]
+								<input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="I" tabindex="1" disabled="disabled"/>
+							[/#if]
+						</td>				
+						<td style="border:none;">
+						<label for="id_abstractProgetto_ruolo">Imprenditore individuale</label>
+						</td>	
+						
+						<td style="border:none;"></td>
+						<td style="border:none;">
+						    [#if "C" == (_abstractProgetto.ruolo)!]
+							    <input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="C" checked="checked" tabindex="1" disabled="disabled"/>
+							[#else]
+								<input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="C" tabindex="1" disabled="disabled"/>
+							[/#if]
+						</td>				
+						<td style="border:none;">
+						<label for="id_abstractProgetto_ruolo">Capofila</label>
+						</td>	
+						
+						<td style="border:none;"></td>
+									
+						<td style="border:none;">
+						    [#if "P" == (_abstractProgetto.ruolo)!]
+							    <input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="P" checked="checked" tabindex="2" disabled="disabled"/>
+							[#else]
+								<input class="noborder" type="radio" name="_abstractProgetto.ruolo" 
+									   id="id_abstractProgetto_ruolo" value="P" tabindex="2" disabled="disabled"/>
+							[/#if]
+						</td>				
+						<td style="border:none;">
+						<label for="id_abstractProgetto_ruolo">Partner</label>				
+						</td>
+						<td style="border:none;"></td>
+						</tr>
+				   </table>		
+				   
+				</td>
+				</tr>		
+		[/#if]		
+		
+
+		<#if _abstract_cup == "true" >
+			[#if "IM" != stereotipoDomanda]
+			<tr>
+				<th><label for="id_abstractProgetto_titolo">Codice CUP</label>
+				<p style="font-style: italic; font-weight: normal;">Specificare il codice CUP se gi&#224;� disponibile</p>
+				</th>
+				<td><input type="text" name="_abstractProgetto.codiceCUP"
+					value="${FTL_PLACEHOLDER}(_abstractProgetto.codiceCUP)!?html}"
+					id="id_abstractProgetto_codiceCUP"
+					class="mediumError" readonly="readonly"/>
+				</td>
+			</tr>
+			[/#if]
+		</#if>
+
+		<#if _abstractProgetto_data_inizio_fine_progetto == "true" >
+			
+			<#if _abstractProgetto_visualizza_solo_data_inizio_progetto == "true" >
+				[#-- Versione custom jira:  --]
+				[#-- Data inizio progetto --]
+				<tr>
+					<#if _abstractProgetto_label_data_inizio_progetto?has_content>
+						 <th  colspan="1">
+								<label for="id_abstractProgetto_dataInizioProgetto">${_abstractProgetto_label_data_inizio_progetto}</label>
+						 </th>
+					<#else>
+						  <th> 
+								<label for="id_abstractProgetto_dataInizioProgetto">Data inizio progetto</label> 
+						  </th>
+					</#if>
+							
+						<td>
+						   <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" name="_abstractProgetto.dataInizioProgetto" width="8%" 
+						   		  value="${FTL_PLACEHOLDER}(_abstractProgetto.dataInizioProgetto)!?html}" 
+						   		  id="id_abstractProgetto_dataInizioProgetto" maxlength="10" disabled="disabled"
+						   		  class="[@classShortError errorList=(messages._abstractProgetto_dataInizioProgetto)![] /]  calendarioCustom2" />
+						  		  <span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+						</td>
+				</tr>
+			<#else>
+				[#-- Versione std --]
+				[#-- Data inizio progetto --]
+				<tr>
+					<#if _abstractProgetto_label_data_inizio_progetto?has_content>
+						 <th  colspan="1">
+								<label for="id_abstractProgetto_dataInizioProgetto">${_abstractProgetto_label_data_inizio_progetto}</label>
+						 </th>
+					<#else>
+						  <th> 
+								<label for="id_abstractProgetto_dataInizioProgetto">Data inizio progetto</label> 
+						  </th>
+					</#if>
+							
+						<td>
+						   <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" name="_abstractProgetto.dataInizioProgetto" width="8%" 
+						   		  value="${FTL_PLACEHOLDER}(_abstractProgetto.dataInizioProgetto)!?html}" 
+						   		  id="id_abstractProgetto_dataInizioProgetto" maxlength="10" disabled="disabled"
+						   		  class="[@classShortError errorList=(messages._abstractProgetto_dataInizioProgetto)![] /]  calendarioCustom2" />
+						  		  <span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+						</td>
+				</tr>
+				
+				[#-- Data fine progetto --]	
+				<tr>
+					<#if _abstractProgetto_label_data_fine_progetto?has_content>
+						 <th  colspan="1">
+						 	<label for="id_abstractProgetto_dataFineProgetto">${_abstractProgetto_label_data_fine_progetto}</label>
+						 </th>
+					<#else>
+					  	 <th> 
+							<label for="id_abstractProgetto_dataFineProgetto">Data fine progetto</label> 
+						 </th>
+					</#if>
+					<td>
+					   <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" name="_abstractProgetto.dataFineProgetto" width="8%"
+					   		  value="${FTL_PLACEHOLDER}(_abstractProgetto.dataFineProgetto)!?html}" 
+					   		  id="id_abstractProgetto_dataFineProgetto" maxlength="10" disabled="disabled"
+					   		  class="[@classShortError errorList=(messages._abstractProgetto_dataFineProgetto)![] /]  calendarioCustom2" />
+					  		  <span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+					</td>
+				</tr>
+			</#if>
+		</#if>
+
+[#--  :: Jira: 1589 --]
+		<#if _importo_complessivo_business_plan == "true" >	
+			<tr>
+				<th>
+					<label for="lbl_abstractProgetto_importo_complessivo_business_plan">
+						Importo complessivo del business plan
+					</label>
+				</th>
+				<td>
+					<input 
+						type="text" 
+						id="id_abstractProgetto_importo_complessivo_business_plan"
+						name="_abstractProgetto.importo_complessivo_business_plan"
+						value="${FTL_PLACEHOLDER}(_abstractProgetto.importo_complessivo_business_plan)!?html}"
+						pattern="\d+(,\d{1,2})?" 
+						title="Solo valori numerici maggiore di 0 con al massimo 2 decimali (Es.: 12345,67)"
+						style="text-align: right" 
+						readonly="readonly"
+						class="[@classShortError errorList=(messages._abstractProgetto_importo_complessivo_business_plan)![] /]" />
+				</td>
+			</tr>
+		</#if>
+
+	</table>
+</div>

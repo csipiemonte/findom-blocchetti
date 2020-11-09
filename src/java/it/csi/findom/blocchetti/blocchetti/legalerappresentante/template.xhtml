@@ -1,0 +1,700 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _legaleRappresentante --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<script type="text/javascript">
+
+$(window).on('load',function () {
+	
+   	if($('#id_legRappr_luogoResidenzaEst').attr('checked')=='checked'){
+   		resetDatiProvinciaComune('residenza');
+
+   	} else if ($('#id_legRappr_luogoResidenzaIt').attr('checked')=='checked') {
+   		resetDatiStatoEstero('residenza');
+ 	}
+ 	
+    <#if _legaleRappresentante_presenza_soggetto_delegato == "true" >
+      	[#if presenzaSD=='si']
+     	    rimuoviEliminazioneSoggettoDelegato();
+     	    [#else]
+     	    impostaEliminazioneSoggettoDelegato();
+       [/#if]
+    </#if> 	
+       
+    <#if _legalerappresentante_res_prov_piemonte == "true" >
+	    //  :  
+	    [#if svuotaCampiResidenza == "true" ]
+	    	// $("#id_legRappr_comuneResidenza").val("");
+			$("#id_legRappr_indirizzo").val("");
+	    	$("#id_legRappr_numcivico").val("");
+	    	$("#id_legRappr_cap").val("");
+	    [/#if]
+    </#if> 
+});
+
+
+function myTrim() {
+  var x = document.getElementById("id_legRappr_cap");
+  // console.log(x);
+  x.value = x.value.trim();
+  // console.log(x.value);
+}
+
+			       
+ // id_legRappr_luogoNascitaIt
+function resetDatiProvinciaComune(localita) {
+	if (localita == "nascita") {
+		$("#id_legRappr_provinciaNascita").val("");
+		$("#id_legRappr_provinciaNascitaDescrizione").val("");
+		$("#id_legRappr_siglaProvinciaNascita").val("");
+		$("#id_legRappr_comuneNascita").val("");
+		$("#id_legRappr_comuneNascitaDescrizione").val("");
+		$("#id_legRappr_luogoNascitaIt").attr("checked", false); // decheck il radio Italia
+		$("#id_legRappr_comuneNascita").prop('disabled', 'disabled'); // Jira 1331: disabilito select-box Comune 
+		$("#id_legRappr_luogoNascitaEst").attr("checked", true); // check il radio Stato Estero
+	}
+	else if (localita == "residenza") {
+		$("#id_legRappr_provinciaResidenza").val("");
+		$("#id_legRappr_provinciaResidenzaDescrizione").val("");
+		$("#id_legRappr_siglaProvinciaResidenza").val("");
+		$("#id_legRappr_comuneResidenza").val("");
+		$("#id_legRappr_comuneResidenzaDescrizione").val("");
+		$("#id_legRappr_luogoResidenzaIt").attr("checked", false); // decheck il radio Italia
+		$("#id_legRappr_luogoResidenzaEst").attr("checked", true); // check il radio Stato Estero
+		$("#id_legRappr_comuneResidenza").prop('disabled', 'disabled'); // Jira 1331: disabilito select-box Comune 
+		
+		$('#id_legRappr_statoEsteroCittaResidenza').attr("readonly", false);
+	}
+}
+
+function resetDatiStatoEstero(localita) {
+	if (localita == "nascita") {
+		$("#id_legRappr_statoEsteroNascita").val("");
+		$("#id_legRappr_statoEsteroNascitaDescrizione").val("");
+		$("#id_legRappr_statoEsteroCittaNascita").val("");
+		$("#id_legRappr_luogoNascitaIt").attr("checked", true); // check il radio Italia
+		$("#id_legRappr_luogoNascitaEst").attr("checked", false); // decheck il radio Stato Estero
+	}
+	else if (localita == "residenza") {
+		$("#id_legRappr_statoEsteroResidenza").val("");
+		$("#id_legRappr_statoEsteroResidenzaDescrizione").val("");
+		$("#id_legRappr_statoEsteroCittaResidenza").val("");
+		$('#id_legRappr_statoEsteroCittaResidenza').attr("readonly", true);
+		$("#id_legRappr_luogoResidenzaIt").attr("checked", true); // check il radio Italia
+		$("#id_legRappr_luogoResidenzaEst").attr("checked", false); // decheck il radio Stato Estero
+	}
+}
+
+function setDescrizioneProvinciaComune(localita) {
+	if (localita == "nascita") {
+		$("#id_legRappr_provinciaNascitaDescrizione").val($("#id_legRappr_provinciaNascita option:selected").text());
+		$("#id_legRappr_comuneNascitaDescrizione").val($("#id_legRappr_comuneNascita option:selected").text());
+	}
+	else if (localita == "residenza") {
+		$("#id_legRappr_provinciaResidenzaDescrizione").val($("#id_legRappr_provinciaResidenza option:selected").text());
+		$("#id_legRappr_comuneResidenzaDescrizione").val($("#id_legRappr_comuneResidenza option:selected").text());
+	}
+}
+
+function setDescrizioneStatoEstero(localita) {
+	if (localita == "nascita") {
+		$("#id_legRappr_statoEsteroNascitaDescrizione").val($("#id_legRappr_statoEsteroNascita option:selected").text());
+	}
+	else if (localita == "residenza") {
+		$("#id_legRappr_statoEsteroResidenzaDescrizione").val($("#id_legRappr_statoEsteroResidenza option:selected").text());
+	}
+}
+
+function setDescrizioneTipoDocRiconoscimento(){
+	$("#id_legRappr_descrTipoDocRiconoscimento").val($("#id_legRappr_idTipoDocRiconoscimento option:selected").text());
+}
+
+
+<#if _legaleRappresentante_presenza_soggetto_delegato == "true" >						
+    function rimuoviEliminazioneSoggettoDelegato(){							
+		$('#id_eliminaSoggettoDelegato').attr('name', "");
+    	$('#id_eliminaSoggettoDelegato').attr('value', "");
+    }
+
+    function impostaEliminazioneSoggettoDelegato(){	
+    	$('#id_eliminaSoggettoDelegato').attr('name', "_soggettoDelegato");
+    	$('#id_eliminaSoggettoDelegato').attr('value', "DELETED");						  								
+	}
+</#if>
+
+$(function() {
+    $('#id_legRappr_codiceFiscale').focusout(function() {
+        // Uppercase-ize contents
+        this.value = this.value.toLocaleUpperCase();
+    });
+});
+					
+function setValImportLRFromAAEP() {
+	//alert("setValImportLRFromAAEP");
+	$("#id_importLRFromAAEP").val("si");
+	$("#id_newLRNotFromAAEP").val("no");
+	// AA - inixio	
+	[#if (mostraMsgDatiUltimaDomanda == "S")]
+		$("#id_lrFromAAEP").val("no");
+	[#else]
+		$("#id_lrFromAAEP").val("si");
+	[/#if]
+	
+	// AA - fine
+	$("#id_lraaep").click();
+}
+
+function setValNewLRNotFromAAEP() {
+	//alert("setValNewLRNotFromAAEP");
+	$("#id_importLRFromAAEP").val("no");
+	$("#id_newLRNotFromAAEP").val("si");
+	// AA - inizio
+	$("#id_lrFromAAEP").val("no");
+	// AA - fine
+	$("#id_lraaep").click();
+}
+
+</script>
+
+
+	[#if (mostraMsgSelLR == "S")]
+		<div class="stdMessagePanel feedback">
+			<div class='feedWarning'>Attenzione! Selezionare il legale rappresentante per poter procedere.</div>
+		</div>
+	[/#if]
+	
+	
+	[#-- visualizzo solo se esistono LR su AAEP ???? --]
+	
+	[#if listLRAAEP?has_content]
+
+		[#if (mostraMsgAAEP == "S")]
+			<div class="stdMessagePanel feedback">
+				[#if (mostraMsgDatiUltimaDomanda == "S")]
+					<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sull'ultima domanda inviata. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+				[#else]
+					<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sul Registro delle Imprese e/o sull'ultima domanda inviata. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+				[/#if]
+			</div>
+		[/#if]
+
+		[#if (visMsgLRdaAAEP == "true")]
+			<h5>Legali rappresentanti presenti nel Registro delle Imprese</h5>
+		[/#if]
+	
+		[#if (visMsgLRdaUltimaDomanda == "true")]
+			<h5>Legali rappresentanti presenti nell'ultima domanda inviata</h5>
+		[/#if]
+
+		<br/>
+			<div>
+				<table class="formTable" summary="....">
+					<col width="30%" />
+					<col width="70%" />
+					
+					<tr>
+						<th> 
+							<label for="id_legRappr_legRappres">
+								Legali Rappresentanti
+							</label> 
+							[@contextualErrors errorList=(messages._legaleRappresentante)![] /]
+						</th>
+						
+						<td>
+							<select name="identificativoLRsuAAEP" id="id_legRappr_legRappres" class="long" >
+							
+								[#if listLRAAEP?size > 1]
+									<option value="">Seleziona...</option>
+								[/#if]
+				
+								[#list (listLRAAEP)?sort_by("codiceFiscale") as item]
+									[#if item.codiceFiscale == (LRMap.codiceFiscale)!]
+										<option value="${FTL_PLACEHOLDER}item.idAzienda!?html}/${FTL_PLACEHOLDER}item.idFonteDato!?html}/${FTL_PLACEHOLDER}item.idPersona!?html}" selected="selected">${FTL_PLACEHOLDER}item.cognome} ${FTL_PLACEHOLDER}item.nome} (${FTL_PLACEHOLDER}item.codiceFiscale})</option>
+									[#else]
+										<option value="${FTL_PLACEHOLDER}item.idAzienda!?html}/${FTL_PLACEHOLDER}item.idFonteDato!?html}/${FTL_PLACEHOLDER}item.idPersona!?html}">${FTL_PLACEHOLDER}item.cognome} ${FTL_PLACEHOLDER}item.nome} (${FTL_PLACEHOLDER}item.codiceFiscale}) </option>
+									[/#if]
+								[/#list]
+							
+							</select>
+							[@contextualErrors errorList=(messages._legaleRappresentante_identificativoLRsuAAEP)![] /]							
+						</td>
+						
+					</tr>
+					
+					<tr>
+						<td></td>
+						
+						<td>
+							<div class="commandPanel noSpaceButton">
+								<div class="button left">
+									<span  class="highlighted"> 
+										<input type="button" value="Importa" onclick="setValImportLRFromAAEP();"/>
+									</span>
+								</div>
+								<div class="button left">
+									<span  class="highlighted"> 
+										<input type="button" value="Inserisci nuovo" onclick="setValNewLRNotFromAAEP();"/>
+									</span>
+								</div>
+							</div>							
+							<input type="hidden" name="importLRFromAAEP" id="id_importLRFromAAEP" value="" />
+							<input type="hidden" name="newLRNotFromAAEP" id="id_newLRNotFromAAEP" value="" />
+							<input type="hidden" name="_legaleRappresentante.lrFromAAEP" id="id_lrFromAAEP" value="${FTL_PLACEHOLDER}(_legaleRappresentante.lrFromAAEP)!?html}" />
+							
+							<!-- SaveCommand -->
+							<input type="submit" name="_command" value="LabelCommand:C_LR_AAEP;RenderCommand:1300" hidden="hidden" id="id_lraaep"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+	[/#if]
+
+	[#if viewFromLR == "si"]
+		<h4>
+			<#if _legaleRappresentante_toggle_dinamico_label?has_content >
+				 <span id="toggle_handle_LegRappr" class="toggle_handle collapse">
+					<label for="id_indirizzo_pec">
+						${_legaleRappresentante_toggle_dinamico_label}
+					</label>
+				 </span>
+			<#else>
+				<span id="toggle_handle_LegRappr" class="toggle_handle collapse">
+					Legale rappresentante
+				</span>
+			</#if>
+		</h4>
+		         
+		         
+		[#-- Jira: 1824 - --]
+		<#if _lr_domanda_firmata_dgt_label?has_content >
+			 <p style="font-style:italic; font-weight:normal;">
+			 	<label for="id_indirizzo_pec">${_lr_domanda_firmata_dgt_label}</label>
+			 </p>
+		<#else>
+			  <p style="font-style:italic; font-weight:normal;">
+			  	<label for="id_indirizzo_pec"></label>
+			  </p>
+		</#if>
+	    
+	    <br/><br/>                          
+	
+		<div class="toggle_target_LegRappr">
+	
+			<table class="formTable" summary="....">
+				<col width="30%" />
+				<col width="70%" />							
+				
+				<tr>
+					<th> 
+						<label for="id_legRappr_codiceFiscale">
+							Codice Fiscale
+						</label> 
+					</th>
+					<td>
+						<input type="text" name="_legaleRappresentante.codiceFiscale" value="${FTL_PLACEHOLDER}(LRMap.codiceFiscale)!?html?upper_case}" id="id_legRappr_codiceFiscale" maxlength="16" class="[@classShortError errorList=(messages._legaleRappresentante_codiceFiscale)![] /]" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_codiceFiscale)![] /]
+					</td>
+				</tr>
+				
+				<tr>
+					<th> 
+						<label for="id_legRappr_cognome">
+							Cognome
+						</label> 
+					</th>
+					<td>
+						<input type="text" name="_legaleRappresentante.cognome" value="${FTL_PLACEHOLDER}(LRMap.cognome)!?html}" id="id_legRappr_cognome" class="[@classLongError errorList=(messages._legaleRappresentante_cognome)![] /]" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_cognome)![] /]
+					</td>
+				</tr>
+				<tr>
+					<th> <label for="id_legRappr_nome">Nome</label> </th>
+					<td>
+						<input type="text" name="_legaleRappresentante.nome" value="${FTL_PLACEHOLDER}(LRMap.nome)!?html}" id="id_legRappr_nome" class="[@classLongError errorList=(messages._legaleRappresentante_nome)![] /]" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_nome)![] /]
+					</td>
+				</tr>	
+									
+					<#if _legaleRappresentante_genere == "true">
+						<tr>
+							<th>
+								<label for="id_legaleRappresentante_genere">
+									Genere
+								</label>
+							</th>
+							<td>
+								<select name="_legaleRappresentante.genere" id="id_legaleRappresentante_genere" class="short">
+									<option value=""></option>
+										
+										[#if "M" == (LRMap.genere)!]
+											<option value="M" selected="selected">MASCHILE</option>
+										[#else]
+											<option value="M">MASCHILE</option>
+										[/#if]
+										
+										[#if "F" == (LRMap.genere)!]
+											<option value="F" selected="selected">FEMMINILE</option>
+										[#else]
+											<option value="F">FEMMINILE</option>
+										[/#if]
+								</select>
+								[@contextualErrors errorList=(messages._legaleRappresentante_genere)![] /]
+							</td>
+						</tr>
+					</#if>
+				
+				<tr>
+					<th>Luogo di nascita</th>
+					<td>
+						[#if "Italia" == (LRMap.luogoNascita)!]
+							<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legRappr_luogoNascitaIt" value="Italia" checked="checked" onclick="resetDatiStatoEstero('nascita')" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_luogoNascita)![] /]
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legRappr_luogoNascitaIt" value="Italia" onclick="resetDatiStatoEstero('nascita')" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_noLuogoNascita)![] /]
+					[/#if]
+					
+					<label for="id_legRappr_luogoNascitaIt">Italia</label>
+		
+					<div id="italiaSel" class="spaceBottom">
+						<label for="id_legRappr_provinciaNascita">Provincia</label>
+						<select name="_legaleRappresentante.provinciaNascita" id="id_legRappr_provinciaNascita" class="medium" 
+						        onchange="resetDatiStatoEstero('nascita'); $('#id_reload_S1_P3').click()">
+							<option value=""></option>
+							[#list provinciaList as item]
+								[#if item.codice == (LRMap.provinciaNascita)!]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[#else]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[/#if]
+							[/#list]
+						</select>
+						<input type="hidden" name="_legaleRappresentante.provinciaNascitaDescrizione" id="id_legRappr_provinciaNascitaDescrizione" value="${FTL_PLACEHOLDER}(LRMap.provinciaNascitaDescrizione)!?html}" />
+						<input type="hidden" name="_legaleRappresentante.siglaProvinciaNascita" id="id_legRappr_siglaProvinciaNascita" value="${FTL_PLACEHOLDER}(_legaleRappresentante_siglaProvinciaNascita)!?html}" />
+						
+						<label for="id_legRappr_comuneNascita">Comune</label>
+						<select name="_legaleRappresentante.comuneNascita" id="id_legRappr_comuneNascita" class="medium" 
+						        onchange="setDescrizioneProvinciaComune('nascita')">
+							<option value=""></option>
+							[#list comuneNascitaList as item]
+								[#if item.codice == (LRMap.comuneNascita)!]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[#else]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[/#if]
+							[/#list]
+						</select>
+						<input type="hidden" name="_legaleRappresentante.comuneNascitaDescrizione" id="id_legRappr_comuneNascitaDescrizione" value="${FTL_PLACEHOLDER}(LRMap.comuneNascitaDescrizione)!?html}" />
+					</div>
+		
+					[#if "Estero" == (LRMap.luogoNascita)!]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legRappr_luogoNascitaEst" value="Estero" checked="checked" onclick="resetDatiProvinciaComune('nascita')" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_luogoNascita)![] /]
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoNascita" id="id_legRappr_luogoNascitaEst" value="Estero" onclick="resetDatiProvinciaComune('nascita')" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_noLuogoNascita)![] /]
+					[/#if]
+		
+					<label for="id_legRappr_luogoNascitaEst">Stato estero</label>
+					<div id="esteroSel">
+						<label for="id_legRappr_statoEsteroNascita">Stato estero</label>
+						<select name="_legaleRappresentante.statoEsteroNascita" id="id_legRappr_statoEsteroNascita" class="medium" 
+						        onchange="resetDatiProvinciaComune('nascita'); setDescrizioneStatoEstero('nascita');">
+							<option value=""></option>
+							[#list statoEsteroList as item]
+								[#if item.codice?string == (LRMap.statoEsteroNascita)!]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[#else]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[/#if]
+							[/#list]
+						</select>
+						<input type="hidden" name="_legaleRappresentante.statoEsteroNascitaDescrizione" 
+						       id="id_legRappr_statoEsteroNascitaDescrizione" 
+						       value="${FTL_PLACEHOLDER}(LRMap.statoEsteroNascitaDescrizione)!?html}" />
+														
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th> 
+					<label for="id_dataNascita">Data di nascita</label>  </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.dataNascita" 
+					value="${FTL_PLACEHOLDER}(LRMap.dataNascita)!?html}" 
+					id="id_dataNascita" maxlength="10" 
+					class="[@classShortError errorList=(messages._legaleRappresentante_dataNascita)![] /]  calendarioCustom2" />								
+					[@contextualErrors errorList=(messages._legaleRappresentante_dataNascita)![] /]
+					<span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+				</td>
+			</tr>
+			
+			<tr>
+				<th> 
+					<label for="id_legRappr_idTipoDocRiconoscimento">Tipo documento di riconoscimento</label>
+				</th>
+				<td >
+					<select name="_legaleRappresentante.documento.idTipoDocRiconoscimento" id="id_legRappr_idTipoDocRiconoscimento"
+					        class="[@classMediumError errorList=(messages._legaleRappresentante_idTipoDocRiconoscimento)![] /]"	
+							onchange="setDescrizioneTipoDocRiconoscimento()">
+							<option value=""></option>	
+							[#list tipoDocRiconoscimentoList as item]
+								[#if item.codice?string == (LRMap.documento.idTipoDocRiconoscimento)!]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[#else]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[/#if]
+							[/#list]
+						</select>
+						[@contextualErrors errorList=(messages._legaleRappresentante_idTipoDocRiconoscimento)![] /]
+						<input type="hidden" name="_legaleRappresentante.documento.descrizioneTipoDocRiconoscimento" 
+						       id="id_legRappr_descrTipoDocRiconoscimento" 
+							   value="${FTL_PLACEHOLDER}(LRMap.documento.descrizioneTipoDocRiconoscimento)!?html}" />
+				</td>
+				</tr>
+		
+				<tr>
+				<th><label for="id_legRappr_numDocumentoRiconoscimento">N. documento</label></th>
+				<td>
+					<input type="text" name="_legaleRappresentante.documento.numDocumentoRiconoscimento" 
+					       value="${FTL_PLACEHOLDER}(LRMap.documento.numDocumentoRiconoscimento)!?html}" 
+						   id="id_legRappr_numDocumentoRiconoscimento" 
+						   class="[@classMediumError errorList=(messages._legaleRappresentante_numDocumentoRiconoscimento)![] /]" />
+					[@contextualErrors errorList=(messages._legaleRappresentante_numDocumentoRiconoscimento)![] /]
+				</td>
+			    </tr>
+			
+			    <tr>
+				<th><label for="id_legRappr_docRilasciatoDa">Rilasciato da</label> </th>
+				<td>
+					<input type="text" name="_legaleRappresentante.documento.docRilasciatoDa" 
+					       value="${FTL_PLACEHOLDER}(LRMap.documento.docRilasciatoDa)!?html}" 
+						   id="id_legRappr_docRilasciatoDa" 
+						   class="[@classLongError errorList=(messages._legaleRappresentante_docRilasciatoDa)![] /]" />
+					[@contextualErrors errorList=(messages._legaleRappresentante_docRilasciatoDa)![] /]
+				</td>
+				</tr>
+			
+		    <tr>
+				<th>
+					<label for="id_legRappr_dataRilascioDoc">Data rilascio</label> 
+				</th>
+				<td>
+					<input type="text" name="_legaleRappresentante.documento.dataRilascioDoc" maxlength="10" 
+					       value="${FTL_PLACEHOLDER}(LRMap.documento.dataRilascioDoc)!?html}" 
+						   id="id_legRappr_dataRilascioDoc" 									
+						   class="[@classShortError errorList=(messages._legaleRappresentante_dataRilascioDoc)![] /]  calendarioCustom2" />
+					[@contextualErrors errorList=(messages._legaleRappresentante_dataRilascioDoc)![] /]
+					<span class="txt_help">Inserire il formato: gg/mm/aaaa</span>
+				</td>
+			</tr>
+		</table>
+	
+	<#if _legaleRappresentante_presenza_residenza =="true">
+		<h5>Residenza</h5>
+		<table class="formTable" summary="....">
+			<col width="30%" />
+			<col width="70%" />
+			<tr>
+				<th>Stato </th>
+				<td >
+					[#if "Italia" == (LRMap.luogoResidenza)!]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legRappr_luogoResidenzaIt" value="Italia" checked="checked" onclick="resetDatiStatoEstero('residenza')" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_luogoResidenza)![] /]
+					[#else]
+						<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legRappr_luogoResidenzaIt" value="Italia" onclick="resetDatiStatoEstero('residenza')" />
+						[@contextualErrors errorList=(messages._legaleRappresentante_noLuogoResidenza)![] /]
+					[/#if]								
+	
+					<label for="id_legRappr_luogoResidenzaIt">Italia</label>
+					<div id="italiaSel_res" class="spaceBottom">
+						<label for="id_legRappr_provinciaResidenza">Provincia</label>
+						<select name="_legaleRappresentante.provinciaResidenza" 
+								id="id_legRappr_provinciaResidenza" class="medium" 
+						        onchange="resetDatiStatoEstero('residenza'); $('#id_reload_S1_P3').click()">
+							<option value=""></option>
+							<#if _legalerappresentante_res_prov_piemonte =="true">
+							
+								[#list provinciaResidenzaList as item]
+									[#if item.codice == (LRMap.provinciaResidenza)!]
+										<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+									[#else]
+										<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+									[/#if]
+								[/#list]
+								
+							<#else>
+							
+								[#list provinciaList as item]
+									[#if item.codice == (LRMap.provinciaResidenza)!]
+										<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+									[#else]
+										<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+									[/#if]
+								[/#list]
+							
+							</#if>
+						</select>
+						<input type="hidden" name="_legaleRappresentante.provinciaResidenzaDescrizione" id="id_legRappr_provinciaResidenzaDescrizione" value="${FTL_PLACEHOLDER}(LRMap.provinciaResidenzaDescrizione)!?html}" />
+						<input type="hidden" name="_legaleRappresentante.siglaProvinciaResidenza" id="id_legRappr_siglaProvinciaResidenza" value="${FTL_PLACEHOLDER}(_legaleRappresentante_siglaProvinciaResidenza)!?html}" />
+						
+						<label for="id_legRappr_comuneResidenza">Comune</label>
+						<select name="_legaleRappresentante.comuneResidenza" id="id_legRappr_comuneResidenza" 
+						        class="medium" onchange="setDescrizioneProvinciaComune('residenza')">
+							<option value=""></option>
+							[#list comuneResidenzaList as item]
+								[#if item.codice == (LRMap.comuneResidenza)!]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[#else]
+									<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[/#if]
+							[/#list]
+						</select>
+						<input type="hidden" name="_legaleRappresentante.comuneResidenzaDescrizione" id="id_legRappr_comuneResidenzaDescrizione" value="${FTL_PLACEHOLDER}(LRMap.comuneResidenzaDescrizione)!?html}" />	
+					</div>
+	
+					
+					<#if _legalerappresentante_res_prov_piemonte =="false">
+							[#if "Estero" == (LRMap.luogoResidenza)!]
+								<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legRappr_luogoResidenzaEst" value="Estero" checked="checked" onclick="resetDatiProvinciaComune('residenza')" />
+								[@contextualErrors errorList=(messages._legaleRappresentante_luogoResidenza)![] /]
+							[#else]
+								<input class="noborder" type="radio" name="_legaleRappresentante.luogoResidenza" id="id_legRappr_luogoResidenzaEst" value="Estero" onclick="resetDatiProvinciaComune('residenza')" />
+								[@contextualErrors errorList=(messages._legaleRappresentante_noLuogoResidenza)![] /]
+							[/#if]
+					
+							<label for="id_legRappr_luogoResidenzaEst">Stato estero</label>
+							<div id="esteroSel_res">
+								<label for="id_legRappr_statoEsteroResidenza">Stato estero</label>
+								<select name="_legaleRappresentante.statoEsteroResidenza" 
+								        id="id_legRappr_statoEsteroResidenza" class="medium" 
+									    onchange="resetDatiProvinciaComune('residenza'); setDescrizioneStatoEstero('residenza');">
+									<option value=""></option>
+									[#list statoEsteroList as item]
+										[#if item.codice?string == (LRMap.statoEsteroResidenza)!]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[#else]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[/#if]
+									[/#list]
+								</select>
+								<input type="hidden" name="_legaleRappresentante.statoEsteroResidenzaDescrizione" 
+									   id="id_legRappr_statoEsteroResidenzaDescrizione" 
+									   value="${FTL_PLACEHOLDER}(LRMap.statoEsteroResidenzaDescrizione)!?html}" />
+								
+								<label for="id_legRappr_statoEsteroCittaResidenza">Città estera</label>
+								<input type="text" name="_legaleRappresentante.cittaEsteraResidenza" value="${FTL_PLACEHOLDER}(LRMap.cittaEsteraResidenza)!?html}" 
+									   id="id_legRappr_statoEsteroCittaResidenza" 
+									   class="[@classMediumError errorList=(messages._legaleRappresentante_cittaEsteraResidenza)![] /]" />
+								       [@contextualErrors errorList=(messages._legaleRappresentante_cittaEsteraResidenza)![] /]
+							</div>
+					</#if>
+				
+				</td>
+			</tr>
+	
+			<tr>
+				<th> 
+					<label for="id_legRappr_indirizzo">Indirizzo</label> 
+				</th>
+				<td >
+					<input type="text" name="_legaleRappresentante.indirizzo" 
+					        value="${FTL_PLACEHOLDER}(LRMap.indirizzo)!?html}" id="id_legRappr_indirizzo" 
+							class="[@classMediumError errorList=(messages._legaleRappresentante_indirizzo)![] /]" style="width:80%"/>
+						[@contextualErrors errorList=(messages._legaleRappresentante_indirizzo)![] /]
+				
+				    <label for="id_legRappr_numcivico">N. civico</label>
+				    <input type="text" name="_legaleRappresentante.numCivico" 
+				           value="${FTL_PLACEHOLDER}(LRMap.numCivico)!?html}" id="id_legRappr_numcivico" 
+						   class="[@classShortError errorList=(messages._legaleRappresentante_numcivico)![] /]" style="width:5%"/>
+						   [@contextualErrors errorList=(messages._legaleRappresentante_numcivico)![] /]
+	
+				</td>
+			</tr>
+			<tr>
+			     <th> <label for="id_legRappr_cap">CAP</label>  </th>
+			     <td >							  
+				    <input 
+				    	type="text" 
+				    	name="_legaleRappresentante.cap"
+				    	value="${FTL_PLACEHOLDER}(LRMap.cap)!?html}"
+				    	onkeyup="myTrim()"
+					    id="id_legRappr_cap" pattern="\d*"
+					    class="[@classShortError errorList=(messages._legaleRappresentante_cap)![] /]" />
+					[@contextualErrors errorList=(messages._legaleRappresentante_cap)![] /]
+				  
+				 </td> 
+			</tr>
+		</table>
+	</#if>		
+	
+<#if _legaleRappresentante_presenza_soggetto_delegato == "true" >		
+	<h5>Delegato</h5>
+	<p style="font-style:italic; font-weight:normal;">Valorizzare se si intende indicare un soggetto delegato con potere di firma che firmerà digitalmente il documento</p>
+				
+	<table class="formTable" summary="....">
+		<col width="30%" />
+		<col width="70%" />						
+		<tr>
+			<th> <label for="id_presenza_soggetto_delegato_si">Soggetto delegato</label>
+				<p style="font-style:italic; font-weight:normal;">Selezionare l'opzione 'No' implica eliminare eventuali dati inseriti nella sezione 'Soggetto delegato'</p>
+				</th>
+			<td>
+			[#if "si" == (LRMap.presenzaSoggettoDelegato)!]
+			<input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+				  id="id_presenza_soggetto_delegato_si" value="si" checked="checked" tabindex="1" onclick="rimuoviEliminazioneSoggettoDelegato()"/> Sì
+					
+			<input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+				  id="id_presenza_soggetto_delegato_no" value="no" tabindex="2" onclick="impostaEliminazioneSoggettoDelegato()" /> No
+			[#else]
+			<input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+				  id="id_presenza_soggetto_delegato_si" value="si" tabindex="1" onclick="rimuoviEliminazioneSoggettoDelegato()"/> Sì
+				  
+			<input class="noborder" type="radio" name="_legaleRappresentante.presenzaSoggettoDelegato" 
+				  id="id_presenza_soggetto_delegato_no" value="no" checked="checked" tabindex="2" onclick="impostaEliminazioneSoggettoDelegato()"/> No
+			[/#if]												   
+			</td>										
+		</tr>
+   </table>
+   <span>
+    <input id="id_eliminaSoggettoDelegato" type="hidden" name="_soggettoDelegato" value = "DELETED"  />
+   </span>
+
+ </#if>	
+	
+	<input type="submit" id="id_reload_S1_P3" name="_command" value="LabelCommand:C_reload_S1_P1;RenderCommand:1300" hidden="hidden" />
+</div>
+[/#if]		
+				
+[#if (mostraMsgDatiUltimaDomanda == "N")]				
+	[#if legRapprAAEP?has_content ]
+		[#--if presenzaLRAAEP=="si" --]
+		[#-- salvo i dati provenienti da AAEP --]			
+		<input type="hidden" name="_legaleRappresentanteAAEP.codiceFiscale" value="${FTL_PLACEHOLDER}(legRapprAAEP.codiceFiscale)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.cognome" value="${FTL_PLACEHOLDER}(legRapprAAEP.cognome)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.nome" value="${FTL_PLACEHOLDER}(legRapprAAEP.nome)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.genere" value="${FTL_PLACEHOLDER}(legRapprAAEP.sesso)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.luogoNascita" value="${FTL_PLACEHOLDER}(legRapprAAEP.luogoNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.siglaProvinciaNascita" value="${FTL_PLACEHOLDER}(legRapprAAEP.siglaProvNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.comuneNascitaDescrizione" value="${FTL_PLACEHOLDER}(legRapprAAEP.descrComuneNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.comuneNascita" value="${FTL_PLACEHOLDER}(legRapprAAEP.codComuneNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.statoEsteroNascita" value="${FTL_PLACEHOLDER}(legRapprAAEP.codStatoNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.dataNascita" value="${FTL_PLACEHOLDER}(legRapprAAEP.dataNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.luogoResidenza" value="${FTL_PLACEHOLDER}(legRapprAAEP.luogoResidenza)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.siglaProvinciaResidenza" value="${FTL_PLACEHOLDER}(legRapprAAEP.siglaProvResidenza)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.comuneResidenzaDescrizione" value="${FTL_PLACEHOLDER}(legRapprAAEP.descrComuneRes)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.comuneResidenza" value="${FTL_PLACEHOLDER}(legRapprAAEP.codComuneRes)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.cap" value="${FTL_PLACEHOLDER}(legRapprAAEP.capResidenza)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.indirizzo" value="${FTL_PLACEHOLDER}(legRapprAAEP.descrToponimoResid)!} ${FTL_PLACEHOLDER}(legRapprAAEP.viaResidenza)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.numCivico" value="${FTL_PLACEHOLDER}(legRapprAAEP.numCivicoResid)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.statoEsteroNascitaDescrizione" value="${FTL_PLACEHOLDER}(legRapprAAEP.descrStatoNascita)!?html}" />
+		<input type="hidden" name="_legaleRappresentanteAAEP.statoEsteroResidenzaDescrizione" value="${FTL_PLACEHOLDER}(legRapprAAEP.descrStatoRes)!?html}" />			
+	[/#if]
+[/#if]
+				
+				
+				

@@ -1,0 +1,18 @@
+﻿name@version*;license*;copyrights*;end-of-support;dependencies;language;repository;email;URL
+aaeporch-cxfclient-2.0.0.jar;"Apache-2.0; MIT (Rilasciata da CSI Piemonte su richiesta)";;;;java;;;
+aggregatore-4.1.12.jar;"Apache-2.0; MIT (Rilasciata da CSI Piemonte su richiesta)";;;;java;;;
+commons-io-2.5.jar;Apache-2.0;;;;java;;;
+commons-lang3-3.1.jar;Apache-2.0;;;;java;;;
+commons-validator-1.4.0.jar;Apache-2.0;;;;java;;;
+freemarker-2.3.26.jar;Apache-2.0;;;;java;;;
+guava-18.0.jar;Apache-2.0;;;;java;;;
+jackson-core-2.6.2.jar;Apache-2.0;;;;java;;;
+jackson-databind-2.6.2.jar;Apache-2.0;;;;java;;;
+log4j-1.2.8.jar;Apache-2.0;;;;java;;;
+postgresql-9.4-1201.jdbc4.jar;"PostgreSQL; BSD-2-Clause";;;;java;;;
+spring-beans-4.1.2.RELEASE.jar;Apache-2.0;;;;java;;;
+spring-context-4.1.2.RELEASE.jar;Apache-2.0;;;;java;;;
+spring-core-4.1.2.RELEASE.jar;Apache-2.0;;;;java;;;
+spring-jdbc-4.1.2.RELEASE.jar;Apache-2.0;;;;java;;;
+spring-tx-4.1.2.RELEASE.jar;Apache-2.0;;;;java;;;
+util-beanlocatorfactory-1.0.1.jar;Apache-2.0;;;;java;;;

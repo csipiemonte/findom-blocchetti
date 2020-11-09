@@ -1,0 +1,262 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+--]
+<script type="text/javascript">
+	function impostaCheckbox(name, valueSel, valueNotSel){
+		var id = '#id_check' + name;
+		var idHidden = '#id_hidden' + name;
+		if($(id).attr('checked')=='checked'){
+			$(idHidden).attr("value", valueSel);
+		} else {
+			$(idHidden).attr("value", valueNotSel);
+		}
+	}
+	function impostaRadioButton(name, inputName, valueSel, valueNotSel){
+		var id = '#id_radio' + name;
+		var idHidden = '#id_hidden' + name + '_' + inputName;
+		if($(id).attr('checked')=='checked'){
+			$("input[id$=" + inputName + "]").each(function() {
+			    this.value=valueNotSel;
+			});
+			$(idHidden).attr("value", valueSel);
+		} else {
+			$(idHidden).attr("value", valueNotSel);
+		}
+	}
+
+	// function schiantata
+	$(function() {
+
+	    function cleanRadioChildren(name){
+   		 	$("input[type='radio'][name$='"+ name +"']").prop('checked', false);
+		 	$("input[type='hidden'][id$='"+ name +"']").attr('value', 'NO');
+		}
+	})
+
+	</script>
+
+	<h4>
+		<span id="toggle_handle_dichiarazioni" class="toggle_handle collapse">Dichiarazioni</span>
+	</h4>
+	<div class="toggle_target_dichiarazioni" id="id_dich">
+
+	 [#if dettaglioDichiarazioniInputMap?has_content]
+	   [#assign key_list = dettaglioDichiarazioniInputMap?keys ]
+	 [#else]
+	   [#-- entro qui se non ci sono configurazioni su tabella findom_d_conf_dichiarazioni --]
+	   [#assign key_list = ""]
+	 [/#if]
+
+
+	[#if (dichiarazioniList?has_content)]	
+
+  		<table class="formDich" summary="livello1">
+  		<col width="3%" /><col width="77%" /><col width="20%" />
+		[#list dichiarazioniList as item]	
+	  	  [#if (item?has_content)]			  	[#-- primo livello --]
+		 	[#if item.typeField?has_content]
+
+			  [#if item.typeField == "radio"]
+			  <tr>
+				<td>			 
+				[#assign seq_index = key_list?seq_index_of(item.outputNameField) ]	 
+				[#if item.valueSelectedField == (_dichiarazioniSA.listaVoci[seq_index].valore)! ]
+				
+				    <input class="${FTL_PLACEHOLDER}(item.classField)!}" type="radio"  name="${FTL_PLACEHOLDER}(item.nameField)!?html}" 
+						   id="id_radio${FTL_PLACEHOLDER}(item.outputNameField)!}" value="${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}" 
+						   checked="checked" 
+						   onclick="impostaRadioButton('${FTL_PLACEHOLDER}(item.outputNameField)!}', '${FTL_PLACEHOLDER}(item.nameField)!}',
+						       '${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}', '${FTL_PLACEHOLDER}(item.valueNotSelectedField)!?html}');"/>
+				[#else]
+					<input class="${FTL_PLACEHOLDER}(item.classField)!}" type="radio" name="${FTL_PLACEHOLDER}(item.nameField)!?html}"  
+						   id="id_radio${FTL_PLACEHOLDER}(item.outputNameField)!}" value="${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}" 
+						   onclick="impostaRadioButton('${FTL_PLACEHOLDER}(item.outputNameField)!}', '${FTL_PLACEHOLDER}(item.nameField)!}', 
+							   '${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}', '${FTL_PLACEHOLDER}(item.valueNotSelectedField)!?html}');"/>
+				[/#if]
+
+				[#if (_dichiarazioniSA.listaVoci[seq_index].valore)?has_content]											  				
+					<input type="hidden" id="id_hidden${FTL_PLACEHOLDER}(item.outputNameField)!}_${FTL_PLACEHOLDER}(item.nameField)!}" 
+						   name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore" 
+						   value="${FTL_PLACEHOLDER}(_dichiarazioniSA.listaVoci[seq_index].valore)!?html}" />													
+				[#else]
+					<input type="hidden" id="id_hidden${FTL_PLACEHOLDER}(item.outputNameField)!}_${FTL_PLACEHOLDER}(item.nameField)!}" 
+						   name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore" 
+						   value="${FTL_PLACEHOLDER}(item.defaultValueField)!?html}" />										
+				[/#if]
+
+					<input type="hidden" id="idname_hidden_${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+						  name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].voce" value="${FTL_PLACEHOLDER}(item.outputNameField)!?html}" />								
+				</td>
+				<td>
+					<label for="id_radio${FTL_PLACEHOLDER}(item.outputNameField)!}">${FTL_PLACEHOLDER}item.labelField!}</label>
+				</td>
+			</tr>
+
+			[#elseif item.typeField == "mixed_open"]
+			<tr>
+			   <td>
+
+			[#elseif item.typeField == "mixed_openCollSpan"]
+			 <tr><td colspan="2">
+
+			[#elseif item.typeField == "mixed_radio"]
+
+					[#assign seq_index = key_list?seq_index_of(item.outputNameField) ]	 
+					[#if item.valueSelectedField == (_dichiarazioniSA.listaVoci[seq_index].valore)! ]
+	
+					    <input class="${FTL_PLACEHOLDER}(item.classField)!}" type="radio"  name="${FTL_PLACEHOLDER}(item.nameField)!?html}" 
+							   id="id_radio${FTL_PLACEHOLDER}(item.outputNameField)!}" value="${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}" 
+							   checked="checked" 
+							   onclick="impostaRadioButton('${FTL_PLACEHOLDER}(item.outputNameField)!}', '${FTL_PLACEHOLDER}(item.nameField)!}',
+							       '${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}', '${FTL_PLACEHOLDER}(item.valueNotSelectedField)!?html}');"/>
+					[#else]
+						<input class="${FTL_PLACEHOLDER}(item.classField)!}" type="radio" name="${FTL_PLACEHOLDER}(item.nameField)!?html}"  
+							   id="id_radio${FTL_PLACEHOLDER}(item.outputNameField)!}" value="${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}" 
+							   onclick="impostaRadioButton('${FTL_PLACEHOLDER}(item.outputNameField)!}', '${FTL_PLACEHOLDER}(item.nameField)!}', 
+								   '${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}', '${FTL_PLACEHOLDER}(item.valueNotSelectedField)!?html}');"/>
+					[/#if]
+	
+					[#if (_dichiarazioniSA.listaVoci[seq_index].valore)?has_content]											  				
+						<input type="hidden" id="id_hidden${FTL_PLACEHOLDER}(item.outputNameField)!}_${FTL_PLACEHOLDER}(item.nameField)!}" 
+							   name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore" 
+							   value="${FTL_PLACEHOLDER}(_dichiarazioniSA.listaVoci[seq_index].valore)!?html}" />													
+					[#else]
+						<input type="hidden" id="id_hidden${FTL_PLACEHOLDER}(item.outputNameField)!}_${FTL_PLACEHOLDER}(item.nameField)!}" 
+							   name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore" 
+							   value="${FTL_PLACEHOLDER}(item.defaultValueField)!?html}" />										
+					[/#if]
+						<input type="hidden" id="idname_hidden_${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+							  name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].voce" value="${FTL_PLACEHOLDER}(item.outputNameField)!?html}" />								
+				</td>
+				<td>
+					<label for="id_radio${FTL_PLACEHOLDER}(item.outputNameField)!}">${FTL_PLACEHOLDER}item.labelField!}</label>
+
+			  [#elseif item.typeField == "mixed_testo"]
+				 ${FTL_PLACEHOLDER}item.labelField!}
+			
+			  [#elseif item.typeField == "mixed_text"]
+				
+					<label for="id_input_text${FTL_PLACEHOLDER}(item.outputNameField)!}">${FTL_PLACEHOLDER}item.labelField!}</label>
+				
+				[#assign seq_index = key_list?seq_index_of(item.outputNameField) ]
+				[#if item.mandatory == true]
+					 [#if ((messages._dichiarazione_input_text_testo)?has_content)]
+   						[#if messages._dichiarazione_input_text_id?seq_contains(seq_index+"I")]
+ 					<span class="txtError">
+						<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+						<span>errore:<br />${FTL_PLACEHOLDER}messages._dichiarazione_input_text_testo?first}</span>
+					</span>
+   						[/#if]
+   					[/#if]
+				[/#if]
+
+				<input type="text" class="${FTL_PLACEHOLDER}(item.classField)!}" 
+					maxlength="${FTL_PLACEHOLDER}(item.maxlength)!}"
+					id="id_input_text${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+					name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore"
+					value="${FTL_PLACEHOLDER}(_dichiarazioniSA.listaVoci[seq_index].valore)!?html}" />
+
+				<input type="hidden" id="idname_hidden_${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+					name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].voce" 
+					value="${FTL_PLACEHOLDER}(item.outputNameField)!?html}" />								
+
+				 
+			  [#elseif item.typeField == "mixed_close"]
+				</td></tr>
+
+ 			  [#elseif item.typeField == "mixed_closeCollSpanssss_serve solo per bilanciare l'html"]
+				</td></tr>
+				
+			  [#elseif item.typeField == "checkbox"]
+
+			<tr>
+				<td>
+				[#assign seq_index = key_list?seq_index_of(item.outputNameField) ]
+				[#if item.mandatory == true]
+					 [#if ((messages._dichiarazione_checkbox_testo)?has_content)]
+   						[#if messages._dichiarazione_checkbox_id?seq_contains(seq_index+"C")]
+ 					<span class="txtError">
+						<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+						<span>errore:<br />${FTL_PLACEHOLDER}messages._dichiarazione_checkbox_testo?first}</span>
+					</span>
+   						[/#if]
+   					[/#if]
+				[/#if]
+
+				[#if item.valueSelectedField == (_dichiarazioniSA.listaVoci[seq_index].valore)!  ]											  
+					<input type="checkbox" class="${FTL_PLACEHOLDER}(item.classField)!}"  
+					       id="id_check${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+					       value="${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}" checked="checked" 
+						   onclick="impostaCheckbox('${FTL_PLACEHOLDER}(item.outputNameField)!}', '${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}', '${FTL_PLACEHOLDER}(item.valueNotSelectedField)!?html}');"/>
+				[#else]
+					<input type="checkbox" class="${FTL_PLACEHOLDER}(item.classField)!}"  
+						   id="id_check${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+						   value="${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}" 
+						   onclick="impostaCheckbox('${FTL_PLACEHOLDER}(item.outputNameField)!}', '${FTL_PLACEHOLDER}(item.valueSelectedField)!?html}', '${FTL_PLACEHOLDER}(item.valueNotSelectedField)!?html}');"/>
+				[/#if]
+
+				[#if (_dichiarazioniSA.listaVoci[seq_index].valore)?has_content]									  				
+					<input type="hidden" id="id_hidden${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+							name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore" 
+							value="${FTL_PLACEHOLDER}(_dichiarazioniSA.listaVoci[seq_index].valore)!?html}" />													
+				[#else]
+					<input type="hidden" id="id_hidden${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+							name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].valore" 
+							value="${FTL_PLACEHOLDER}(item.defaultValueField)!?html}" />							
+				[/#if]
+
+					<input type="hidden" id="idname_hidden_${FTL_PLACEHOLDER}(item.outputNameField)!}" 
+							name="_dichiarazioniSA.listaVoci[${FTL_PLACEHOLDER}seq_index}].voce" 
+							value="${FTL_PLACEHOLDER}(item.outputNameField)!?html}" />
+				</td>
+				<td>
+					<label for="id_check${FTL_PLACEHOLDER}(item.outputNameField)!}">${FTL_PLACEHOLDER}item.labelField!?html}</label>
+				</td>
+			</tr>
+			
+			[#elseif item.typeField == "testo"]
+			<tr><td colspan="2">${FTL_PLACEHOLDER}item.labelField!}</td></tr>
+
+			[#elseif item.typeField == "postLabelField"]
+			<tr><td></td><td><span>${FTL_PLACEHOLDER}item.labelField!}</span></td></tr>
+
+			[#elseif item.typeField == "preLabelField"]
+			<tr><td colspan="2"><span>${FTL_PLACEHOLDER}item.labelField!}</span></td></tr>
+
+			[#elseif item.typeField == "list"]
+			<tr><td colspan="2"><li>${FTL_PLACEHOLDER}(item.labelField)!}<br/><br/></li></td></tr>
+			  
+			[#elseif item.typeField == "radio_group"]	
+			<tr><td>
+				[#if item.mandatory == true]
+					 [#if ((messages._dichiarazione_radio_group_testo)?has_content)]
+   						[#if messages._dichiarazione_radio_group_id?seq_contains(item.nameField)]
+ 					<span class="txtError">
+						<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+						<span>errore:<br />${FTL_PLACEHOLDER}messages._dichiarazione_radio_group_testo?first}</span>
+					</span>
+   						[/#if]
+   					[/#if]
+				[/#if]
+				</td>
+				<td><span>${FTL_PLACEHOLDER}item.labelField!}</span></td>
+			</tr>
+
+			[#elseif item.typeField == "includeHtml"]		
+				<td colspan="2"><span>${FTL_PLACEHOLDER}item.includeHTML!}</span></td>
+			[/#if]
+		  [/#if]
+		[/#if]
+	  	[/#list]
+	  	</table>
+	[#else]
+		dichiarazioniList vuota
+	[/#if] [#-- dichiarazioniList?has_content --]	
+
+
+	</div>

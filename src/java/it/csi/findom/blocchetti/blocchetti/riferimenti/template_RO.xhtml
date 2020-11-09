@@ -1,0 +1,225 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+	[#-- _riferimenti RO --]
+
+	<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<#if _riferimenti_view_sezione_societa_consulenza?? >
+	<#if _riferimenti_view_sezione_societa_consulenza == "true" >
+		<#if _riferimenti_obbligo_compilazione == "true" >
+			<p>Compilare obbligatoriamente almeno la sezione 'Persona dell'Ente/Impresa autorizzata ad intrattenere contatti'</p>
+		<#else>	
+			<p>Compilare almeno una sezione</p>
+		</#if>	
+		<input type="submit" id="id_reload_S1_P2" name="_command" value="LabelCommand:C_reload_S1_P2;RenderCommand:1600" hidden="hidden" />
+	</#if>
+</#if>
+
+	<h4>
+		<#if _riferimenti_per_ent_imp_aut_int_cont_label?has_content >
+			 <span id="toggle_handle_01" class="toggle_handle collapse">
+			 	${_riferimenti_per_ent_imp_aut_int_cont_label}
+			 	[@contextualErrors errorList=(messages._riferimenti_personaImpresa)![] /]
+				[@contextualErrors errorList=(messages._riferimenti)![] /]
+			 </span>
+		<#else>
+			<!-- std -->
+			<span id="toggle_handle_01" class="toggle_handle collapse">
+				Persona dell'ente/impresa autorizzata ad intrattenere contatti
+				[@contextualErrors errorList=(messages._riferimenti_personaImpresa)![] /]
+				[@contextualErrors errorList=(messages._riferimenti)![] /]
+			</span>
+		</#if>
+	</h4>
+	
+	<div class="toggle_target_01">
+		<table class="formTable" summary="Tabella per i dati della Persona dell'impresa autorizzata ad intrattenere contatti">
+			<col width="20%" />
+			<col width="35%" />
+			<col width="10%" />
+			<col width="35%" />
+			<tr>
+			   <th> <label for="id_personaImpresa_codiceFiscale">Codice Fiscale</label> </th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.personaImpresa.codiceFiscale" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.codiceFiscale)!?html?upper_case}" 
+						id="id_personaImpresa_codiceFiscale" maxlength="16" class="short" tabindex="1" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_personaImpresa_cognome">Cognome</label></th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.cognome" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.cognome)!?html}" 
+							id="id_personaImpresa_cognome" class="long" tabindex="2" readonly="readonly"/>
+				</td>
+				<th> <label for="id_personaImpresa_nome">Nome</label> </th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.nome" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.nome)!?html}" 
+							id="id_personaImpresa_nome" class="long" tabindex="3" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_personaImpresa_telefono">Telefono</label></th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.telefono" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.telefono)!?html}" 
+						id="id_personaImpresa_telefono" maxlength="30" class="medium" tabindex="4" readonly="readonly"/>
+				</td>
+				<th> <label for="id_personaImpresa_email">e-Mail</label></th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.email" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.email)!?html}" 
+							id="id_personaImpresa_email" maxlength="80" class="long" tabindex="5" readonly="readonly"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+<#if _riferimenti_view_sezione_societa_consulenza?? >
+ <#if _riferimenti_view_sezione_societa_consulenza == "true" >
+ 
+		<h4>
+			<#if _riferimenti_soc_con_aut_int_cont_label?has_content >
+		 		<span id="toggle_handle_02" class="toggle_handle collapse">
+				 	${_riferimenti_soc_con_aut_int_cont_label}
+				 	[@contextualErrors errorList=(messages._riferimenti_societa)![] /]
+					[@contextualErrors errorList=(messages._riferimenti)![] /]
+				</span>
+			<#else>
+				<!-- std -->
+				<span id="toggle_handle_02" class="toggle_handle collapse">
+					Societa di consulenza autorizzata ad intrattenere contatti
+					[@contextualErrors errorList=(messages._riferimenti_societa)![] /]
+					[@contextualErrors errorList=(messages._riferimenti)![] /]
+				</span>
+			</#if>
+		</h4>
+
+	<div class="toggle_target_02">
+		<table class="formTable" summary="Tabella per i dati della societa di consulenza autorizzata ad intrattenere contatti">
+			<col width="20%"/>
+		    <col width="20%" />
+			<col width="10%" />
+			<col width="25%" />
+			<col width="5%" />
+			<col width="20%" />
+			<tr>
+			   <th> <label for="id_societa_codicefiscale">Codice Fiscale</label> </th>
+				<td colspan="5">
+					<input type="text" name="_riferimenti.societa.codiceFiscale" value="${FTL_PLACEHOLDER}(_riferimenti.societa.codiceFiscale)!?html}" 
+						id="id_societa_codicefiscale" maxlength="16" class="short" tabindex="6" readonly="readonly"/>
+				</td>
+			</tr>	
+			<tr>
+			   <th> <label for="id_societa_partitaiva">Partita IVA</label> </th>
+				<td colspan="5">
+					<input type="text" name="_riferimenti.societa.partitaIVA" value="${FTL_PLACEHOLDER}(_riferimenti.societa.partitaIVA)!?html}" 
+						id="id_societa_partitaiva" maxlength="11" class="short" tabindex="7" readonly="readonly"/>
+				</td>
+			</tr>	
+			<tr>
+			   <th> <label for="id_societa_ragioneSociale">Denominazione o ragione sociale</label> </th>
+				<td colspan="5">
+					<input type="text" name="_riferimenti.societa.ragioneSociale" value="${FTL_PLACEHOLDER}(_riferimenti.societa.ragioneSociale)!?html}" 
+						id="id_societa_ragioneSociale" class="long" tabindex="8" readonly="readonly"/>
+				</td>
+			</tr>				
+			<tr>
+				<th>
+					<label for="id_societa_provincia">Provincia</label>
+				</th>
+				<td>					
+				   <input type="text" name="_riferimenti.societa.provinciaDescrizione" value="${FTL_PLACEHOLDER}(_riferimenti.societa.provinciaDescrizione)!?html}" 
+						id="id_societa_provincia_descrizione" class="long" tabindex="9" readonly="readonly"/>				   
+				</td>
+
+				<th><label for="id_societa_comune">Comune</label></th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.societa.comuneDescrizione" value="${FTL_PLACEHOLDER}(_riferimenti.societa.comuneDescrizione)!?html}" 
+						id="id_societa_comune_descrizione" class="long" tabindex="10" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="id_cap">CAP</label></th>
+				<td><input type="text" name="_riferimenti.societa.cap"
+						value="${FTL_PLACEHOLDER}(_riferimenti.societa.cap)!?html}" id="id_cap" maxlength="5" class="short" tabindex="11"  readonly="readonly"/>
+				</td>
+				<th><label for="id_indirizzo">Indirizzo</label></th>
+				<td><input type="text" name="_riferimenti.societa.indirizzo"
+						value="${FTL_PLACEHOLDER}(_riferimenti.societa.indirizzo)!?html}" id="id_indirizzo" maxlength="100"
+						class="long" tabindex="12" readonly="readonly"/>
+				</td>
+				<th><label for="id_numero_civico">N.</label></th>
+				<td><input type="text" name="_riferimenti.societa.numeroCivico"
+						value="${FTL_PLACEHOLDER}(_riferimenti.societa.numeroCivico)!?html}" id="id_numero_civico" maxlength="30"
+						class="short" tabindex="13" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_societa_telefono">Telefono</label></th>
+				<td>
+					<input type="text" name="_riferimenti.societa.telefono" value="${FTL_PLACEHOLDER}(_riferimenti.societa.telefono)!?html}" 
+							id="id_societa_telefono" maxlength="30" class="medium" tabindex="14" readonly="readonly"/>
+				</td>
+				<th> <label for="id_societa_email">e-Mail</label></th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.societa.email" value="${FTL_PLACEHOLDER}(_riferimenti.societa.email)!?html}" 
+							id="id_societa_email" maxlength="80" class="long" tabindex="15" readonly="readonly"/>
+				</td>
+			</tr>
+		</table>	
+	</div>
+
+		<h4>
+			<#if _riferimenti_con_aut_int_cont_label?has_content >
+				 <span id="toggle_handle_03" class="toggle_handle collapse">
+				 	${_riferimenti_con_aut_int_cont_label}
+				 </span>
+			<#else>
+				<!-- std -->
+				<span id="toggle_handle_03" class="toggle_handle collapse">
+					Consulente autorizzato ad intrattenere contatti
+				</span>
+			</#if>
+		</h4>
+	
+	<div class="toggle_target_03">
+		<table class="formTable" summary="Tabella per i dati del Consulente autorizzato ad intrattenere contatti">
+			<col width="20%" />
+			<col width="35%" />
+			<col width="10%" />
+			<col width="35%" />
+			<tr>
+			   <th> <label for="id_consulente_codiceFiscale">Codice Fiscale</label> </th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.consulente.codiceFiscale" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.codiceFiscale)!?html?upper_case}" 
+							id="id_consulente_codiceFiscale" maxlength="16" class="short" 
+							tabindex="16" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_consulente_cognome">Cognome</label></th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.cognome" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.cognome)!?html}" 
+							id="id_consulente_cognome"  class="long" tabindex="17" readonly="readonly"/>
+				</td>
+				<th> <label for="id_consulente_nome">Nome</label> </th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.nome" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.nome)!?html}" 
+							id="id_consulente_nome" class="long" tabindex="18" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_consulente_telefono">Telefono</label></th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.telefono" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.telefono)!?html}" 
+						id="id_consulente_telefono" maxlength="30" class="medium" tabindex="19" readonly="readonly"/>
+				</td>
+				<th> <label for="id_consulente_email">e-Mail</label></th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.email" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.email)!?html}" 
+							id="id_consulente_email" maxlength="80" class="long" tabindex="20" readonly="readonly"/>
+				</td>
+			</tr>
+		</table>			
+	</div>
+</#if>
+</#if>

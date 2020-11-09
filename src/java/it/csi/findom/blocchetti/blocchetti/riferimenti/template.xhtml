@@ -1,0 +1,326 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _riferimenti --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+<script type="text/javascript">
+		$(function() {
+		    $('#id_personaImpresa_codiceFiscale').focusout(function() {
+		        // Uppercase-ize contents
+		        this.value = this.value.toLocaleUpperCase();
+		    });
+<#if _riferimenti_view_sezione_societa_consulenza?? >
+<#if _riferimenti_view_sezione_societa_consulenza == "true" >
+		    $('#id_societa_codicefiscale').focusout(function() {
+		        // Uppercase-ize contents
+		        this.value = this.value.toLocaleUpperCase();
+		    });
+		    $('#id_consulente_codiceFiscale').focusout(function() {
+		        // Uppercase-ize contents
+		        this.value = this.value.toLocaleUpperCase();
+		    });
+</#if>
+</#if>
+		});
+<#if _riferimenti_view_sezione_societa_consulenza?? >
+<#if _riferimenti_view_sezione_societa_consulenza == "true" >
+	   function setCampiHiddenProvincia(){
+			  $("#id_societa_descrProvinciaHidden").val($("#id_societa_provincia option:selected").text());
+	   }
+	   function setCampiHiddenComune(){
+			  $("#id_societa_descrComuneHidden").val($("#id_societa_comune option:selected").text());
+	   }
+</#if>
+</#if>
+	  </script>
+
+<#if _riferimenti_view_sezione_societa_consulenza?? >
+	<#if _riferimenti_view_sezione_societa_consulenza == "true" >
+		<#if _riferimenti_obbligo_compilazione == "true" >
+			<p>Compilare obbligatoriamente almeno la sezione 'Persona dell'Ente/Impresa autorizzata ad intrattenere contatti'</p>
+		<#else>	
+			<p>Compilare almeno una sezione</p>
+		</#if>	
+		<input type="submit" id="id_reload_S1_P2" name="_command" value="LabelCommand:C_reload_S1_P2;RenderCommand:1600" hidden="hidden" />
+	</#if>
+</#if>
+	
+	[#-- Jira: 1843 --]
+	<h4>
+		<#if _riferimenti_per_ent_imp_aut_int_cont_label?has_content >
+			 <span id="toggle_handle_01" class="toggle_handle collapse">
+			 	${_riferimenti_per_ent_imp_aut_int_cont_label}
+			 	[@contextualErrors errorList=(messages._riferimenti_personaImpresa)![] /]
+				[@contextualErrors errorList=(messages._riferimenti)![] /]
+			 </span>
+		<#else>
+			<!-- std -->
+			<span id="toggle_handle_01" class="toggle_handle collapse">
+				Persona dell'ente/impresa autorizzata ad intrattenere contatti
+				[@contextualErrors errorList=(messages._riferimenti_personaImpresa)![] /]
+				[@contextualErrors errorList=(messages._riferimenti)![] /]
+			</span>
+		</#if>
+	</h4>
+	
+	<div class="toggle_target_01">
+		<table class="formTable" summary="Tabella per i dati della Persona dell'impresa autorizzata ad intrattenere contatti">
+			<col width="20%" />
+			<col width="35%" />
+			<col width="10%" />
+			<col width="35%" />
+			<tr>
+			   <th> <label for="id_personaImpresa_codiceFiscale">Codice Fiscale</label> </th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.personaImpresa.codiceFiscale" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.codiceFiscale)!?html?upper_case}" 
+						id="id_personaImpresa_codiceFiscale" maxlength="16" class="[@classShortError errorList=(messages._riferimenti_personaImpresa_codiceFiscale)![] /]" 
+						tabindex="1"/>
+					[@contextualErrors errorList=(messages._riferimenti_personaImpresa_codiceFiscale)![] /]
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_personaImpresa_cognome">Cognome</label></th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.cognome" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.cognome)!?html}" 
+							id="id_personaImpresa_cognome"  class="[@classLongError errorList=(messages._riferimenti_personaImpresa_cognome)![] /]" 
+							tabindex="2"/>
+					[@contextualErrors errorList=(messages._riferimenti_personaImpresa_cognome)![] /]
+				</td>
+				<th> <label for="id_personaImpresa_nome">Nome</label> </th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.nome" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.nome)!?html}" 
+							id="id_personaImpresa_nome"  class="[@classLongError errorList=(messages._riferimenti_personaImpresa_nome)![] /]" 
+							tabindex="3"/>
+					[@contextualErrors errorList=(messages._riferimenti_personaImpresa_nome)![] /]
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_personaImpresa_telefono">Telefono</label></th>
+				<td>
+					<input type="text" name="_riferimenti.personaImpresa.telefono" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.telefono)!?html}" 
+						id="id_personaImpresa_telefono" maxlength="30" class="[@classMediumError errorList=(messages._riferimenti_personaImpresa_telefono)![] /]" 
+						tabindex="4"/>
+					[@contextualErrors errorList=(messages._riferimenti_personaImpresa_telefono)![] /]
+				</td>
+				<th> <label for="id_personaImpresa_email">e-Mail</label></th>
+				<td >
+					<input type="text" name="_riferimenti.personaImpresa.email" value="${FTL_PLACEHOLDER}(_riferimenti.personaImpresa.email)!?html}" 
+							id="id_personaImpresa_email" maxlength="80" class="[@classLongError errorList=(messages._riferimenti_personaImpresa_email)![] /]" 
+							tabindex="5"/>
+					[@contextualErrors errorList=(messages._riferimenti_personaImpresa_email)![] /]
+				</td>
+			</tr>
+		</table>
+	</div>
+<#if _riferimenti_view_sezione_societa_consulenza?? >
+ <#if _riferimenti_view_sezione_societa_consulenza == "true" >
+		<h4>
+			<#if _riferimenti_soc_con_aut_int_cont_label?has_content >
+		 		<span id="toggle_handle_02" class="toggle_handle collapse">
+				 	${_riferimenti_soc_con_aut_int_cont_label}
+				 	[@contextualErrors errorList=(messages._riferimenti_societa)![] /]
+					[@contextualErrors errorList=(messages._riferimenti)![] /]
+				</span>
+			<#else>
+				<!-- std -->
+				<span id="toggle_handle_02" class="toggle_handle collapse">
+					Societa di consulenza autorizzata ad intrattenere contatti
+					[@contextualErrors errorList=(messages._riferimenti_societa)![] /]
+					[@contextualErrors errorList=(messages._riferimenti)![] /]
+				</span>
+			</#if>
+		</h4>
+		
+	<div class="toggle_target_02">
+		<table class="formTable" summary="Tabella per i dati della societa di consulenza autorizzata ad intrattenere contatti">
+			<col width="20%"/>
+		    <col width="20%" />
+			<col width="10%" />
+			<col width="25%" />
+			<col width="5%" />
+			<col width="20%" />	
+			<tr>
+			   <th> <label for="id_societa_codicefiscale">Codice Fiscale</label> </th>
+				<td colspan="5">
+					<input type="text" name="_riferimenti.societa.codiceFiscale" value="${FTL_PLACEHOLDER}(_riferimenti.societa.codiceFiscale)!?html}" 
+						id="id_societa_codicefiscale" maxlength="16" class="[@classShortError errorList=(messages._riferimenti_societa_codiceFiscale)![] /]" 
+						tabindex="6"/>
+					[@contextualErrors errorList=(messages._riferimenti_societa_codiceFiscale)![] /]
+				</td>
+			</tr>	
+			<tr>
+			   <th> <label for="id_societa_partitaiva">Partita IVA</label> </th>
+				<td colspan="5">
+					<input type="text" name="_riferimenti.societa.partitaIVA" value="${FTL_PLACEHOLDER}(_riferimenti.societa.partitaIVA)!?html}" 
+						id="id_societa_partitaiva" maxlength="11"  class="[@classShortError errorList=(messages._riferimenti_societa_partitaIVA)![] /]" 
+						tabindex="7"/>
+					[@contextualErrors errorList=(messages._riferimenti_societa_partitaIVA)![] /]
+				</td>
+			</tr>	
+			<tr>
+			   <th> <label for="id_societa_ragioneSociale">Denominazione o ragione sociale</label> </th>
+				<td colspan="5">
+					<input type="text" name="_riferimenti.societa.ragioneSociale" value="${FTL_PLACEHOLDER}(_riferimenti.societa.ragioneSociale)!?html}" 
+						id="id_societa_ragioneSociale" class="[@classLongError errorList=(messages._riferimenti_societa_ragioneSociale)![] /]" 
+						tabindex="8"/>
+					[@contextualErrors errorList=(messages._riferimenti_societa_ragioneSociale)![] /]
+				</td>
+			</tr>				
+			<tr>
+				<th><label for="id_societa_provincia">Provincia</label></th>
+				<td>
+					<select name="_riferimenti.societa.provincia" id="id_societa_provincia" 
+						class="[@classLongError errorList=(messages._riferimenti_societa_provincia)![] /]" 
+						onchange="setCampiHiddenProvincia();$('#id_reload_S1_P2').click()" tabindex="9" >									
+					<option value=""></option>
+					[#list provinciaList as item] 
+					[#if item.codice == (_riferimenti.societa.provincia)!]
+						<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+					[#else]
+						<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+					[/#if] 
+					[/#list]
+				   </select>
+				   [@contextualErrors errorList=(messages._riferimenti_societa_provincia)![] /]
+				   
+				   <input type="hidden" id="id_societa_descrProvinciaHidden" name="_riferimenti.societa.provinciaDescrizione" 			              
+ 						  value="${FTL_PLACEHOLDER}(_riferimenti.societa.provinciaDescrizione)!?html}"/>				   
+				   
+				</td>
+
+				<th><label for="id_societa_comune">Comune</label></th>
+				<td colspan="3">
+					<select name="_riferimenti.societa.comune" id="id_societa_comune" 
+							class="[@classMediumError errorList=(messages._riferimenti_societa_comune)![] /]" 
+							onchange="setCampiHiddenComune()" tabindex="10">
+								<option value=""></option> 
+								[#list comuneList as item] 
+								[#if item.codice == (_riferimenti.societa.comune)!]
+								<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[#else]
+								<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+								[/#if] 
+								[/#list]
+					</select>
+					[@contextualErrors errorList=(messages._riferimenti_societa_comune)![] /]
+					
+					<input type="hidden" id="id_societa_descrComuneHidden" name="_riferimenti.societa.comuneDescrizione" 			              
+ 						  value="${FTL_PLACEHOLDER}(_riferimenti.societa.comuneDescrizione)!?html}"/>	
+ 						  
+				 </td>
+			</tr>
+			<tr>
+				<th><label for="id_cap">CAP</label></th>
+				<td>
+					<input 
+						type="text" 
+						name="_riferimenti.societa.cap"
+						value="${FTL_PLACEHOLDER}(_riferimenti.societa.cap)!?html}"
+						pattern="\d*" title="Digitare cap senza spazi"
+						id="id_cap" maxlength="5"
+						class="[@classShortError errorList=(messages._riferimenti_societa_cap)![] /]" 
+						tabindex="11"/>
+						[@contextualErrors errorList=(messages._riferimenti_societa_cap)![] /]
+				</td>
+				<th><label for="id_indirizzo">Indirizzo</label></th>
+				<td><input type="text" name="_riferimenti.societa.indirizzo"
+						value="${FTL_PLACEHOLDER}(_riferimenti.societa.indirizzo)!?html}" id="id_indirizzo" maxlength="100"
+						class="[@classLongError errorList=(messages._riferimenti_societa_indirizzo)![] /]" 
+						tabindex="12"/>
+						[@contextualErrors errorList=(messages._riferimenti_societa_indirizzo)![] /]</td>
+				<th><label for="id_numero_civico">N.</label></th>
+				<td><input type="text" name="_riferimenti.societa.numeroCivico"
+						value="${FTL_PLACEHOLDER}(_riferimenti.societa.numeroCivico)!?html}" id="id_numero_civico" maxlength="30"
+						class="[@classShortError errorList=(messages._riferimenti_societa_numeroCivico)![] /]" 
+						tabindex="13"/>
+						[@contextualErrors errorList=(messages._riferimenti_societa_numeroCivico)![] /]
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_societa_telefono">Telefono</label></th>
+				<td>
+						<input type="text" name="_riferimenti.societa.telefono" value="${FTL_PLACEHOLDER}(_riferimenti.societa.telefono)!?html}" 
+								id="id_societa_telefono" maxlength="30" class="[@classMediumError errorList=(messages._riferimenti_societa_telefono)![] /]" 
+								tabindex="14"/>
+						[@contextualErrors errorList=(messages._riferimenti_societa_telefono)![] /]
+				</td>
+				<th> <label for="id_societa_email">e-Mail</label></th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.societa.email" value="${FTL_PLACEHOLDER}(_riferimenti.societa.email)!?html}" 
+								id="id_societa_email" maxlength="80" class="[@classLongError errorList=(messages._riferimenti_societa_email)![] /]" 
+								tabindex="15"/>
+						[@contextualErrors errorList=(messages._riferimenti_societa_email)![] /]
+				</td>
+			</tr>
+		</table>
+		
+		
+		
+	    <h4>
+			<#if _riferimenti_con_aut_int_cont_label?has_content >
+				 <span id="toggle_handle_03" class="toggle_handle collapse">
+				 	${_riferimenti_con_aut_int_cont_label}
+				 </span>
+			<#else>
+				<!-- std -->
+				<span id="toggle_handle_03" class="toggle_handle collapse">
+					Consulente autorizzato ad intrattenere contatti
+				</span>
+			</#if>
+		</h4>
+
+	<div class="toggle_target_03">
+		<table class="formTable" summary="Tabella per i dati del Consulente autorizzato ad intrattenere contatti">
+			<col width="20%" />
+			<col width="35%" />
+			<col width="10%" />
+			<col width="35%" />
+			<tr>
+			   <th> <label for="id_consulente_codiceFiscale">Codice Fiscale</label> </th>
+				<td colspan="3">
+					<input type="text" name="_riferimenti.consulente.codiceFiscale" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.codiceFiscale)!?html?upper_case}" 
+							id="id_consulente_codiceFiscale" maxlength="16" class="[@classShortError errorList=(messages._riferimenti_consulente_codiceFiscale)![] /]" 
+							tabindex="16"/>
+					[@contextualErrors errorList=(messages._riferimenti_consulente_codiceFiscale)![] /]
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_consulente_cognome">Cognome</label></th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.cognome" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.cognome)!?html}" 
+							id="id_consulente_cognome"  class="[@classLongError errorList=(messages._riferimenti_consulente_cognome)![] /]" 
+							tabindex="17"/>
+					[@contextualErrors errorList=(messages._riferimenti_consulente_cognome)![] /]
+				</td>
+				<th> <label for="id_consulente_nome">Nome</label> </th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.nome" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.nome)!?html}" 
+							id="id_consulente_nome"  class="[@classLongError errorList=(messages._riferimenti_consulente_nome)![] /]" 
+							tabindex="18"/>
+					[@contextualErrors errorList=(messages._riferimenti_consulente_nome)![] /]
+				</td>
+			</tr>
+			<tr>
+				<th> <label for="id_consulente_telefono">Telefono</label></th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.telefono" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.telefono)!?html}" 
+						id="id_consulente_telefono" maxlength="30" class="[@classMediumError errorList=(messages._riferimenti_consulente_telefono)![] /]" 
+						tabindex="19"/>
+					[@contextualErrors errorList=(messages._riferimenti_consulente_telefono)![] /]
+				</td>
+				<th> <label for="id_consulente_email">e-Mail</label></th>
+				<td>
+					<input type="text" name="_riferimenti.consulente.email" value="${FTL_PLACEHOLDER}(_riferimenti.consulente.email)!?html}" 
+							id="id_consulente_email" maxlength="80" class="[@classLongError errorList=(messages._riferimenti_consulente_email)![] /]" 
+							tabindex="20"/>
+					[@contextualErrors errorList=(messages._riferimenti_consulente_email)![] /]
+				</td>
+			</tr>
+		</table>		
+		
+	</div>
+	</div>
+</#if>
+</#if>

@@ -1,0 +1,62 @@
+[#--
+ * Copyright Regione Piemonte - 2020
+ * SPDX-License-Identifier: EUPL-1.2-or-later
+ --]
+	[#macro COMMON_contenutiHeader]
+		<!-- testalino comune alle pagine della sezione dei Contenuti -->
+		<table class="formTable" summary=" ">
+			<colgroup>
+				<col width="20%" />
+				<col width="80%" />
+			</colgroup> 
+			<tr class="highlightedLine">
+				<th>Progressivo edizione nella Domanda</th>
+				<td>
+					[#assign calcProgressivoEdizione]
+						[#if (_corsi.corsoList[(_corsi.corsoSelected)?eval].riferimenti.progressivoEdizione)?has_content]
+							${FTL_PLACEHOLDER}_corsi.corsoList[(_corsi.corsoSelected)?eval].riferimenti.progressivoEdizione}
+						[#else]
+							[#assign virtualSize = _corsi.corsoList?size]
+							[#assign currentSize = virtualSize - 1]
+							[#if currentSize > 0]
+								${FTL_PLACEHOLDER}_corsi.corsoList[currentSize - 1].riferimenti.progressivoEdizione?number + 1}
+							[#else]
+								1
+							[/#if]
+						[/#if]
+					[/#assign]
+					${FTL_PLACEHOLDER}calcProgressivoEdizione}
+					<input type="hidden" name="_corsi.corsoList[${FTL_PLACEHOLDER}(_corsi.corsoSelected)?eval}].riferimenti.progressivoEdizione" value="${FTL_PLACEHOLDER}calcProgressivoEdizione?trim}" />
+				</td>
+			</tr>
+			<tr class="highlightedLine">
+				<th>Sede Responsabile</th>
+				<td>
+					[#assign gruppoOperatoreRT_codiceOperatoreRT]
+						[#if (_operatoriRT.operatoreRTList)?has_content]
+							[#list _operatoriRT.operatoreRTList as item]
+								[#if item.operatoreRT.id == (_corsi.corsoList[(_corsi.corsoSelected)?eval].riferimenti.idOperatoreRT)!]
+									${FTL_PLACEHOLDER}item.operatoreRT.gruppo}${FTL_PLACEHOLDER}item.operatoreRT.codice}
+									[#break]
+								[/#if]
+							[/#list]
+						[#else]
+							${FTL_PLACEHOLDER}_operatorePresentatore.gruppo}${FTL_PLACEHOLDER}_operatorePresentatore.codice}
+						[/#if]
+					[/#assign]
+					[#if sediResponsabiliFound]
+						[#list _sedi.sedeList as item]
+							[#if item.sede.id == (_corsi.corsoList[(_corsi.corsoSelected)?eval].riferimenti.idSedeResponsabile)!]
+								${FTL_PLACEHOLDER}gruppoOperatoreRT_codiceOperatoreRT} - ${FTL_PLACEHOLDER}item.sede.id} - ${FTL_PLACEHOLDER}item.sede.denominazione} - ${FTL_PLACEHOLDER}item.sede.indirizzo} - ${FTL_PLACEHOLDER}item.sede.denominazioneComune} (${FTL_PLACEHOLDER}item.sede.siglaProvincia})
+								[#break]
+							[/#if]
+						[/#list]
+					[/#if]
+				</td>
+			</tr>
+			<tr class="highlightedLine">
+				<th>Denominazione Percorso</th>
+				<td>${FTL_PLACEHOLDER}(_corsi.corsoList[(_corsi.corsoSelected)?eval].percorso.denominazione)!}</td>
+			</tr>
+		</table>
+	[/#macro]

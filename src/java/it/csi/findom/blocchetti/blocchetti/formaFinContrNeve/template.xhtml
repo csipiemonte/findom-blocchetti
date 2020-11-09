@@ -1,0 +1,642 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _caratteristicheProgetto --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+
+	[#if speseNonCompilate == "true"]	
+		<div class="stdMessagePanel feedback">
+			<div class='feedWarning'>
+				Attenzione! Compilare la sezione Spese.<br/>
+			</div>
+		</div>
+	[/#if]
+	
+	[#if viewWarningSpese == "true"]	
+		[#if speseNonCompilate == "false"]
+			<div class="stdMessagePanel feedback">
+				<div class='feedWarning'>
+					Attenzione! Ci sono dei dati incongruenti con la sezione Spese. Necessario salvare la pagina corrente.<br/>
+				</div>
+			</div>
+		[/#if]
+	[/#if]
+
+	<style>
+		/* nascondo label */
+		#lbl_tipo_beneficiario {
+		 display: none;
+		}
+	</style>
+<script type="text/javascript">	
+
+
+$(document).ready(function() {
+
+	var perc97 = 100.00;
+	var perc98 = 100.00;
+	var perc99 = 100.00;
+	
+	$("#id_spesa_max_dichiarabile_catg97_0").keyup(function()
+    {
+		[#if isGrandiStazioni == "true"]
+		var tot97;
+    	var totaleImportoRichiesto97;
+        var spesaMaxDichiarabile97 = $(this).val(); 
+        var totVoceSpesa = $("#id_totale_voce_spesa_0").val();
+
+        if(totVoceSpesa != NaN){
+        	tot97 = calcolaMin97(totVoceSpesa, spesaMaxDichiarabile97).toFixed(2).replace(".",",");
+        	// console.log("*2 tot97 vale: " + tot97);
+        }else{
+        	tot97 = 0.0;
+        }
+        
+        $("#id_importo_categoria97_0").val(tot97.toString());
+        [#if isSelectedIdTipoIntervento97 == "true"]	
+	        $("#id_totale_importo_contributo").val(aggiornaTotali().toString());
+    	[/#if]
+		[/#if]
+		
+    });
+	 
+    $("#id_spesa_max_dichiarabile_catg98_1").keyup(function()
+    {
+    	var tot98;
+    	var totaleImportoRichiesto98;
+    	var posizioneZero;
+    	
+    	// recupero il valore inserito da utente
+        var spesaMaxDichiarabile98 = $(this).val(); 
+        // console.log("*01 tot98 vale: " + spesaMaxDichiarabile98);
+
+        // recupero carattere seconda posizione
+        posizioneZero = spesaMaxDichiarabile98.indexOf("0");
+		// console.log("02 zero in posizione : " + posizioneZero);
+
+        // verifico se presente lo {0,} come primi 2 valori
+        if(spesaMaxDichiarabile98.startsWith('0') )
+        {
+        	spesaMaxDichiarabile98 = spesaMaxDichiarabile98.replace("0","");
+			// console.log("06 e dopo la sostituzione vale: " + spesaMaxDichiarabile98);
+
+			// eseguo il replace del campo di input
+			$("#id_spesa_max_dichiarabile_catg98_1").val(spesaMaxDichiarabile98);
+			
+	    }
+        
+        var totVoceSpesa = $("#id_totale_voce_spesa_1").val();
+
+        tot = calcolaMin98(spesaMaxDichiarabile98, totVoceSpesa).toFixed(2).replace(".",",");
+        // console.log("*07 tot98 vale: " + tot);
+        
+        $("#id_importo_categoria98_1").val(tot.toString());
+
+        [#if isSelectedIdTipoIntervento98 == "true"]	
+        	$("#id_totale_importo_contributo").val(aggiornaTotali().toString());
+		[/#if]
+
+    });
+
+
+    function calcolaMin97(num1, num2)
+    {
+    	var totMin97 = 0; 		// valore ritornato dalla funzione
+    	var MinNum = 0; 		// valore minimo calcolato
+    	
+    	var numero1 = 0.0;		// valore di appoggio per sostituire (,) con (.)
+    	var numero2 = 0.0;		// valore di appoggio per sostituire (,) con (.)
+    	
+		var sVal97;				// var recupera la percentuale stringa dal campo text
+		var perc97 = 0.0;		// var contiene valore percentuale stringa convertito in double 
+		
+    	// verifico se num1 risulta un numero
+    	if(!isNaN(parseFloat(num1)))
+       	{
+    		numero1 = num1.replace(",",".");
+       	}
+
+    	// verifico se num2 risulta un numero
+    	if(!isNaN(parseFloat(num2)))
+       	{
+    		numero2 = num2.replace(",",".");
+       	}
+
+    	// Elabora valore minimo tra i 2 argomenti passati
+    	MinNum = Math.min(numero1,numero2);
+
+    	// se tipo intervento selezionato risulta 97
+    	[#if isSelectedIdTipoIntervento97 == "true"]
+			sVal97 = $('#id_perc_max_erogabile_97').val(); 
+    		// console.log("*08 sVal97 vale: " + sVal97);
+    		
+			perc97 = parseFloat(sVal97)/100;
+			// console.log("*09 perc97 vale: " + perc97);
+			
+			// calcola totale in base alla percentuale riferita a intervento selezionato
+			if(!isNaN(parseFloat(((MinNum * perc97).toFixed(2)))))
+       		{
+    			totMin97 = parseFloat(((MinNum * perc97).toFixed(2)));
+    			// console.log("*010 totMin97 vale: " + totMin97);
+    			
+       		} else {
+       			totMin97 = 0.0;
+		     	// console.log("*011 totMin98 vale: " + totMin97);
+           	}
+		[/#if]
+
+		return totMin97;
+    }
+
+    function calcolaMin98(num1, num2)
+    {
+    	var totMin98 = 0; 		// valore ritornato dalla funzione
+    	var MinNum = 0; 		// valore minimo calcolato
+    	
+    	var numero1 = 0.0;		// valore di appoggio per sostituire (,) con (.)
+    	var numero2 = 0.0;		// valore di appoggio per sostituire (,) con (.)
+    	
+		var sVal98;				// var recupera la percentuale stringa dal campo text
+		var perc98 = 0.0;		// var contiene valore percentuale stringa convertito in double 
+
+    	// verifico se num1 risulta un numero
+    	if(!isNaN(parseFloat(num1)))
+       	{
+    		numero1 = num1.replace(",",".");
+       	}
+
+    	// verifico se num2 risulta un numero
+    	if(!isNaN(parseFloat(num2)))
+       	{
+    		numero2 = num2.replace(",",".");
+       	}
+
+    	// Elabora valore minimo tra i 2 argomenti passati
+    	MinNum = Math.min(numero1,numero2);
+
+		// se tipo intervento selezionato risulta 98
+		[#if isSelectedIdTipoIntervento98 == "true"]
+	 		sVal98 = $('#id_perc_max_erogabile_98').val(); 
+			// console.log("*012 sVal98 vale: " + sVal98);
+
+	 		perc98 = parseFloat(sVal98)/100;
+	 		// console.log("*013 perc98 vale: " + perc98);
+	 		
+	 		// calcola totale in base alla percentuale riferita a intervento selezionato
+	 		if(!isNaN(parseFloat(((MinNum * perc98).toFixed(2)))))
+       		{
+		     	totMin98 = parseFloat(((MinNum * perc98).toFixed(2)));
+		     	// console.log("*014 totMin98 vale: " + totMin98);
+       		}else{
+       			totMin98 = 0.0;
+		     	// console.log("*015 totMin98 vale: " + totMin98);
+           	}
+		[/#if]
+		
+		return totMin98;
+    }
+
+    function calcolaMin99(num1, num2)
+    {
+    	var totMin99 = 0; 		// valore ritornato dalla funzione
+    	var MinNum = 0; 		// valore minimo calcolato
+    	
+    	var numero1 = 0.0;		// valore di appoggio per sostituire (,) con (.)
+    	var numero2 = 0.0;		// valore di appoggio per sostituire (,) con (.)
+    	
+		var sVal99 = 0.0;		// var recupera la percentuale stringa dal campo text
+		var perc99 = 0.0;		// var contiene valore percentuale stringa convertito in double 
+
+    	// verifico se num1 risulta un numero
+    	if(!isNaN(parseFloat(num1)))
+       	{
+    		numero1 = num1.replace(",",".");
+       	}
+
+    	// verifico se num2 risulta un numero
+    	if(!isNaN(parseFloat(num2)))
+       	{
+    		numero2 = num2.replace(",",".");
+       	}
+
+    	// Elabora valore minimo tra i 2 argomenti passati
+    	MinNum = Math.min(numero1,numero2);
+
+    	
+		// se tipo intervento selezionato risulta 99
+    	[#if isSelectedIdTipoIntervento99 == "true"]
+			sVal99 = $('#id_perc_max_erogabile_99').val(); 
+			perc99 = parseFloat(sVal99)/100;
+
+			totMin99 = parseFloat(((MinNum * perc99).toFixed(2)));
+	    	// console.log("*016 totMin99 vale: " + totMin99);
+		[/#if]
+
+		return totMin99;
+    }
+
+    
+    function aggiornaTotali() 
+    {
+    	var tot97 = 0.0;
+    	[#if isSelectedIdTipoIntervento97 == "true"]
+    		tot97 = $("#id_importo_categoria97_0").val().replace(",",".");
+		[/#if]
+			
+		var tot98 = 0.0;
+    	[#if isSelectedIdTipoIntervento98 == "true"]
+			tot98 = $("#id_importo_categoria98_1").val().replace(",",".");
+		[/#if]
+
+		var tot99 = 0.0;
+    	[#if isSelectedIdTipoIntervento99 == "true"]
+    		tot99 = $("#id_importo_categoria99_2").val().replace(",",".");;
+		[/#if]
+		
+		var sum = sumDecimal( parseFloat(tot97), parseFloat(tot98), parseFloat(tot99) );
+
+		return sum;        
+    } 
+
+
+	function sumDecimal(num1, num2, num3) 
+	{
+	    var num1 = parseFloat(num1);
+	    var num2 = parseFloat(num2);
+	    var num3 = parseFloat(num3);
+
+	    var n =  parseFloat(num1 + num2 + num3).toFixed(2);
+
+	    return n;
+	}
+    
+});
+
+</script> 	
+				
+<h4>
+	<span id="toggle_handle_cciaa" class="toggle_handle collapse">${FTL_PLACEHOLDER}(caratteristicheProgettoLabel)!}
+	</span>
+</h4>
+	
+	<div class="toggle_target_cciaa">
+		
+		<table class="formTable" summary="....">
+		    <col width="5%" />
+			<col width="95%" />	
+		    <tr>
+				<td></td>
+				<td>
+					<table summary="...." id="id_tipol_cat_intervento"
+						class="myovertable tablesorter target_toggle_checkbox_1">
+					  	<col width="5%"/>	
+					  	<col width="30%" />	
+						<col width="10%" />	
+						<col width="10%" />	
+						<col width="15%" />	
+						<col width="15%" />	
+						<col width="15%" />	
+													  
+						<thead>
+							<tr class="skip">
+								<th scope="col"></th>														
+								<th scope="col">Contributi</th>												
+								<th scope="col">Totale spese dichiarate</th>								
+								<th scope="col" style="text-align: center; font-weight:bold; ">% max erogabile<br/><em>(definito dal bando)</em></th>		
+								<th scope="col" style="text-align: center; font-weight:bold;">Imp. max. erogabile<br/><em>(definito da bando)</em></th>	
+								<th scope="col" style="text-align: center; font-weight:bold;">Spesa max dichiarabile<br/><em>(inserire valore come da perizia asseverata)</em></th>									
+								<th scope="col" style="text-align: center; font-weight:bold;">Importo richiesto *</th>										
+							</tr>
+						</thead>
+						
+						<tbody>	
+							[#list tipologiaInterventoList as item]									
+								[#if !(!item?has_content || !item?is_hash)]
+								    <tr>
+											  [#if item.checked == "true"]	  
+													<th scope="row">
+														<input type="checkbox" class="noborder"
+																id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 											
+																checked="checked" disabled="disabled" />
+													</th>
+											  [#else]	
+													<th scope="row">
+														<input type="checkbox" class="noborder"
+																id="id_tipologia_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 											
+																disabled="disabled" />
+													</th>
+											  [/#if]
+												<td>
+													${FTL_PLACEHOLDER}(item.descrTipoIntervento)!?html}
+													<!-- checked -->
+													<input type="hidden"  
+									   					id="id_checked_forma_fin_contr_neve_${FTL_PLACEHOLDER}(item_index)}" 	
+							           					value="${FTL_PLACEHOLDER}(item.checked)!?html}"																				
+									   					name="_formaAgevolazione.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].checked"/>
+									   					
+									   				<!-- idTipoIntervento contributi -->
+									   				<input type="hidden"  
+									  			 	   id="id_tipo_intervento_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 	
+											           value="${FTL_PLACEHOLDER}(item.idTipoIntervento)!?html}"																				
+													   name="_formaAgevolazione.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].idTipoIntervento"/>
+									   					
+									   				<!-- descrTipoIntervento contributi -->
+									   				<input type="hidden"  
+									  			 	   id="id_descr_tipo_intervento_${FTL_PLACEHOLDER}(item.descrTipoIntervento)!}" 	
+											           value="${FTL_PLACEHOLDER}(item.descrTipoIntervento)!?html}"																				
+													   name="_formaAgevolazione.tipologiaInterventoList[${FTL_PLACEHOLDER}item_index}].descrTipoIntervento"/>
+													
+												</td>	
+												<!-- Toale spesa dichiarata -->
+												[#if item.idTipoIntervento == "97"]	
+														<td>
+															 <input type="text" style="text-align: right;"								
+															       id="id_totale_voce_spesa_${FTL_PLACEHOLDER}item_index}"
+															       value="${FTL_PLACEHOLDER}(strTotCat97)!?html}" 
+															       name="_formaAgevolazione.strTotCat97"								              
+															       class="long idleField"				               
+													               readonly="readonly"  />
+													               [@contextualErrors errorList=(messages._formaAgevolazione_importoRichiestoCat97)![] /]
+														</td>
+														
+														[#elseif item.idTipoIntervento == "98"]
+															<td>
+																<input type="text" style="text-align: right;"							
+																	       id="id_totale_voce_spesa_${FTL_PLACEHOLDER}item_index}"
+																	       value="${FTL_PLACEHOLDER}(strTotCat98)!?html}" 
+																	       name="_formaAgevolazione.strTotCat98"	
+																	       class="long idleField"				               
+															               readonly="readonly"  />
+															               [@contextualErrors errorList=(messages._formaAgevolazione_importoRichiestoCat98)![] /]
+															</td>
+														
+														[#elseif item.idTipoIntervento == "99"]
+														<td>
+															<input type="text" style="text-align: right;"								
+																       id="id_totale_voce_spesa_${FTL_PLACEHOLDER}item_index}"
+																       value="${FTL_PLACEHOLDER}(totCat99)!?html}" 
+																       name="_formaAgevolazione.totCat99"								              
+																        class="long idleField"				               
+														                readonly="readonly"  />
+														                [@contextualErrors errorList=(messages._formaAgevolazione_importoRichiestoCat99)![] /]
+														</td> 
+												[/#if]
+												<!-- percentuale max erogabile -->
+												[#list valoriContributoList as item2]									
+													[#if !(!item2?has_content || !item2?is_hash)]
+														[#if item.idTipoIntervento == item2.idTipolIntervento]
+															<td>
+																<input type="text" style="text-align: right;" 	         
+													               id="id_perc_max_erogabile_${FTL_PLACEHOLDER}(item.idTipoIntervento)!}" 
+													               value="${FTL_PLACEHOLDER}(item2.percMaxContributoErogabile)!?html}"	
+													               name=""		              
+													               class="long idleField"				               
+													               readonly="readonly"  />
+															</td>
+															<!-- importo max erogabile -->
+															[#if item.idTipoIntervento == "97"]	
+																<td>
+																	<input type="text" style="text-align: right;" 	             
+														               id="id_importo_max_erogabile"
+														               value="Non previsto"	
+														               name=""	              
+														               class="long idleField"		               
+														               readonly="readonly"  />
+														               <!-- idTipolIntervento : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_id_tipol_intervento_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.idTipolIntervento)!?html}"																				
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].idTipolIntervento"/> 
+																		
+																		<!-- importoMassimoErogabile : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_importo_massimo_erogabile_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.importoMassimoErogabile)!?html}"																				
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].importoMassimoErogabile"/> 
+																		
+																		
+																		<!-- percMaxContrErogabile : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_perc_max_contributo_erogabile_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.percMaxContributoErogabile)!?html}"																			
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].percMaxContributoErogabile"/> 
+														         </td>
+														     [#elseif item.idTipoIntervento == "98"]
+														     	<td>
+																	<input type="text" style="text-align: right;" 	             
+														               id=""
+														               value="Non previsto"	
+														               name=""	             
+														               class="long idleField"		               
+														               readonly="readonly"  />
+														               <!-- idTipolIntervento : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_id_tipol_intervento_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.idTipolIntervento)!?html}"																				
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].idTipolIntervento"/> 
+																		
+																		<!-- importoMassimoErogabile : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_importo_massimo_erogabile_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.importoMassimoErogabile)!?html}"																				
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].importoMassimoErogabile"/> 
+																		
+																		
+																		<!-- percMaxContrErogabile : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_perc_max_contributo_erogabile_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.percMaxContributoErogabile)!?html}"																			
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].percMaxContributoErogabile"/> 
+														               
+														         </td>
+														     [#elseif item.idTipoIntervento == "99"] 
+														     	<td>
+																	<input type="text" style="text-align: right;" 	             
+														               id=""
+														               value="${FTL_PLACEHOLDER}(item2.importoMassimoErogabile)!?html}"	
+														               name=""	              
+														               class="long idleField"		               
+														               readonly="readonly"  />
+														         
+														                <!-- idTipolIntervento : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_id_tipol_intervento_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.idTipolIntervento)!?html}"																				
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].idTipolIntervento"/> 
+																		
+																		<!-- importoMassimoErogabile : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_importo_massimo_erogabile_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.importoMassimoErogabile)!?html}"																				
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].importoMassimoErogabile"/> 
+																		
+																		<!-- percMaxContrErogabile : valoriContributoList -->  
+																		<input type="hidden"  
+																		   id="id_perc_max_contributo_erogabile_forma_finanziamento_${FTL_PLACEHOLDER}(item2_index)}" 	
+																		   value="${FTL_PLACEHOLDER}(item2.percMaxContributoErogabile)!?html}"																			
+																		   name="_formaAgevolazione.valoriContributoList[${FTL_PLACEHOLDER}item2_index}].percMaxContributoErogabile"/> 
+																</td>
+															[/#if]
+														[/#if]
+													[/#if]
+												[/#list]
+												<!-- spesa max dichiarabile -->
+												
+												[#if item.checked == "true"]
+													
+													[#if item.idTipoIntervento == "97"]
+														[#if isGrandiStazioni == "true"]
+															<td>
+																<input type="text" style="text-align: right;" 			               
+																   id="id_spesa_max_dichiarabile_catg97_${FTL_PLACEHOLDER}item_index}"
+																   value="${FTL_PLACEHOLDER}(str_spesaMaxDichiarabile_97)!?html}"
+																   name="_formaAgevolazione.str_spesaMaxDichiarabile_97"
+																   pattern="\d+(,\d{1,2})?" title="Solo valori numerici maggiore di 0 con al massimo 2 decimali (Es.: 12345,67)"
+													               required="required"														               
+																   class="long idleField"
+																/>
+																[@contextualErrors errorList=(messages._formaAgevolazione_str_spesaMaxDichiarabile_97)![] /]
+															</td>
+														[#else]
+															<td>
+																<input type="text" style="text-align: right;" 			               
+																   id="id_spesa_max_dichiarabile_catg97_${FTL_PLACEHOLDER}item_index}"
+																   value="Non previsto"
+																   name="_formaAgevolazione.str_spesaMaxDichiarabile_97"
+																   readonly="readonly"
+																   class="long idleField"
+																/>
+																[@contextualErrors errorList=(messages._formaAgevolazione_str_spesaMaxDichiarabile_97)![] /]
+															</td>
+														[/#if]
+													[#elseif item.idTipoIntervento == "98"]	
+															<td>
+																<input type="text" style="text-align: right;" 			               
+													               id="id_spesa_max_dichiarabile_catg98_${FTL_PLACEHOLDER}item_index}"
+													               value="${FTL_PLACEHOLDER}(str_spesaMaxDichiarabile_98)!?html}" 
+												               	   name="_formaAgevolazione.str_spesaMaxDichiarabile_98"
+												               	   pattern="\d+(,\d{1,2})?" title="Solo valori numerici maggiore di 0 con al massimo 2 decimali (Es.: 12345,67)"
+													               required="required"	
+													               class="long idleField"													               
+													            />
+													            [@contextualErrors errorList=(messages._formaAgevolazione_str_spesaMaxDichiarabile_98)![] /]
+															</td>
+													[#elseif item.idTipoIntervento == "99"]
+															<td>
+																<input type="text" style="text-align: right;" 			               
+													               id="id_spesa_max_dichiarabile_catg99_${FTL_PLACEHOLDER}item_index}"
+													               value="Non previsto" 
+												               	   name="_formaAgevolazione.spesa_max_dichiarabile_catg99"
+													               class="long idleField"
+													               readonly="readonly"
+													            />
+															</td>
+													[/#if]
+												[#else]
+													[#if item.idTipoIntervento == "97"]	
+														<td>
+															<input type="text" style="text-align: right;" 			               
+												               id="97"
+												               value="Non previsto"	
+												               name="_formaAgevolazione.str_spesaMaxDichiarabile_97"          
+												               class="long idleField"			               
+												               readonly="readonly"  />
+														</td>
+													[#elseif item.idTipoIntervento == "98"]	
+														<td>
+															<input type="text" style="text-align: right;" 			               
+												               id="98"
+												               value="Non previsto"	
+												                name="_formaAgevolazione.str_spesaMaxDichiarabile_98"              
+												               class="long idleField"			               
+												               readonly="readonly"  />
+														</td>
+													
+													[#elseif item.idTipoIntervento == "99"]	
+														<td>
+															<input type="text" style="text-align: right;" 			               
+												               id="99"
+												               value="Non previsto"	
+												               name="_formaAgevolazione.spesa_max_dichiarabile_catg99"              
+												               class="long idleField"			               
+												               readonly="readonly"  />
+														</td>
+													[/#if]
+												[/#if]
+												
+											    <!-- importo richiesto -->
+											    [#if item.idTipoIntervento == "97"]
+													<td>
+														<input type="text" style="text-align: right;" 			               
+											               id="id_importo_categoria97_${FTL_PLACEHOLDER}item_index}"
+											               value="${FTL_PLACEHOLDER}(strImportoCat97)!?html}" 
+											               name="_formaAgevolazione.importoRichiestoCat97"	              
+											               class="long idleField"				               
+											               readonly="readonly"  />
+													</td>
+												[#elseif item.idTipoIntervento == "98"]
+													<td>
+														<input type="text" style="text-align: right;" 			               
+											               id="id_importo_categoria98_${FTL_PLACEHOLDER}item_index}"
+											               value="${FTL_PLACEHOLDER}(strImportoCat98)!?html}" 
+											               name="_formaAgevolazione.importoRichiestoCat98"
+											               class="long idleField"			               
+											               readonly="readonly"  />
+											               
+													</td>
+												[#elseif item.idTipoIntervento == "99"]
+													<td>
+														<input type="text" style="text-align: right;" 			               
+											               id="id_importo_categoria99_${FTL_PLACEHOLDER}item_index}"
+											                value="${FTL_PLACEHOLDER}(strImportoCat99)!?html}" 
+											               name="_formaAgevolazione.importoRichiestoCat99"              
+											               class="long idleField"				               
+											               readonly="readonly"  />
+													</td>
+												[/#if]
+									
+									    	</tr>
+							    [/#if]
+							[/#list]
+							<tr class="skip">
+												<th scope="row"></th>
+												<td>
+													<strong>Totale</strong>
+												</td>
+												<td>
+													<input type="text" 			               
+											               id=""
+											               value="${FTL_PLACEHOLDER}(totaleSpeseContrCatg)!?html}" 
+											               name="_formaAgevolazione.totaleSpeseContributo"		              
+											               class="long"	style="text-align: right; font-weight: bold;"				               
+											               readonly="readonly"  />
+												</td>
+												<td>
+													
+												</td>
+												<td>
+													
+												</td>
+												<td>
+													
+												</td>
+												<td>
+													<input type="text" 			               
+											               id="id_totale_importo_contributo"
+											               value="${FTL_PLACEHOLDER}(strTotImportoRichiesto)!?html}"
+											               name="_formaAgevolazione.totaleImportoContributo"         											              
+											               class="long"	style="text-align: right; font-weight: bold;" 				               
+											               readonly="readonly"  />
+												</td>
+											</tr>
+						</tbody>
+					</table>
+				</td>
+				<td></td>
+			</tr>
+		</table>
+</div>	
+
+

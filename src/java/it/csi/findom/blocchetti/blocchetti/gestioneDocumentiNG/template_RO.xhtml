@@ -1,0 +1,121 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _gestioneDocumenti RO --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<h4 class="titTab_hide">Documentazione</h4>
+
+[#if errorsIndexMap?has_content]
+	<div class="stdMessagePanel feedback">
+		<div class="feedKo">
+			<p><strong>Attenzione!</strong><br/>L'operazione non risulta andata a buon fine.
+			<br/>${FTL_PLACEHOLDER}(errorsIndexMap._allegati)!}</p>
+		</div>
+	</div>
+[/#if]
+
+[#-- box che riporta l'elenco dei documenti obbligatori NON ancora inseriti dall'utente --]
+<#if msgDocumentiOpzionaliPerBando == "true" >
+	[#if msg_allegati_opzionali_per_bando == "true" ]
+		<div class="stdMessagePanel feedback">
+			<div class="feedWarning">
+			<p>Altri documenti obbligatori:<br /> 
+				Attenzione! Gli allegati obbligatori potrebbero variare in base alle indicazioni del Bando:<br />
+				<ul>
+					<li> Qualifica professionale in corso di validità - Allegato OBBLIGATORIO per le Guide Turistiche (ATECO 79.90.20), PENA LA NON RICEVIBILITA' DELLA DOMANDA</li>
+					<li> Attestato di qualifica professionale rilasciato dalle associazioni professionali – Allegato OBBLIGATORIO per interpreti e traduttori (ATECO 74.30), PENA LA NON RICEVIBILITA' DELLA DOMANDA</li>
+					<li> Statuto – Allegato OBBLIGATORIO per le associazioni con partita IVA (ATECO 94.99.2) e per quelle con il solo codice fisale, PENA LA NON RICEVIBILITA' DELLA DOMANDA</li>
+				</ul>
+			</p>
+			</div>
+		</div>
+	[/#if]
+</#if>
+<!--INIZIO ELENCO ALLEGATI -->
+
+<div >
+	<table summary="...." class="myovertable">
+		<col width="52%" />
+		<col width="44%" />
+		<col width="4%" />
+		<thead>
+			<tr>
+				<th scope="col">Tipologia</th>
+				<th scope="col">Nome documento allegato</th>
+				<th scope="col">Documento extra soglia</th>
+			</tr>
+		</thead>
+		<tbody>
+		[#if (allegatiList)?has_content]
+			[#assign i = 0]
+			[#list allegatiList as item]
+			[#-- genero una nuova lista per poter ordinare gli elementi --]
+			[#assign i = i + 1]
+			[#if i == 1]
+			[#-- primo elemento --]
+				[#assign listaAllegatiOrd = [{"descrTipologia":(item.documento.descrTipologia)!,
+											"idFile": (item.documento.idFile)!,
+											"nomeFile": (item.documento.nomeFile)!,
+											"idTipologia": (item.documento.idTipologia!),
+											"differito": (item.documento.differito)!,
+											"chiaveSorting" : (item.documento.descrTipologia) + ' ' + (item.documento.nomeFile)!}]]
+			[#else]
+			[#-- elementi successivi, appendo alla lista --]
+				[#assign listaAllegatiOrd = listaAllegatiOrd +
+											[{"descrTipologia":(item.documento.descrTipologia)!,
+											"idFile": (item.documento.idFile)!,
+											"nomeFile": (item.documento.nomeFile)!,
+											"idTipologia": (item.documento.idTipologia!),
+											"differito": (item.documento.differito)!,
+											"chiaveSorting" : (item.documento.descrTipologia) + ' ' + (item.documento.nomeFile)!}]]
+			[/#if]
+			[/#list]
+			
+			[#list (listaAllegatiOrd)?sort_by("chiaveSorting") as item]
+			<tr>
+				<td>${FTL_PLACEHOLDER}(item.descrTipologia)!}</td>
+				
+				<td> <a href="/${FTL_PLACEHOLDER}(urlContextSportello)!}/caricaAllegati.do?viewedoc=${FTL_PLACEHOLDER}(item.idFile)!}">
+					${FTL_PLACEHOLDER}(item.nomeFile)!}
+				</a> 
+				[#if errorsIndexMap?has_content]
+				  [#if (errorsIndexMap._allegati_read)??]
+					[#if errorOnElement! == item.idFile]
+						<span class="txtError">
+						<img src="/ris/resources/global/images/error.gif" alt="ci sono errori" title="ci sono errori" class="imError" />
+						<span>	${FTL_PLACEHOLDER}(errorsIndexMap._allegati_read)!} </span>
+						</span>
+					[/#if]
+				  [/#if]
+				[/#if]
+				</td>
+				<td><center>
+				[#if stringaIdTipolDifferibili?contains("["+item.idTipologia!+"]")]
+				[#if "true" == (item.differito)!]											  
+				<input type="checkbox" class="noborder" id="id_documento_differibile_${FTL_PLACEHOLDER}item_index}" checked="checked" disabled="disabled" />
+				[#else]										
+				<input type="checkbox" class="noborder" id="id_documento_differibile_${FTL_PLACEHOLDER}item_index}" disabled="disabled" />
+				[/#if]
+				[#else]
+					-								
+				[/#if]
+				</center>
+				</td>
+			</tr>
+			[/#list]
+
+		[#else]
+			<!-- non esistono documenti insertiti dall'utente -->
+			<tr>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+			</tr>
+		[/#if]
+		</tbody>
+	</table>
+
+</div>

@@ -1,0 +1,202 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+				[#-- _sedeLegale RO --]
+
+				<#-- note di dipendenze da altre commonalities: nessuna -->
+
+	<#if _toggle_dinamico_label == "true" >
+			
+			<#if _sedeLegale_toggle_dinamico_label?has_content >
+					
+				<#if _ente_impresa_SL_altri_recapiti == "false" >
+					<h4>
+						<span id="toggle_handle_SedeLeg" class="toggle_handle collapse">${_sedeLegale_toggle_dinamico_label}</span>
+					</h4>
+					<div class="toggle_target_SedeLeg">
+				<#else>
+				    <h5>Sede legale</h5>
+					<div class="formTable" summary="....">
+				</#if>
+			
+			<#else>
+			
+				<#if _ente_impresa_SL_altri_recapiti == "false" >
+					<h4>
+						<span id="toggle_handle_SedeLeg" class="toggle_handle collapse">Sede legale</span>
+					</h4>
+					<div class="toggle_target_SedeLeg">
+				<#else>
+				    <h5>Sede legale</h5>
+					<div class="formTable" summary="....">
+				</#if>
+			
+			</#if>
+
+	<#else>
+	
+		<#if _ente_impresa_SL_altri_recapiti == "false" >
+			<h4>
+				<span id="toggle_handle_SedeLeg" class="toggle_handle collapse">Sede legale</span>
+			</h4>
+			<div class="toggle_target_SedeLeg">
+		<#else>
+		    <h5>Sede legale</h5>
+			<div class="formTable" summary="....">
+		</#if>
+
+	</#if>
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="70%" />
+							<#if _sedeLegale_solo_province_piemonte == "true" >
+								<tr>
+									<th>Stato </th>
+									<td>
+										[#if "Italia" == (_sedeLegale.stato)!]
+											<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" checked="checked" />
+										[#else]
+											<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" disabled="disabled" />
+										[/#if]
+										
+										<label for="id_sedeLegale_statoIt">Italia</label>
+		
+										<div id="italiaSel" class="spaceBottom">
+											<label for="id_sedeLegale_provinciaDescrizione">Provincia</label>
+											<input type="text" name="_sedeLegale.provincia" value="${FTL_PLACEHOLDER}(_sedeLegale.provinciaDescrizione)!?html}" id="id_sedeLegale_provinciaDescrizione" class="medium" readonly="readonly" />
+											
+											<label for="id_sedeLegale_comune">Comune</label>
+											<input type="text" name="_sedeLegale.comuneDescrizione" value="${FTL_PLACEHOLDER}(_sedeLegale.comuneDescrizione)!?html}" id="id_sedeLegale_comuneDescrizione" class="medium" readonly="readonly" />
+										</div>
+		
+									</td>
+								</tr>	
+							<#else>
+								[#-- std --]
+								<tr>
+									<th>Stato </th>
+									<td>
+										[#if "Italia" == (_sedeLegale.stato)!]
+											<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" checked="checked" />
+										[#else]
+											<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" disabled="disabled" />
+										[/#if]
+										
+										<label for="id_sedeLegale_statoIt">Italia</label>
+		
+										<div id="italiaSel" class="spaceBottom">
+											<label for="id_sedeLegale_provinciaDescrizione">Provincia</label>
+											<input type="text" name="_sedeLegale.provincia" value="${FTL_PLACEHOLDER}(_sedeLegale.provinciaDescrizione)!?html}" id="id_sedeLegale_provinciaDescrizione" class="medium" readonly="readonly" />
+											
+											<label for="id_sedeLegale_comune">Comune</label>
+											<input type="text" name="_sedeLegale.comuneDescrizione" value="${FTL_PLACEHOLDER}(_sedeLegale.comuneDescrizione)!?html}" id="id_sedeLegale_comuneDescrizione" class="medium" readonly="readonly" />
+										</div>
+		
+										[#if "Estero" == (_sedeLegale.stato)!]
+											<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoEst" value="Estero" checked="checked" />
+										[#else]
+											<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoEst" value="Estero" disabled="disabled" />
+										[/#if]
+		
+										<label for="id_sedeLegale_statoEst">Stato estero</label>
+										<div id="esteroSel">
+											<label for="id_sedeLegale_statoEstero">Stato estero</label>
+											<input type="text" name="_sedeLegale.statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_sedeLegale.statoEsteroDescrizione)!?html}" id="id_sedeLegale_statoEsteroDescrizione" class="medium" readonly="readonly" />
+											
+											<label for="id_sedeLegale_cittaEstera">Città estera</label>
+											<input type="text" name="_sedeLegale.cittaEstera" value="${FTL_PLACEHOLDER}(_sedeLegale.cittaEstera)!?html}" id="id_sedeLegale_cittaEstera" class="medium"  readonly="readonly" />
+										</div>
+									</td>
+								</tr>						
+								
+							</#if>
+					
+								<tr>
+									<th> <label for="id_sedeLegale_indirizzo">Indirizzo</label> </th>
+									<td colspan="3">
+										<input type="text" name="_sedeLegale.indirizzo" value="${FTL_PLACEHOLDER}(_sedeLegale.indirizzo)!?html}" 
+										id="id_sedeLegale_indirizzo" class="medium"  style="width:80%" readonly="readonly"/>
+									
+										<label for="id_sedeLegale_numcivico">N. civico</label> 
+										<input type="text" name="_sedeLegale.numCivico" value="${FTL_PLACEHOLDER}(_sedeLegale.numCivico)!?html}" 
+										       id="id_sedeLegale_numcivico" class="short" style="width:5%" readonly="readonly" />
+									</td>
+								</tr>						
+								<tr>
+									<th> <label for="id_sedeLegale_cap">CAP</label> </th>
+									<td  colspan="3">
+										<input type="text" name="_sedeLegale.cap" value="${FTL_PLACEHOLDER}(_sedeLegale.cap)!?html}" id="id_sedeLegale_cap" 
+										       class="short" readonly="readonly" />
+									</td>
+								</tr>
+						
+					</table>
+
+					<h5>Recapiti</h5>
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="30%" />
+						<col width="10%" />
+						<col width="30%" />
+						
+				<#if _ente_impresa_SL_altri_recapiti == "false" >						
+						<tr>
+							<th> 
+								<label for="id_sedeLegale_telefono">Telefono</label> 
+							</th>
+							<td>
+								<input type="text" name="_sedeLegale.telefono" value="${FTL_PLACEHOLDER}(_sedeLegale.telefono)!?html}" id="id_sedeLegale_telefono" 
+								       class="long" readonly="readonly" />
+							</td>
+							<th> 
+								<label for="id_sedeLegale_pec">Indirizzo PEC</label> 
+							</th>
+							<td>
+								<input type="text" name="_sedeLegale.pec" value="${FTL_PLACEHOLDER}(_sedeLegale.pec)!?html}" id="id_sedeLegale_pec" 
+								       class="long" readonly="readonly" />
+							</td>
+						</tr>
+							<tr>
+								<th> <label for="id_sedeLegale_email">Email</label>  </th>
+								<td>
+									<input type="text" name="_sedeLegale.email" value="${FTL_PLACEHOLDER}(_sedeLegale.email)!?html}" id="id_sedeLegale_email" 
+										class="long" readonly="readonly"  />								
+								</td>
+							</tr>
+				<#else>	
+					<!-- Jira: 1334   inizio -->					
+	                     <tr>
+							<th> <label for="id_sedeLegale_personaRifSL">Persona di riferimento</label>  </th>
+							<td>
+								<input type="text" name="_sedeLegale.personaRifSL" value="${FTL_PLACEHOLDER}(_sedeLegale.personaRifSL)!?html}" id="id_sedeLegale_personaRifSL" 
+									class="long" readonly="readonly"  />
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_sedeLegale_email">Email</label>  </th>
+							<td>
+								<input type="text" name="_sedeLegale.email" value="${FTL_PLACEHOLDER}(_sedeLegale.email)!?html}" id="id_sedeLegale_email" 
+									class="long"  readonly="readonly" />
+							</td>
+						</tr>
+						
+						<tr>
+						    <th> <label for="id_sedeLegale_telefono">Telefono</label>  </th>
+							<td>
+								<input type="text" name="_sedeLegale.telefono" value="${FTL_PLACEHOLDER}(_sedeLegale.telefono)!?html}" id="id_sedeLegale_telefono" 
+									class="long" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<th> <label for="id_sedeLegale_cellulare">Cellulare</label>  </th>
+							<td>
+								<input type="text" name="_sedeLegale.cellulare" value="${FTL_PLACEHOLDER}(_sedeLegale.cellulare)!?html}" id="id_sedeLegale_cellulare" 
+									class="long"  readonly="readonly"/>
+							</td>
+						</tr>	
+					<!-- Jira: 1334   fine -->											
+				</#if>											
+					</table>
+
+				</div>

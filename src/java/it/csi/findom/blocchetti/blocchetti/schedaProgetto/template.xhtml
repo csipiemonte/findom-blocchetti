@@ -1,0 +1,345 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _SchedaProgetto --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+	<div class="stdMessagePanel feedback" id="criteriMessages" style="display: none;">
+		<div class="feedWarning"><p><strong>Attenzione!</strong><br/>La cancellazione dei criteri contenuti in questa pagina diventera' definitiva con il salvataggio. </p>
+		</div>
+	</div>
+[#if bottoniAbilitati=="true"]
+	<script type="text/javascript">
+		function impostaRadioButton(idname, name){
+		    //valorizzo campo hidden
+			var id = '#' + idname;
+			$(id).attr("value", "checked");
+			//// console.log('idname='+idname);
+			
+			// svalorizzo altri hidden
+			$('input[id^="' +name+ '"]').each(function() {
+				//// console.log('-name='+this.name);
+				if(this.id!=idname){
+					//// console.log('cercato = ' + idname + ', scartato '+this.id);
+					this.value="notChecked";
+				}
+			});
+		}
+
+		function cancellaTutto(){
+			// console.log("cancellaTutto ");
+			// per ogni idCriterio passato come input al metodo
+			[].forEach.call(arguments, function (el) {
+				// console.log(" disabilito DIV criterio = "+el);
+				// disabilito i criteri presenti in pagina
+				$("div.toggle_target_criterio"+el+" :input").each(function() {
+					//// console.log('id='+ $(this).attr('id')+", valore="+ $(this).val());
+					$(this).prop("disabled", true);
+				});
+			});
+						
+			//mostro Warning
+			$("#criteriMessages").show();
+
+			// console.log('abilito i campi di cancellazione');
+			// abilito i campi per cancellare i criteri presenti in pagina
+			$("#id_cancellazioneCriteri :input").each(function() {
+				// console.log('id='+ $(this).attr('id')+", valore="+ $(this).val());
+				$(this).prop("disabled", false);
+			});
+		}
+	</script>
+[/#if]
+	<input type="hidden" name="_criteri.numeroCriteriTotali" id="id_numeroCriteriTotali" value="${FTL_PLACEHOLDER}(numeroCriteriTotali)!}" />
+ 
+[#assign crit = ""] [#-- variabile che uso per il javascript cancellaTutto --]
+
+[#if listaCriteri?has_content]
+	[#list listaCriteri as item]
+		[#if item?has_content]
+			
+		[#if crit?has_content]
+		   [#assign crit = crit + "," + item.idCriterio]
+		[#else]
+		   [#assign crit = item.idCriterio]
+		[/#if]
+
+	<h4>
+		<span id="toggle_handle_criterio${FTL_PLACEHOLDER}(item.idCriterio)!?html}" class="toggle_handle collapse">
+			${FTL_PLACEHOLDER}(item.descrBreveCriterio)!?html}
+		[#if ((messages._criterioID)?has_content)]
+			[#if messages._criterioID?seq_contains(item.idCriterio+"D")]
+					[@contextualErrors errorList=(messages._criterioMsg)![] /]
+			[/#if]
+		[/#if]
+		</span>
+	</h4>
+
+[#if item.abilitato!="true"]
+	<span style="font-size:12;font-style: italic;"> 
+	<img src="http://dev-www.sistemapiemonte.it/ris/resources/global/images/warning.gif" alt="criterio disabilitato" 
+					title="criterio disabilitato"  />
+		Questo criterio &#232; abilitato solo per la tipologia di intervento: <strong>${FTL_PLACEHOLDER}(descrizioneTipolIntervento)!?html}</strong>
+		[#-- ${FTL_PLACEHOLDER}(item.descrizioneCriterio)!?html} risulta disabilitato...... </span> --]
+	<br/><br/>
+[/#if]	
+	
+	<div class="toggle_target_criterio${FTL_PLACEHOLDER}(item.idCriterio)!?html}">
+		
+		<h5 class="titTab_hide">
+		 ${FTL_PLACEHOLDER}(item.descrizioneCriterio)!?html}
+		</h5>
+[#if item.abilitato=="true"]
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].idCriterio" 
+			id="id_criterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="${FTL_PLACEHOLDER}(item.idCriterio)!}" />
+		
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].descrBreveCriterio" 
+			id="id_descrBreveCriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="${FTL_PLACEHOLDER}(item.descrBreveCriterio)!?html}" />
+		
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].descrizioneCriterio" 
+			id="id_descrizioneCriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="${FTL_PLACEHOLDER}(item.descrizioneCriterio)!?html}" />
+
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].ordineCriterio" 
+			id="id_ordineCriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="${FTL_PLACEHOLDER}(item.ordineCriterio)!}" />
+			
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].idTipolIntervento" 
+			id="id_idTipolIntervento${FTL_PLACEHOLDER}item.posizioneCriterio}" value="${FTL_PLACEHOLDER}(item.idTipolIntervento)!}" />
+[/#if]	
+		[#assign ordSpec = 0]
+		[#list item.listaSpecifiche as item2]
+
+			<span>
+			[#if ((messages._specifica)?has_content)]
+				[#if messages._specifica_id?seq_contains(item2.idSpecifica+"D")]
+						[@contextualErrors errorList=(messages._specifica)![] /]
+				[/#if]
+			[/#if]
+				<STRONG>
+				${FTL_PLACEHOLDER}(item2.descrizioneSpecifica)!?html} 
+				</STRONG>
+			</span>
+[#if item.abilitato=="true"]
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].idSpecifica" 
+				id="id_specifica${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}" 
+				value="${FTL_PLACEHOLDER}(item2.idSpecifica)!}" />
+			
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].descrizioneSpecifica" 
+				id="id_descrizioneSpecifica${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}" 
+				value="${FTL_PLACEHOLDER}(item2.descrizioneSpecifica)!?html}" />
+			
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].descrBreveSpecifica" 
+				id="id_descrBreveSpecifica${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}" 
+				value="${FTL_PLACEHOLDER}(item2.descrBreveSpecifica)!?html}" />
+				
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].ordineSpecifica" 
+				id="id_ordineSpecifica${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}" 
+				value="${FTL_PLACEHOLDER}(item2.ordineSpecifica)!}" />
+				
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].tipoCampo" 
+				id="id_tipoCampo${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}" 
+				value="${FTL_PLACEHOLDER}(item2.tipoCampo)!?html}" />
+[/#if]
+				
+		<table class="formTable" summary="....">
+			<col width="3%" />
+			<col width="97%" />
+				
+		[#list item2.listaParametri?sort_by("ordineParametro") as item3]
+[#if item.abilitato=="true"]
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].idParametro" 
+				id="id_parametro${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				value="${FTL_PLACEHOLDER}(item3.idParametro)!}" />
+			
+			<#-- item3.idParametroValut e' > 1000, uscira col punto... -->
+			
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].idParametroValut" 
+				id="id_idParametroValut${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				value="${FTL_PLACEHOLDER}(item3.idParametroValut)!}" />
+				
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].descrBreveParametro" 
+				id="id_descrBreveParametro${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				value="${FTL_PLACEHOLDER}(item3.descrBreveParametro)!?html}" />
+			
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].descrizioneParametro" 
+				id="id_descrizioneParametro${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				value="${FTL_PLACEHOLDER}(item3.descrizioneParametro)!?html}" />
+				
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].ordineParametro" 
+				id="id_ordineParametro${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				value="${FTL_PLACEHOLDER}(item3.ordineParametro)!}" />
+			
+			<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].punteggioParametro" 
+				id="id_punteggioParametro${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				value="${FTL_PLACEHOLDER}(item3.punteggioParametro)!}" />
+[/#if]
+[#if item2.tipoCampo=="checkbox"]
+		
+			<tr>
+				<td>
+[#if item.abilitato=="true"]
+	[#if "checked" == (item3.checked)!]
+	<input class="noborder" type="checkbox" 
+		id="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" checked="checked" 
+		name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+		value="checked"/>
+	[#else]
+	<input class="noborder" type="checkbox" 
+		id="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+		name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+		value="checked"/>
+	[/#if]
+	
+	<input class="noborder" type="hidden" 
+		id="id_checkboxHidden${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+		name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+		value="notChecked"/>
+[#else]
+	<input class="noborder" type="checkbox" disabled="disabled"
+		id="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}" 
+		name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+		value=""/>
+[/#if]
+				</td>
+				<td>
+				<label for="id_checkbox${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}${FTL_PLACEHOLDER}item3.ordineParametro}"> 
+					${FTL_PLACEHOLDER}(item3.descrizioneParametro)!?html} 
+				</label>
+				</td>
+		</tr>
+
+[#else]  [#--  tipoCampo=="checkbox"  --]
+
+			<tr>
+				<td>
+[#if item.abilitato=="true"]
+				[#if "checked" == (item3.checked)!]
+				<input class="noborder" type="radio" 
+					name="criterio${FTL_PLACEHOLDER}item.idCriterio}_specifica[${FTL_PLACEHOLDER}ordSpec}]_parametro"
+					id="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+					value="checked" 
+					checked="checked" />
+				[#else]
+				<input class="noborder" type="radio" 
+					name="criterio${FTL_PLACEHOLDER}item.idCriterio}_specifica[${FTL_PLACEHOLDER}ordSpec}]_parametro"
+					id="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+					value="" 
+					onclick="impostaRadioButton('id_radiodHidden${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}','id_radiodHidden${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_')"
+					 />
+				[/#if]
+[#else]
+				<input class="noborder" type="radio" disabled="disabled"
+					name="criterio${FTL_PLACEHOLDER}item.idCriterio}_specifica[${FTL_PLACEHOLDER}ordSpec}]_parametro"
+					id="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+					value=""  />
+[/#if]
+			</td>
+			<td>
+			<label for="id_radio${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}"> 
+				${FTL_PLACEHOLDER}(item3.descrizioneParametro)!?html} 
+			</label>
+[#if item.abilitato=="true"]			
+			[#if "checked" == (item3.checked)!]
+			<input class="noborder" type="hidden" 
+				id="id_radiodHidden${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+				value="checked"/>
+			[#else]
+			<input class="noborder" type="hidden" 
+				id="id_radiodHidden${FTL_PLACEHOLDER}item.posizioneCriterio}_${FTL_PLACEHOLDER}ordSpec}_${FTL_PLACEHOLDER}item3.ordineParametro}" 
+				name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}].parametriList[${FTL_PLACEHOLDER}item3.ordineParametro -1}].checked"
+				value="notChecked"/>
+[/#if]
+			</td>
+			[/#if]
+		</tr>
+
+[/#if]
+				[/#list]
+		</table>
+
+  		[#assign ordSpec = ordSpec +1]
+		[/#list]
+	</div>
+
+	<br/>
+	
+		[/#if] 
+	[/#list]
+	
+	[#if bottoniAbilitati=="true"]
+
+	<div class="commandPanel">
+		<div class="button left">
+			<span>
+				<input onclick="cancellaTutto(${FTL_PLACEHOLDER}crit})" value="Cancella tutto" type="button" id="idButtoneCancTT"/>	
+			</span>
+		</div>	
+		<div class="button left">
+			<span>
+				<input name="_command:RESTORE_PAGE" value="Ripristina valori iniziali" type="submit" />
+			</span>
+		</div>
+		<div class="button left" id="id_salvaCriteri">
+			<span class="save highlighted">
+				<input  name="_command:SAVE_PAGE" value="Salva" type="submit" />
+			</span>
+		</div>
+	</div>
+	[#else]
+	<div class="commandPanel">
+		<div class="button left">
+			<span>
+				<input value="Cancella tutto" type="submit" id="idButtoneCancTT" disabled="disabled" />	
+			</span>
+		</div>	
+		<div class="button left">
+			<span>
+				<input name="_command:RESTORE_PAGE" value="Ripristina valori iniziali" type="submit" disabled="disabled" />
+			</span>
+		</div>
+		<div class="button left" id="id_salvaCriteri">
+			<span>
+				<input  name="_command:SAVE_PAGE" value="Salva" type="submit" disabled="disabled" />
+			</span>
+		</div>
+	</div>
+	
+	[/#if]
+
+[#else]
+	Nessun criterio disponibile
+[/#if] 
+
+
+[#-- ############################################################################# --]
+[#-- SEZIONE UTILE PER LA CANCELLAZIONE , i campi vengono abilitati via javascript --]
+[#if bottoniAbilitati=="true"]
+
+[#if listaCriteri?has_content]
+	<div id="id_cancellazioneCriteri" style="display: none;">
+	[#list listaCriteri as item]
+		[#if item?has_content]
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].idCriterio" 
+			id="id_DELcriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="" disabled="disabled"/>
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].descrBreveCriterio" 
+			id="id_DELdescrBreveCriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="" disabled="disabled"/>
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].descrizioneCriterio" 
+			id="id_DELdescrizioneCriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="" disabled="disabled"/>
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].ordineCriterio" 
+			id="id_DELordineCriterio${FTL_PLACEHOLDER}item.posizioneCriterio}" value="" disabled="disabled"/>
+		<input type="hidden" name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].idTipolIntervento" 
+			id="id_iDELdTipolIntervento${FTL_PLACEHOLDER}item.posizioneCriterio}" value="" disabled="disabled"/>
+		[#assign ordSpec = 0]
+		[#list item.listaSpecifiche as item2]
+			<input type="hidden" id="id_DELspecifica${FTL_PLACEHOLDER}item.posizioneCriterio}${FTL_PLACEHOLDER}ordSpec}" 
+				name="_criteri.criteriList[${FTL_PLACEHOLDER}item.posizioneCriterio}].specificheList[${FTL_PLACEHOLDER}ordSpec}]" 
+				value="DELETED" disabled="disabled"/>
+  		[#assign ordSpec = ordSpec +1]
+		[/#list]
+		[/#if] 
+	[/#list]
+	</div>
+[/#if] 
+[/#if]

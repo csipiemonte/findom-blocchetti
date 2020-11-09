@@ -1,0 +1,43 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+<div id="document">
+	<![CDATA[
+		[@InjectModel][/@InjectModel]
+	]]>
+
+
+	[#-- MACRO: sono valide per ogni sezione o pagina --]
+	<#include "../../../../../../../../../../blocchetti/macros/errorclass.bsh">
+	
+	[#-- FINE MACRO --]
+
+	[#if (formState == "BZ") || (formState == "OK") || (formState == "OW") || (formState == "KO")]
+	  
+		<!-- PARTE IN LETTURA/SCRITTURA-->
+		<#include "../../../../../../../../../../blocchetti/javascripts/disableEnterKey.js">
+		
+		<div id="S1">
+			<div id="S1_P1_SEL_ATECO">
+				 <!-- AGGR_hideAllPageButtons -->					
+
+				<#include "../../../../../blocchetti/selezioneAteco/template.xhtml">
+				
+			</div><!--/S1_P1_SEL_ATECO -->
+		</div><!--/S1 -->
+
+	[#else]
+
+		<!-- PARTE IN SOLA LETTURA-->
+
+		<div id="S1">
+			<div id="S1_P1_SEL_ATECO">
+                <!-- AGGR_hideAllPageButtons -->
+				<#include "../../../../../blocchetti/selezioneAteco/template_RO.xhtml">
+
+			</div><!--/S1_P1_SEL_ATECO -->			
+		</div><!--/S1 -->
+	[/#if]
+
+</div>

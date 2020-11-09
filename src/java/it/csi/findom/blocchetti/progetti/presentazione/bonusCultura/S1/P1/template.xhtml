@@ -1,0 +1,47 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+<div id="document">
+	<![CDATA[
+		[@InjectModel][/@InjectModel]
+	]]>
+
+
+	[#-- MACRO: sono valide per ogni sezione o pagina --]
+	[#-- include "../../../macros/warningclass.bsh" // NON USATA  --]
+	<#include "../../../../../../../../../../blocchetti/macros/errorclass.bsh">
+	
+	[#-- COMMON: parti di codice comune a piu pagine --]
+	[#-- include "../../../macros/contenutiHeader.bsh"  // NON USATA --]
+	
+	[#-- FINE MACRO --]
+
+	[#if (formState == "BZ") || (formState == "OK") || (formState == "OW") || (formState == "KO")]
+
+		<!-- PARTE IN LETTURA/SCRITTURA-->
+		<#include "../../../../../../../../../../blocchetti/javascripts/disableEnterKey.js">
+		
+		<div id="S1">
+			<div id="S1_P1">
+				<!-- AGGR_hideButton_RESET_PAGE -->
+				<!-- AGGR_hideButton_RESTORE_PAGE -->	
+				<#include "../../../../../blocchetti/domandaNG/template.xhtml">
+				<#include "../../../../../blocchetti/operatorePresentatoreSemplificato/template.xhtml">
+			</div><!--/S1_P1 -->
+		</div><!--/S1 -->
+
+	[#else]
+
+		<!-- PARTE IN SOLA LETTURA-->
+
+		<div id="S1">
+			<div id="S1_P1">
+                <!-- AGGR_hideAllPageButtons -->
+				<#include "../../../../../blocchetti/domandaNG/template_RO.xhtml">
+				<#include "../../../../../blocchetti/operatorePresentatoreSemplificato/template_RO.xhtml">
+			</div><!--/S1_P1 -->			
+		</div><!--/S1 -->
+	[/#if]
+
+</div>

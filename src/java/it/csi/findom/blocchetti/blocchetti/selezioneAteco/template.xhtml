@@ -1,0 +1,286 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _selezionaAteco --]
+
+<#-- note di dipendenze da altre commonalities: _operatorePresentatore -->
+
+				<h4>
+					<span id="toggle_handle_ateco" class="toggle_handle collapse">Ricerca il settore prevalente ATECO (2007)
+					[@contextualErrors errorList=(messages.atecoParamNull)![] /]</span>
+				</h4>
+
+				<div class="toggle_target_ateco">
+				
+					<table class="formTable" summary="....">
+						<col width="30%" />
+						<col width="70%" />
+						<tr>
+							<td>
+								<label for="id_codiceAteco">Codice </label>
+								</td>
+								<td>
+								<input type="text" name="codiceAteco" value="${FTL_PLACEHOLDER}codiceAteco!?html?js_string}"  class="medium"  id="id_codiceAteco"  />
+								[@contextualErrors errorList=(messages.id_codiceAteco)![] /]
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="id_descrizioneAteco">Descrizione </label>
+								</td>
+								<td>
+								<input type="text" name="descrizioneAteco" value="${FTL_PLACEHOLDER}descrizioneAteco!?html?js_string}" id="id_descrizioneAteco" class="medium" />
+								[@contextualErrors errorList=(messages.id_descrizioneAteco)![] /]
+							</td>
+						</tr>
+					</table>
+					
+					<div class="commandPanel noSpaceButton">
+						<div class="button left">
+							<span class="cancel">
+								<input type="submit" id="indietro" value="Indietro" 
+							       name="_command:LabelCommand:C_tornaallanagrafica;RenderCommand:1100"  />
+							</span>
+							<span class="cancel">
+								<input type="submit" id="pulisci_campi" value="Pulisci i campi" 
+							       name="_command:LabelCommand:C_pulisci_campi_ricerca_ateco;RenderCommand:1140"  />
+							</span>
+							<span class="highlighted">
+								<input type="submit" name="_command:LabelCommand:C_trova_ateco;RenderCommand:1140" value="Trova" />
+							</span>
+						</div>
+					</div>
+					
+				</div>
+	
+<div>
+  
+  <input type="hidden" id="id_codiceFiscaleOperatoreHidden" name="_operatorePresentatore.codiceFiscale" 
+	     value="${FTL_PLACEHOLDER}(statusInfo.codFiscaleBeneficiario)!?html}"/>
+	     
+  <input type="hidden" id="id_operatorePresentatore_denominazione"  name="_operatorePresentatore.denominazione" 
+         value="${FTL_PLACEHOLDER}(_operatorePresentatore.denominazione)!?html}" />	
+											     
+
+  <#if operatorePresentatore_dipartimenti == "true" >  
+    <input type="hidden" id="id_operatorePresentatore_idDipartimento" name="_operatorePresentatore.idDipartimento" value="${FTL_PLACEHOLDER}(_operatorePresentatore.idDipartimento)!?html}" />
+    <input type="hidden" id="id_operatorePresentatore_codiceDipartimento" name="_operatorePresentatore.codiceDipartimento" value="${FTL_PLACEHOLDER}(_operatorePresentatore.codiceDipartimento)!?html}" />
+    <input type="hidden" id="id_operatorePresentatore_descrizioneDipartimento" name="_operatorePresentatore.descrizioneDipartimento" value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneDipartimento)!?html}" />								
+  </#if>
+  
+  
+  <input type="hidden" id="id_operatorePresentatore_idStato" name="_operatorePresentatore.idStato" value="${FTL_PLACEHOLDER}(_operatorePresentatore.idStato)!?html}" />
+  <input type="hidden" id="id_operatorePresentatore_descrStato" name="_operatorePresentatore.descrStato" value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrStato)!?html}" />
+  <input type="hidden" id="id_operatorePresentatore_idStatoCostImpresa" name="_costituzioneImpresa.idStatoCostImpresa" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.idStatoCostImpresa)!?html}" />
+  <input type="hidden" id="id_operatorePresentatore_descrStatoCostImpresa" name="_costituzioneImpresa.descrStatoCostImpresa" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.descrStatoCostImpresa)!?html}" />
+								
+  
+  <input type="hidden" id="id_operatorePresentatore_idFormaGiuridica" name="_operatorePresentatore.idFormaGiuridica" 
+		 value="${FTL_PLACEHOLDER}(_operatorePresentatore.idFormaGiuridica)!?html}" />
+  <input type="hidden" id="id_operatorePresentatore_codiceFormaGiuridica" name="_operatorePresentatore.codiceFormaGiuridica" 
+		 value="${FTL_PLACEHOLDER}(_operatorePresentatore.codiceFormaGiuridica)!?html}" />
+  <input type="hidden" id="id_operatorePresentatore_descrizioneFormaGiuridica" name="_operatorePresentatore.descrizioneFormaGiuridica" 
+		 value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneFormaGiuridica)!?html}" />
+    
+  <input type="hidden" id="id_partitaIvaOperatoreHidden" name="_operatorePresentatore.partitaIva" 
+	     value="${FTL_PLACEHOLDER}(_operatorePresentatore.partitaIva)!?html}"  />
+  <input type="hidden" id="id_indirizzoPecOperatoreHidden" name="_operatorePresentatore.indirizzoPec" 
+	     value="${FTL_PLACEHOLDER}(_operatorePresentatore.indirizzoPec)!?html}"  />	
+
+  <input type="hidden" id="id_idAttivitaEconomicaOperatoreHidden" name="_operatorePresentatore.idAttivitaEconomica" 
+  		 value="${FTL_PLACEHOLDER}(_operatorePresentatore.idAttivitaEconomica)!?html}" />
+  <input type="hidden" id="id_codiceAttivitaEconomicaOperatoreHidden" name="_operatorePresentatore.codiceAttivitaEconomica" 
+         value="${FTL_PLACEHOLDER}(_operatorePresentatore.codiceAttivitaEconomica)!?html}" />
+  <input type="hidden" id="id_descrizioneAttivitaEconomicaOperatoreHidden" name="_operatorePresentatore.descrizioneAttivitaEconomica" 
+         value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneAttivitaEconomica)!?html}" />
+								     			                
+  <input type="hidden" id="id_dataCostituzioneImpresaHidden" name="_costituzioneImpresa.dataCostituzioneImpresa" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataCostituzioneImpresa)!?html}" />	
+  
+  <!-- Jira: 1707 -->
+<input type="hidden" id="id_dataIscrizioneRegistroImpreseHidden" name="_costituzioneImpresa.dataIscrizioneRegistroImprese" value="${FTL_PLACEHOLDER}(_costituzioneImpresa.dataIscrizioneRegistroImprese)!?html}" />		
+
+<input type="hidden" id="id_costituzioneInCorsoCostituzioneImpresaHidden" name="_costituzioneImpresa.costituzioneInCorso" 
+       value="${FTL_PLACEHOLDER}(_costituzioneImpresa.costituzioneInCorso)!?html}" />
+       
+<input type="hidden" id="id_idProvinciaCostituzioneImpresaHidden" name="_costituzioneImpresa.provincia" 
+       value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provincia)!?html}" />
+<input type="hidden" id="id_provinciaDescrizioneCostituzioneImpresaHidden" name="_costituzioneImpresa.provinciaDescrizione" 
+       value="${FTL_PLACEHOLDER}(_costituzioneImpresa.provinciaDescrizione)!?html}" />
+
+<input type="hidden" id="id_iscrizioneInCorsoCostituzioneImpresaHidden" name="_costituzioneImpresa.iscrizioneInCorso" 
+       value="${FTL_PLACEHOLDER}(_costituzioneImpresa.iscrizioneInCorso)!?html}" />
+
+<!-- valorizzati (sovrascritti se fossero gia' valorizzati nel chiamante) sul salva -->
+<input type="hidden" id="id_operatorePresentatore_idAteco2007" 
+name="_operatorePresentatore.idAteco2007" value="${FTL_PLACEHOLDER}(_operatorePresentatore.idAteco2007)!?html}" />	
+<input type="hidden" id="id_operatorePresentatore_codicePrevalenteAteco2007" 
+name="_operatorePresentatore.codicePrevalenteAteco2007" value="${FTL_PLACEHOLDER}(_operatorePresentatore.codicePrevalenteAteco2007)!?html}" />
+<input type="hidden" id="id_operatorePresentatore_descrizioneAteco2007" 
+name="_operatorePresentatore.descrizioneAteco2007"  value="${FTL_PLACEHOLDER}(_operatorePresentatore.descrizioneAteco2007)!?html}" />
+
+<!-- MB2018_03_27 ini -->
+<input type="hidden" id="id_codiceIpaOperatoreHidden" name="_operatorePresentatore.codiceIpa" 
+    value="${FTL_PLACEHOLDER}(_operatorePresentatore.codiceIpa)!?html}"  />	
+<!-- MB2018_03_27 fine -->
+
+<!-- questi campi sono passati dalla pagina beneficiario nel caso dei bandi cultura; per gli altri bandi non vengono valorizzati  -->
+     
+     <input type="hidden" id="id_sedeLegale_stato" 
+		    name="_sedeLegale.stato"  value="${FTL_PLACEHOLDER}(_sedeLegale.stato)!?html}" />		    
+     <input type="hidden" id="id_sedeLegale_provincia" 
+		    name="_sedeLegale.provincia"  value="${FTL_PLACEHOLDER}(_sedeLegale.provincia)!?html}" />		    
+     <input type="hidden" id="id_sedeLegale_provinciaDescrizione" 
+		    name="_sedeLegale.provinciaDescrizione"  value="${FTL_PLACEHOLDER}(_sedeLegale.provinciaDescrizione)!?html}" />		    
+	 <input type="hidden" id="id_sedeLegale_provinciaSigla" 
+		    name="_sedeLegale.provinciaSigla"  value="${FTL_PLACEHOLDER}(_sedeLegale.provinciaSigla)!?html}" />		
+	 <input type="hidden" id="id_sedeLegale_comune" 
+		    name="_sedeLegale.comune" value="${FTL_PLACEHOLDER}(_sedeLegale.comune)!?html}" />	    
+	 <input type="hidden" id="id_sedeLegale_comuneDescrizione" 
+		    name="_sedeLegale.comuneDescrizione" value="${FTL_PLACEHOLDER}(_sedeLegale.comuneDescrizione)!?html}" /> 
+	 <input type="hidden" id="id_sedeLegale_statoEstero" 
+		    name="_sedeLegale.statoEstero" value="${FTL_PLACEHOLDER}(_sedeLegale.statoEstero)!?html}" />
+	 <input type="hidden" id="id_sedeLegale_statoEsteroDescrizione" 
+		    name="_sedeLegale.statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(_sedeLegale.statoEsteroDescrizione)!?html}" />	    
+	 <input type="hidden" id="id_sedeLegale_cittaEstera" 
+		    name="_sedeLegale.cittaEstera" value="${FTL_PLACEHOLDER}(_sedeLegale.cittaEstera)!?html}" />     
+     <input type="hidden" id="id_sedeLegale_indirizzo" 
+		    name="_sedeLegale.indirizzo"  value="${FTL_PLACEHOLDER}(_sedeLegale.indirizzo)!?html}" />
+	 <input type="hidden" id="id_sedeLegale_numCivico" 
+		    name="_sedeLegale.numCivico"  value="${FTL_PLACEHOLDER}(_sedeLegale.numCivico)!?html}" />
+     <input type="hidden" id="id_sedeLegale_cap" 
+		    name="_sedeLegale.cap"  value="${FTL_PLACEHOLDER}(_sedeLegale.cap)!?html}" />
+     <input type="hidden" id="id_sedeLegale_personaRifSL" 
+		    name="_sedeLegale.personaRifSL"  value="${FTL_PLACEHOLDER}(_sedeLegale.personaRifSL)!?html}" />
+     <input type="hidden" id="id_sedeLegale_email" 
+		    name="_sedeLegale.email"  value="${FTL_PLACEHOLDER}(_sedeLegale.email)!?html}" />
+	 <input type="hidden" id="id_sedeLegale_telefono" 
+		    name="_sedeLegale.telefono"  value="${FTL_PLACEHOLDER}(_sedeLegale.telefono)!?html}" />
+	 <input type="hidden" id="id_sedeLegale_cellulare" 
+		    name="_sedeLegale.cellulare"  value="${FTL_PLACEHOLDER}(_sedeLegale.cellulare)!?html}" />
+    					       	
+</div>		
+				
+				[#if "true"==viewAtecoResult]
+				[#if atecoFoundList?has_content]
+				
+<script type="text/javascript">
+
+	function valorizzaHiddenAteco(id, cod, descr, coddenorm, codsett, descrsett){
+        $('#id_tmpOperatorePresentatore_idAteco2007').val(id);  
+        $('#id_tmpOperatorePresentatore_codicePrevalenteAteco2007').val(cod); 
+        $('#id_tmpOperatorePresentatore_descrizioneAteco2007').val(descr);
+	}
+	
+	function valorizzaHiddenAtecoScelti(){
+	
+		if($('#id_tmpOperatorePresentatore_idAteco2007').val()!=''){
+			//sovrascrivo i valori originali solo se e' stata fatta una scelta di un radio e quindi i campi tmp sono valorizzati
+            $('#id_operatorePresentatore_idAteco2007').attr('value', $('#id_tmpOperatorePresentatore_idAteco2007').val());  
+            $('#id_operatorePresentatore_codicePrevalenteAteco2007').attr('value', $('#id_tmpOperatorePresentatore_codicePrevalenteAteco2007').val()); 
+            $('#id_operatorePresentatore_descrizioneAteco2007').attr('value', $('#id_tmpOperatorePresentatore_descrizioneAteco2007').val()); 
+		}
+	}
+	
+	jQuery(document).ready(function() {
+		// PER ORDINAMENTO COLONNE 
+        jQuery("#id_ateco_trovati").tablesorter({
+            sortColumn: 'Codice', // Intero o nome della colonna da ordinare all'avvio
+            sortClassAsc: 'ord_su',     // Classe CSS per la colonna ordinata in modo crescente
+            sortClassDesc: 'ord_giu',   // Classe CSS per la colonna ordinata in modo decrescente
+            headerClass: 'no_ordine',   // class name for headers (th's)
+            headers: {
+                0: {sorter: false}
+            }
+        });
+	});
+
+</script>
+
+<h4 class="caption">
+	<span id="toggle_handle_02" class="toggle_handle collapse">Elenco risultati
+	[@contextualErrors errorList=(messages.atecoNotSelected)![] /]</span>
+</h4>
+<div class="content_caption toggle_target_02">
+	<div class="commandPanel noSpaceButton">
+		<div class="button left">
+			<span class="cancel">
+				<input type="submit" id="pulisci_campi_alto" value="Pulisci i campi" 
+			       name="_command:LabelCommand:C_pulisci_campi_ricerca_ateco;RenderCommand:1140"  />
+			</span>
+			<span class="save highlighted">
+				<input type="submit" name="_command:LabelCommand:C_salva_ateco;RenderCommand:1100" 
+				value="Conferma" id="salva_ateco" onclick="valorizzaHiddenAtecoScelti();"/>
+		</span>
+	</div>
+</div>
+
+<div class="paging">
+	<span class="pagingLeft">
+		<strong>Risultati trovati: ${FTL_PLACEHOLDER}(atecoFoundList)?size}</strong>
+	</span>
+</div>
+
+<table summary="...." id="id_ateco_trovati" class="myovertable tablesorter target_toggle_checkbox_1">
+	<col width="4%" />
+	<col width="16%" />
+	<col width="80%" />
+	<thead>
+		<tr>
+			<th scope="col"></th>
+			<th scope="col">Codice Ateco</th>
+			<th scope="col">Descrizione</th>
+		</tr>
+	</thead>
+	<tbody>
+	[#list atecoFoundList?sort_by("id") as item]
+		[#if !item?has_content || item?is_hash]
+		<tr>
+			<td>
+			<input class="noborder" type="radio" name="_operatorePresentatore.idAteco2007" 
+			id="id_operatorePresentatore_idAteco2007" value="${FTL_PLACEHOLDER}(item.id)!?string('0')}" 
+			onclick="valorizzaHiddenAteco('${FTL_PLACEHOLDER}(item.id)!}',
+			                          '${FTL_PLACEHOLDER}(item.codice)!}',
+									  '${FTL_PLACEHOLDER}(item.descrizione)!?js_string}',
+									  '${FTL_PLACEHOLDER}(item.codnormalizzato)!}',
+									  '${FTL_PLACEHOLDER}(item.codicesezione)!}',
+									  '${FTL_PLACEHOLDER}(item.descrizionesezione)!?js_string}');" />
+			</td>
+			<td>${FTL_PLACEHOLDER}(item.codice)!}</td>
+			<td>${FTL_PLACEHOLDER}(item.descrizione)!}</td>
+		</tr>
+		[/#if]
+	[/#list]
+	</tbody>
+</table>
+<!-- temporanei -->
+<input type="hidden" id="id_tmpOperatorePresentatore_idAteco2007" name="tmpOperatorePresentatore_idAteco2007" value="" />
+<input type="hidden" id="id_tmpOperatorePresentatore_codicePrevalenteAteco2007" value="" />
+<input type="hidden" id="id_tmpOperatorePresentatore_descrizioneAteco2007" value="" />
+	
+<div class="commandPanel noSpaceButton">
+	<div class="button left">
+		<span class="cancel">
+			<input type="submit" id="pulisci_campi_basso" value="Pulisci i campi" 
+		       name="_command:LabelCommand:C_pulisci_campi_ricerca_ateco;RenderCommand:1140"  />
+		</span>
+		<span class="save highlighted">
+			<input type="submit" name="_command:LabelCommand:C_salva_ateco;RenderCommand:1100" 
+			value="Conferma" id="salva_ateco" onclick="valorizzaHiddenAtecoScelti();"/>
+				</span>
+			</div>
+		</div>
+	</div>
+[#else]
+	<h4 class="caption">
+		<span id="toggle_handle_02" class="toggle_handle collapse">Elenco risultati</span>
+	</h4>
+	<div class="content_caption toggle_target_02">
+		<div class="stdMessagePanel noSpaceBottom">
+			<div class="feedWarning">
+				<p>Non ci sono elementi da visualizzare in base ai filtri impostati</p>
+			</div>
+		</div>
+	</div><!--/content_caption-->
+[/#if]
+[/#if]

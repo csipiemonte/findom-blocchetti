@@ -1,0 +1,439 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _sedeLegale --]
+
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<script type="text/javascript">
+
+    $(window).on('load',function () {
+       	if($('#id_sedeLegale_statoEst').attr('checked')=='checked'){
+       		resetDatiProvinciaComuneSL();
+       	}else if($('#id_sedeLegale_statoIt').attr('checked')=='checked'){
+       		resetDatiStatoEsteroSL();
+	    }		
+       	
+       	
+       	<#if _sedeLegale_solo_province_piemonte == "true">
+       	
+	        [#if svuotaCampiResidenzaSL == "true" ]
+	        	$("#id_sedeLegale_indirizzo").val("");
+	    		$("#id_sedeLegale_numcivico").val("");
+	        	$("#id_sedeLegale_cap").val("");
+	        	$("#id_sedeLegale_telefono").val("");
+	        	$("#id_sedeLegale_pec").val("");
+	        	$("#id_sedeLegale_email").val("");
+	        [/#if]
+
+	     </#if>
+	});
+    
+	function resetDatiProvinciaComuneSL() {
+		$("#id_sedeLegale_provincia").val("");
+		$("#id_sedeLegale_provinciaDescrizione").val("");
+		$("#id_sedeLegale_siglaProvincia").val("");
+		$("#id_sedeLegale_comune").val("");
+		$("#id_sedeLegale_comuneDescrizione").val("");
+		$("#id_sedeLegale_statoIt").attr("checked", false); // decheck il radio Italia
+		$("#id_sedeLegale_comune").prop('disabled', 'disabled'); // Jira 1331: disabilito select-box Comune
+		$("#id_sedeLegale_statoEst").attr("checked", true); // check il radio Stato Estero
+        $('#id_sedeLegale_cittaEstera').attr("readonly", false);
+	}
+
+	function resetDatiStatoEsteroSL() {
+		$("#id_sedeLegale_statoEstero").val("");
+		$("#id_sedeLegale_statoEsteroDescrizione").val("");
+		$("#id_sedeLegale_cittaEstera").val("");
+		$("#id_sedeLegale_statoIt").attr("checked", true); // check il radio Italia
+		$("#id_sedeLegale_statoEst").attr("checked", false); // decheck il radio Stato Estero
+        $('#id_sedeLegale_cittaEstera').attr("readonly", true);
+	}
+
+	function setDescrizioneProvinciaComuneSL() {
+		$("#id_sedeLegale_provinciaDescrizione").val($("#id_sedeLegale_provincia option:selected").text());
+		$("#id_sedeLegale_comuneDescrizione").val($("#id_sedeLegale_comune option:selected").text());
+	}
+
+	function setDescrizioneStatoEsteroSL() {
+		$("#id_sedeLegale_statoEsteroDescrizione").val($("#id_sedeLegale_statoEstero option:selected").text());
+	}
+	
+	
+	
+</script>
+				
+	<#if _sede_legale_visualizza_nota_precompilazione == "true">		
+			[#if visNotaPrecompilazioneSedeAAEP == "true"]
+				<div class="stdMessagePanel feedback">
+					[#if visNotaPrecompilazioneSedeUltimaDomanda == "true"]
+						<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sul Registro delle Imprese e/o sull'ultima domanda inviata. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+					[#else]
+						<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sul Registro delle Imprese. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+					[/#if]
+				</div>
+			[#else]
+				[#if visNotaPrecompilazioneSedeUltimaDomanda == "true"]
+					<div class="stdMessagePanel feedback">
+					<div class='feedWarning'>I campi sono stati precompilati con le informazioni disponibili sull'ultima domanda inviata. Verificare i dati presenti, compilare quelli mancanti e salvare.</div>
+					</div>
+				[/#if]
+			[/#if]
+	</#if>
+	
+	<#if _toggle_dinamico_label == "true" >
+			
+			<#if _sedeLegale_toggle_dinamico_label?has_content >
+					
+				<#if _ente_impresa_SL_altri_recapiti == "false" >
+					<h4>
+						<span id="toggle_handle_SedeLeg" class="toggle_handle collapse">${_sedeLegale_toggle_dinamico_label}</span>
+					</h4>
+					<div class="toggle_target_SedeLeg">
+				<#else>
+				    <h5>Sede legale</h5>
+					<div class="formTable" summary="....">
+				</#if>
+			
+			<#else>
+			
+				<#if _ente_impresa_SL_altri_recapiti == "false" >
+					<h4>
+						<span id="toggle_handle_SedeLeg" class="toggle_handle collapse">Sede legale</span>
+					</h4>
+					<div class="toggle_target_SedeLeg">
+				<#else>
+				    <h5>Sede legale</h5>
+					<div class="formTable" summary="....">
+				</#if>
+			
+			</#if>
+
+	<#else>
+	
+		<#if _ente_impresa_SL_altri_recapiti == "false" >
+			<h4>
+				<span id="toggle_handle_SedeLeg" class="toggle_handle collapse">Sede legale</span>
+			</h4>
+			<div class="toggle_target_SedeLeg">
+		<#else>
+		    <h5>Sede legale</h5>
+			<div class="formTable" summary="....">
+		</#if>
+
+	</#if>
+	
+		<table class="formTable" summary="....">
+			<col width="30%" />
+			<col width="70%" />
+			
+			
+			[#-- if custom --]
+			<#if _sedeLegale_solo_province_piemonte == "true" >
+					<tr>
+						<th> 
+							<label for="id_sedeLegale_indirizzo">Stato:</label>  Italia
+						</th>
+						<td>
+							[#if "Italia" == (sedeLeg.stato)!]
+								<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" checked="checked" />
+								<input type="hidden" name="_sedeLegale.stato" id="id_sede_legale_stato" value="${FTL_PLACEHOLDER}(sedeLeg.stato)!?html}" />
+								[@contextualErrors errorList=(messages._sedeLegale_stato)![] /]
+							[/#if]
+							
+							<div id="italiaSel" class="spaceBottom">
+								<label for="id_sedeLegale_provincia">Provincia</label>
+								[@contextualErrors errorList=(messages._sedeLegale_stato_provincia)![] /]
+								<select name="_sedeLegale.provincia" id="id_sedeLegale_provincia" class="medium" onchange="resetDatiStatoEsteroSL(); $('#id_reload_S1_P4_SL').click()">
+									<option value=""></option>
+									[#list provinciaSLList as item]
+										[#if item.codice == (sedeLeg.provincia)!]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[#else]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[/#if]
+									[/#list]
+								</select>
+								<input type="hidden" name="_sedeLegale.provinciaDescrizione" id="id_sedeLegale_provinciaDescrizione" value="${FTL_PLACEHOLDER}(sedeLeg.provinciaDescrizione)!?html}" />
+								<input type="hidden" name="_sedeLegale.provinciaSigla" id="id_sedeLegale_siglaProvincia" value="${FTL_PLACEHOLDER}(_sedeLegale_siglaProvincia)!?html}" />
+								
+								<label for="id_sedeLegale_comune">Comune</label>
+								[@contextualErrors errorList=(messages._sedeLegale_stato_comune)![] /]
+								<select name="_sedeLegale.comune" id="id_sedeLegale_comune" class="medium" 
+								        onchange="setDescrizioneProvinciaComuneSL()">
+									<option value=""></option>
+									[#list comuneSLList as item]
+										[#if item.codice == (sedeLeg.comune)!]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[#else]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[/#if]
+									[/#list]
+								</select>
+								<input type="hidden" name="_sedeLegale.comuneDescrizione" id="id_sedeLegale_comuneDescrizione" value="${FTL_PLACEHOLDER}(sedeLeg.comuneDescrizione)!?html}" />
+							</div>
+						</td>
+					</tr>
+			<#else>
+				[#-- std --]
+				<tr>
+						<th>Stato</th>
+						<td>
+							[#if "Italia" == (sedeLeg.stato)!]
+								<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" checked="checked" onclick="resetDatiStatoEsteroSL()" />
+							[@contextualErrors errorList=(messages._sedeLegale_stato)![] /]
+							[#else]
+								<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoIt" value="Italia" onclick="resetDatiStatoEsteroSL()" />
+								[@contextualErrors errorList=(messages._sedeLegale_noStato)![] /]
+							[/#if]
+							
+							<label for="id_sedeLegale_statoIt">Italia</label>
+			
+							<div id="italiaSel" class="spaceBottom">
+								<label for="id_sedeLegale_provincia">Provincia</label>
+								<select name="_sedeLegale.provincia" id="id_sedeLegale_provincia" class="medium" onchange="resetDatiStatoEsteroSL(); $('#id_reload_S1_P4_SL').click()">
+									<option value=""></option>
+									[#list provinciaSLList as item]
+										[#if item.codice == (sedeLeg.provincia)!]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[#else]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[/#if]
+									[/#list]
+								</select>
+								<input type="hidden" name="_sedeLegale.provinciaDescrizione" id="id_sedeLegale_provinciaDescrizione" value="${FTL_PLACEHOLDER}(sedeLeg.provinciaDescrizione)!?html}" />
+								<input type="hidden" name="_sedeLegale.provinciaSigla" id="id_sedeLegale_siglaProvincia" value="${FTL_PLACEHOLDER}(_sedeLegale_siglaProvincia)!?html}" />
+								
+								<label for="id_sedeLegale_comune">Comune</label>
+								<select name="_sedeLegale.comune" id="id_sedeLegale_comune" class="medium" 
+								        onchange="setDescrizioneProvinciaComuneSL()">
+									<option value=""></option>
+									[#list comuneSLList as item]
+										[#if item.codice == (sedeLeg.comune)!]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[#else]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[/#if]
+									[/#list]
+								</select>
+								<input type="hidden" name="_sedeLegale.comuneDescrizione" id="id_sedeLegale_comuneDescrizione" value="${FTL_PLACEHOLDER}(sedeLeg.comuneDescrizione)!?html}" />
+							</div>
+			
+							[#if "Estero" == (sedeLeg.stato)!]
+								<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoEst" value="Estero" checked="checked" onclick="resetDatiProvinciaComuneSL()" />
+							[@contextualErrors errorList=(messages._sedeLegale_stato)![] /]
+							[#else]
+								<input class="noborder" type="radio" name="_sedeLegale.stato" id="id_sedeLegale_statoEst" value="Estero" onclick="resetDatiProvinciaComuneSL()" />
+								[@contextualErrors errorList=(messages._sedeLegale_noStato)![] /]
+							[/#if]
+			
+							<label for="id_sedeLegale_statoEst">Stato estero</label>
+							<div id="esteroSel">
+								<label for="id_sedeLegale_statoEstero">Stato estero</label>
+								<select name="_sedeLegale.statoEstero" id="id_sedeLegale_statoEstero" class="medium"
+								        onchange="resetDatiProvinciaComuneSL(); setDescrizioneStatoEsteroSL()">
+									<option value=""></option>
+									[#list statoEsteroSLList as item]
+										[#if item.codice?string == (sedeLeg.statoEstero)!]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}" selected="selected">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[#else]
+											<option value="${FTL_PLACEHOLDER}item.codice!?html}">${FTL_PLACEHOLDER}item.descrizione}</option>
+										[/#if]
+									[/#list]
+								</select>
+								<input type="hidden" name="_sedeLegale.statoEsteroDescrizione" id="id_sedeLegale_statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(sedeLeg.statoEsteroDescrizione)!?html}" />
+								
+								<label for="id_sedeLegale_cittaEstera">Città estera</label>
+								<input type="text" name="_sedeLegale.cittaEstera" value="${FTL_PLACEHOLDER}(sedeLeg.cittaEstera)!?html}" 
+									id="id_sedeLegale_cittaEstera" class="[@classMediumError errorList=(messages._sedeLegale_cittaEstera)![] /]" />
+									[@contextualErrors errorList=(messages._sedeLegale_cittaEstera)![] /]
+							</div>
+						</td>
+					</tr>
+			</#if>
+								
+			<tr>
+				<th> <label for="id_sedeLegale_indirizzo">Indirizzo</label>  </th>
+				<td colspan="3">
+					<input type="text" name="_sedeLegale.indirizzo" value="${FTL_PLACEHOLDER}(sedeLeg.indirizzo)!?html}" id="id_sedeLegale_indirizzo" 
+							class="[@classMediumError errorList=(messages._sedeLegale_indirizzo)![] /]" style="width:80%"/>
+						[@contextualErrors errorList=(messages._sedeLegale_indirizzo)![] /]
+				
+					<label for="id_sedeLegale_numcivico">N. civico</label> 
+					<input type="text" name="_sedeLegale.numCivico" value="${FTL_PLACEHOLDER}(sedeLeg.numCivico)!?html}" id="id_sedeLegale_numcivico" 
+							class="[@classShortError errorList=(messages._sedeLegale_numcivico)![] /]" style="width:5%"/>
+						[@contextualErrors errorList=(messages._sedeLegale_numcivico)![] /]
+				</td>
+			</tr>
+			
+			<tr>
+				<th> <label for="id_sedeLegale_cap">CAP</label>  </th>
+				<td  colspan="3">
+					<input 
+						type="text" 
+						name="_sedeLegale.cap"
+						pattern="\d*" title="Digitare valori numerici senza spazi"
+						value="${FTL_PLACEHOLDER}(sedeLeg.cap)!?html}" 
+						id="id_sedeLegale_cap" 
+						class="[@classShortError errorList=(messages._sedeLegale_cap)![] /]" />
+					[@contextualErrors errorList=(messages._sedeLegale_cap)![] /]
+				</td>
+			</tr>
+			
+		</table>
+
+		[#-- gestione recapiti Jira: 1770 --]
+		<h5>Recapiti</h5>
+		<table class="formTable" summary="....">
+			<#if _ente_impresa_SL_altri_recapiti_senza_pec == "false" >	
+				<col width="30%" />
+				<col width="23%" />
+				<col width="23%" />
+				<col width="24%" />
+			<#else>
+				<col width="30%" />
+				<col width="23%" />
+				<col width="10%" />
+				<col width="37%" />
+			</#if>
+				
+			[#-- telefono, indirizzo-pec, email --]						
+			<#if _ente_impresa_SL_altri_recapiti == "false" >
+							
+				<#if _ente_impresa_SL_altri_recapiti_senza_pec == "false" >	
+					<tr>
+						<th> 
+							<label for="id_sedeLegale_telefono">Telefono</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.telefono" value="${FTL_PLACEHOLDER}(sedeLeg.telefono)!?html}" 
+									id="id_sedeLegale_telefono" 
+									class="[@classLongError errorList=(messages._sedeLegale_telefono)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_telefono)![] /]
+						</td>
+						
+						<th> 
+							<label for="id_sedeLegale_pec">Indirizzo PEC</label>  
+						</th>
+						<td> 
+							<input type="text" name="_sedeLegale.pec" value="${FTL_PLACEHOLDER}(sedeLeg.pec)!?html}" id="id_sedeLegale_pec" class="[@classLongError errorList=(messages._sedeLegale_pec)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_pec)![] /]
+						</td>
+					</tr>
+					
+					<tr>
+						<th> 
+							<label for="id_sedeLegale_email">Email</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.email" value="${FTL_PLACEHOLDER}(sedeLeg.email)!?html}" id="id_sedeLegale_email" class="[@classLongError errorList=(messages._sedeLegale_email)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_email)![] /]
+						</td>
+					</tr>
+					
+				<#else>
+					<tr>
+						<th> 
+							<label for="id_sedeLegale_telefono">Telefono</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.telefono" value="${FTL_PLACEHOLDER}(sedeLeg.telefono)!?html}" 
+									id="id_sedeLegale_telefono" 
+									class="[@classLongError errorList=(messages._sedeLegale_telefono)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_telefono)![] /]
+						</td>
+						
+						<th> 
+							<label for="id_sedeLegale_email">Email</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.email" value="${FTL_PLACEHOLDER}(sedeLeg.email)!?html}" id="id_sedeLegale_email" class="[@classLongError errorList=(messages._sedeLegale_email)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_email)![] /]
+						</td>
+					</tr>
+				</#if>
+			<#else>
+			
+			       <tr>
+						<th> 
+							<label for="id_sedeLegale_personaRifSL">Persona di riferimento</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.personaRifSL" value="${FTL_PLACEHOLDER}(sedeLeg.personaRifSL)!?html}" id="id_sedeLegale_personaRifSL" class="[@classLongError errorList=(messages._sedeLegale_persona_rif)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_persona_rif)![] /]
+						</td>
+						
+					    <th> 
+					    	<label for="id_sedeLegale_telefono">Telefono</label>  
+					    </th>
+						<td>
+							<input type="text" name="_sedeLegale.telefono" value="${FTL_PLACEHOLDER}(sedeLeg.telefono)!?html}" id="id_sedeLegale_telefono" class="[@classLongError errorList=(messages._sedeLegale_telefono)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_telefono)![] /]
+						</td>
+					</tr>
+		
+					<tr>
+			            <th> 
+							<label for="id_sedeLegale_email">
+								Email: <br/>
+								<p style="font-style: italic; font-weight: normal;">
+								(La mail indicata sar&#224; quella di riferimento<br/>
+								per eventuali comunicazioni in fase di istruttoria)</p>
+							</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.email" value="${FTL_PLACEHOLDER}(sedeLeg.email)!?html}" id="id_sedeLegale_email" class="[@classLongError errorList=(messages._sedeLegale_email)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_email)![] /]
+						</td>
+						
+						<th> 
+							<label for="id_sedeLegale_cellulare">Cellulare</label>  
+						</th>
+						<td>
+							<input type="text" name="_sedeLegale.cellulare" value="${FTL_PLACEHOLDER}(sedeLeg.cellulare)!?html}" id="id_sedeLegale_cellulare" class="[@classLongError errorList=(messages._sedeLegale_cellulare)![] /]" />
+							[@contextualErrors errorList=(messages._sedeLegale_cellulare)![] /]
+						</td>
+					</tr>		
+				</#if>						
+		</table>
+		
+		
+		
+		<#if _ente_impresa_SL_altri_recapiti == "false" >	
+		
+				<#if _sedeLegale_col_rec_1300 == "false" >
+					[#-- versione std con reload page con record su database 1400 --]
+					<input type="submit" id="id_reload_S1_P4_SL" name="_command" value="LabelCommand:C_reload_S1_P1_SL;RenderCommand:1400" hidden="hidden" />
+				<#else>	
+					[#-- versione custom con reload page con record su database 1300 --]
+					<input type="submit" id="id_reload_S1_P4_SL" name="_command" value="LabelCommand:C_reload_S1_P1_SL;RenderCommand:1300" hidden="hidden" />
+				</#if>
+				
+		<#else>				
+				[#-- versione std per bandi cultura --]	
+				<input type="submit" id="id_reload_S1_P4_SL" name="_command" value="LabelCommand:C_reload_S1_P1_SL;RenderCommand:1100" hidden="hidden" />
+		</#if>	
+						
+						
+						
+		[#if (sedeLegaleAziCorrente?has_content)]
+			[#-- salvo i dati provenienti da AAEP --]
+			<input type="hidden" name="_sedeLegaleAAEP.statoEsteroDescrizione" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.nomeNazione)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.provinciaSigla" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.siglaProvincia)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.comune" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.codISTATComune)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.comuneDescrizione" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.descrComune)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.indirizzo" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.toponimo)!?html} ${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.indirizzo)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.numCivico" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.numeroCivico)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.cap" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.ubicazione.cap)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.telefono" value="${FTL_PLACEHOLDER}(sedeLegaleAziCorrente.contatti_telefono)!?html}" />
+			<input type="hidden" name="_sedeLegaleAAEP.pec" value="${FTL_PLACEHOLDER}(enteImpresa.postaElettronicaCertificata)!?html}" />
+			[#-- campi che AAEP non passa --]
+			<input type="hidden" name="_sedeLegaleAAEP.stato" value="" />
+			<input type="hidden" name="_sedeLegaleAAEP.statoEstero" value="" />
+			<input type="hidden" name="_sedeLegaleAAEP.cittaEstera" value="" />
+			<input type="hidden" name="_sedeLegaleAAEP.provincia" value="" />
+			<input type="hidden" name="_sedeLegaleAAEP.provinciaDescrizione" value="" />
+		[/#if]
+</div>
+			

@@ -1,0 +1,220 @@
+<#--
+Copyright Regione Piemonte - 2020
+SPDX-License-Identifier: EUPL-1.2-or-later
+-->
+[#-- _dichiarazioni --]
+<#-- note di dipendenze da altre commonalities: nessuna -->
+
+<#if _dichiarazioni_dichiarazioni == "true" >
+	
+	<script type="text/javascript">
+		$(window).on('load',function () {
+		    $(".todelete").parents("tr").hide();
+		});
+	</script>
+	
+	<h4>
+		<span id="toggle_handle_dichiarazioni" class="toggle_handle collapse">Dichiarazioni</span>
+	</h4>
+	
+		[#assign numParag = 0]
+		<div class="toggle_target_dichiarazioni">
+			<p>IL SOTTOSCRITTO INOLTRE DICHIARA:</p>
+			[#-- 1 --]
+			<h5>Sede legale</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. di avere sede legale e operativa in Piemonte e di svolgere la propria attivit&#224; in via esclusiva 
+					o comunque prevalente in ambito culturale o, per i soggetti imprese e operatori, di lavorare nel settore dell’indotto delle attivit&#224; culturali;
+			<br/><br/>
+			
+			[#-- 2 --]
+			<h5>Altri Bonus/Bandi</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. di non aver usufruito di altri Bonus da parte della Regione Piemonte;
+			<br/><br/>
+			
+			[#-- 3 --]
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. di non aver intenzione di partecipare ad alcun Bando della Direzione Cultura, Turismo e Commercio per il 2020;
+			<br/><br/>
+			
+			[#-- 4 --]
+			<h5>Bonus</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. che il presente Bonus deve essere utilizzato per spese correnti e non per investimenti;
+			<br/><br/>
+			
+			[#-- 5 --]
+			<h5>Partita IVA</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. per i soggetti in possesso di partita IVA, che la stessa si attiva fosse attiva alla data del 29 maggio 2020; 
+			<br/><br/>
+			
+			[#-- 6 --]
+			<h5>Ateco</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. per le sole Associazioni rientranti nel codice ATECO 94.99.2, di non svolgere attivit&#224; di somministrazione;
+			<br/><br/>
+			
+			[#-- 7 --]
+			<h5>Ispezioni e controlli</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. che &#233; consapevole che la Regione Piemonte potr&#224; attivare, 
+				anche per il tramite di Finpiemonte o di altre Autorit&#224; istituzionalmente preposte, 
+				controlli ex-post a campione sulla veridicit&#224; delle dichiarazioni rilasciate 
+				e sull'effettivo utilizzo del Bonus, come previsto al precedente punto 4;
+			<br/><br/>
+			
+			[#-- 8 --]
+			<h5>IBAN</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. che l'IBAN indicato nella sezione A.4 &#233; intestato al soggetto beneficiario;
+			<br/><br/>
+			
+			[#-- 9 --]
+			<h5>Dati e informazioni</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. che i dati e le informazioni fornite con la presente domanda ed i relativi allegati sono veritieri 
+			e di assumersi la responsabilit&#224; per le dichiarazioni e per gli impegni sottoscritti anche in caso di delega a terzo per il caricamento della domanda 
+			(a tal fine dovranno essere conservati una copia della delega e del modulo di domanda controfirmati dal delegante/dichiarante); 
+			<br/><br/>
+			
+			[#-- 11 --]
+			<h5>Cause di revoca</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. di non essere destinatario della sanzione amministrativa prevista all'art. 9 comma 2 lettera d) 
+			del d.lgs. 231/2001 consistente nell'esclusione da agevolazioni, finanziamenti, contributi o sussidi e dell'eventuale revoca di quelli gi&#224; concessi;
+			<br/><br/>
+			
+			[#-- 12 --]
+			<h5>Informativa trattamenti dati personali</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. di avere preso visione dell'informativa sul trattamento dei dati personali, resa, ai sensi dell'art. 13 
+			del Regolamento Generale sulla Protezione dei Dati (RGPD 679/2016), e sul sito di Finpiemonte S.p.A. (www.finpiemonte.it). 
+			Il sottoscritto dichiara altres&#236; di essere consapevole che tali dati saranno utilizzati per gestire la richiesta medesima e per le altre finalit&#224; indicate 
+			nell'informativa citata;
+			<br/><br/>
+			
+			[#-- 13 --]
+			<h5>Finpiemonte S.p.A.</h5>
+			[#assign numParag=numParag+1 ]
+			${FTL_PLACEHOLDER}numParag}. di essere a conoscenza che Finpiemonte S.p.A. non intrattiene alcun rapporto particolare di collaborazione con societ&#224; 
+			o liberi professionisti che svolgano attivit&#224; di consulenza o assistenza nella presentazione della presente domanda; 
+			le eventuali deleghe a professionisti consulenti o societ&#224; terze nella presentazione della domanda costituiscono 
+			unicamente autorizzazione ad intrattenere contatti con Finpiemonte in nome e nell'interesse del sottoscritto 
+			senza alcuna agevolazione e/o privilegio.
+			<br/><br/>
+		</div>
+		<br/>
+	<br/>
+</#if>
+
+<#if _dichiarazioni_impegni == "true" >
+	<br/><br/>
+	<h4>
+		<span id="toggle_handle_impegni" class="toggle_handle collapse">Impegni</span>
+	</h4>
+	<div class="toggle_target_impegni">
+		<p>E SI IMPEGNA FIN D'ORA<br/></p>
+		
+		[#assign numParag = 0]
+		<h5>Ulteriori impegni</h5>
+		[#assign numParag=numParag+1 ]
+		${FTL_PLACEHOLDER}numParag}. a consentire la pubblicazione e l'utilizzo dei propri dati per i fini previsti dalla legge;
+		<br/><br/>
+		
+	</div>
+	<br/><br/>
+</#if>
+
+
+<#if _dichiarazioni_autorizzazioni == "true" >
+	<h4>
+		<span id="toggle_handle_autorizzazioni" class="toggle_handle collapse">Autorizzazioni e presa visione</span>
+	</h4>
+	<div class="toggle_target_autorizzazioni">
+		<h5>Trattamento dati personali</h5>
+		
+		<table class="formTable" summary="....">
+			<col width="3%" />
+			<col width="97%" />
+			[@contextualErrors errorList=(messages._dichiarazioni_trattamentoDatiPersonali)![] /]
+			<tr>
+				<td>
+					[#if "si" == (_dichiarazioni.trattamentoDatiPersonali)!]
+						<input class="noborder" type="checkbox" name="_dichiarazioni.trattamentoDatiPersonali" 
+								id="id_trattamentodatipersonali" value="si" checked="checked" tabindex="7"/>
+					[#else]
+						<input class="noborder" type="checkbox" name="_dichiarazioni.trattamentoDatiPersonali" 
+								id="id_trattamentodatipersonali" value="si" tabindex="7" />
+					[/#if]
+					<input type="hidden" name="_dichiarazioni.trattamentoDatiPersonali" value="no" />
+				</td>
+				<td>
+					<label for="id_trattamentodatipersonali">
+					Il sottoscritto, in relazione al trattamento dei dati personali forniti con la presente richiesta, dichiara di avere preso visione 
+					delle due informative rese ai sensi dell'art. 13 del Regolamento Generale sulla Protezione dei Dati (RGPD 679/2016) pubblicate: <br/>
+					a) sul sito di Regione Piemonte, congiuntamente al bando, e <br/>
+					b) sul sito <a href="https://www.finpiemonte.it">www.finpiemonte.it</a> 
+					Il sottoscritto dichiara altres&#236; di essere consapevole che i dati forniti con la presente richiesta saranno utilizzati per 
+					gestire la richiesta medesima, nonch&#233; per indagini statistiche, anche mediante l'ausilio di mezzi elettronici o automatizzati, 
+					nel rispetto della sicurezza e riservatezza necessarie.
+					</label>
+				</td>
+			</tr>
+		</table>
+		<br/>
+
+		<h5>Regole di compilazione</h5>
+		<table class="formTable" summary="....">
+			<col width="3%" />
+			<col width="97%" />
+			[@contextualErrors errorList=(messages._dichiarazioni_regoleCompilazione)![] /]
+			<tr>
+				<td>
+				[#if "si" == (_dichiarazioni.regoleCompilazione)!]
+					<input class="noborder" type="checkbox" name="_dichiarazioni.regoleCompilazione" 
+							id="id_regolecompilazione" value="si" checked="checked" tabindex="8"/>
+				[#else]
+					<input class="noborder" type="checkbox" name="_dichiarazioni.regoleCompilazione" 
+							id="id_regolecompilazione" value="si" tabindex="8"/>
+				[/#if]
+				<input type="hidden" name="_dichiarazioni.regoleCompilazione" value="no" />
+				</td>
+				<td>
+					<label for="id_regolecompilazione">
+						Il sottoscritto dichiara di aver preso visione delle regole di compilazione della domanda.</label>
+						<br/> 
+						Vedi pagina : <a href="${FTL_PLACEHOLDER}urlPagRegoleCompilazione}">Regole di compilazione</a>
+				</td>
+			</tr>
+		</table>
+		<br/>
+
+		<h5>Presa visione</h5>
+		<table class="formTable" summary="....">
+			<col width="3%" />
+			<col width="97%" />
+			[@contextualErrors errorList=(messages._dichiarazioni_presaVisione)![] /]
+			<tr>
+				<td>
+				[#if "si" == (_dichiarazioni.presaVisione)!]
+					<input class="noborder" type="checkbox" name="_dichiarazioni.presaVisione" 
+							id="id_presaVisione" value="si" checked="checked" tabindex="9"/>
+				[#else]
+					<input class="noborder" type="checkbox" name="_dichiarazioni.presaVisione" 
+							id="id_presaVisione" value="si" tabindex="9"/>
+				[/#if]
+				<input type="hidden" name="_dichiarazioni.presaVisione" value="no" />
+				</td>
+				<td>
+					<label for="id_presaVisione">
+							Il sottoscritto dichiara di aver preso visione di tutti i punti indicati in questa pagina, 
+							nelle sezioni "Dichiarazioni" e "Impegni", ex artt. 1341 e 1342 del Codice Civile.
+					</label>
+				</td>
+			</tr>
+		</table>
+		<br/>
+	</div>
+</#if>
